@@ -1,0 +1,694 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene_factory.runtime_session.v1",
+  "title": "SceneFactory runtime session canonical messages",
+  "description": "Physics session message contracts shared by local and HTTP adapters. All messages must be finite JSON; backend support and reset option semantics also require runtime validation. Force vectors use world-frame N and N*m in [Fx,Fy,Fz,Tx,Ty,Tz] order; a three-vector supplies force only.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/capabilities"
+    },
+    {
+      "$ref": "#/$defs/reset"
+    },
+    {
+      "$ref": "#/$defs/step"
+    },
+    {
+      "$ref": "#/$defs/observation"
+    },
+    {
+      "$ref": "#/$defs/snapshot"
+    }
+  ],
+  "$defs": {
+    "capabilities": {
+      "oneOf": [
+        {
+          "const": {
+            "schema_version": "scene_factory.session_capabilities.v1",
+            "backend": "dry_run",
+            "physical": false,
+            "fidelity": "dry_run",
+            "action_modes": [
+              "noop",
+              "dry_run"
+            ],
+            "reset_options": [
+              "pose_overrides",
+              "pose_jitter",
+              "randomization"
+            ],
+            "missing_fields": [
+              "object_poses",
+              "object_velocities",
+              "robot_state",
+              "contacts"
+            ],
+            "observation_modalities": [
+              "state"
+            ],
+            "image_modalities": [],
+            "snapshot_levels": [
+              "rebuild"
+            ],
+            "reset_level": "rebuild",
+            "max_request_steps": 10000,
+            "external_joint_control": false,
+            "contact_units": null
+          }
+        },
+        {
+          "const": {
+            "schema_version": "scene_factory.session_capabilities.v1",
+            "backend": "mujoco",
+            "physical": true,
+            "fidelity": "collision_proxy",
+            "action_modes": [
+              "noop",
+              "object_forces"
+            ],
+            "reset_options": [
+              "pose_overrides",
+              "pose_jitter",
+              "randomization"
+            ],
+            "missing_fields": [
+              "robot_state",
+              "robot_end_effector"
+            ],
+            "observation_modalities": [
+              "state"
+            ],
+            "image_modalities": [
+              "rgb"
+            ],
+            "snapshot_levels": [
+              "rebuild",
+              "runtime_state"
+            ],
+            "reset_level": "rebuild",
+            "max_request_steps": 10000,
+            "external_joint_control": false,
+            "contact_units": "N_and_Nm"
+          }
+        },
+        {
+          "const": {
+            "schema_version": "scene_factory.session_capabilities.v1",
+            "backend": "isaac",
+            "physical": true,
+            "fidelity": "franka_mug_scripted",
+            "action_modes": [
+              "scripted",
+              "joint_position"
+            ],
+            "reset_options": [],
+            "missing_fields": [
+              "object_orientations",
+              "object_velocities",
+              "general_contacts"
+            ],
+            "observation_modalities": [
+              "state"
+            ],
+            "image_modalities": [
+              "rgb",
+              "depth"
+            ],
+            "snapshot_levels": [],
+            "reset_level": "new_session",
+            "max_request_steps": 10000,
+            "external_joint_control": true,
+            "contact_units": null
+          }
+        }
+      ]
+    },
+    "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "idempotency_key",
+        "seed",
+        "options"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scene_factory.session_reset.v1"
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "options": {
+          "type": "object"
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "episode_id",
+        "sequence_id",
+        "idempotency_key",
+        "action",
+        "steps"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scene_factory.session_step.v1"
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "sequence_id": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "action": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "payload"
+              ],
+              "properties": {
+                "mode": {
+                  "enum": [
+                    "noop",
+                    "scripted"
+                  ]
+                },
+                "payload": {
+                  "type": "object",
+                  "maxProperties": 0
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "payload"
+              ],
+              "properties": {
+                "mode": {
+                  "const": "dry_run"
+                },
+                "payload": {
+                  "type": "object"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "payload"
+              ],
+              "properties": {
+                "mode": {
+                  "const": "joint_position"
+                },
+                "payload": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "arm_positions_rad",
+                    "gripper_open_fraction"
+                  ],
+                  "properties": {
+                    "arm_positions_rad": {
+                      "type": "array",
+                      "minItems": 7,
+                      "maxItems": 7,
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    "gripper_open_fraction": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "mode",
+                "payload"
+              ],
+              "properties": {
+                "mode": {
+                  "const": "object_forces"
+                },
+                "payload": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "object_forces"
+                  ],
+                  "properties": {
+                    "object_forces": {
+                      "type": "object",
+                      "minProperties": 1,
+                      "propertyNames": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256,
+                        "pattern": "\\S"
+                      },
+                      "additionalProperties": {
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
+                        "oneOf": [
+                          {
+                            "minItems": 3,
+                            "maxItems": 3
+                          },
+                          {
+                            "minItems": 6,
+                            "maxItems": 6
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "session_id",
+        "episode_id",
+        "scene_sha256",
+        "state_version",
+        "step_index",
+        "sim_time",
+        "coordinates",
+        "backend",
+        "fidelity",
+        "observation",
+        "unavailable_fields",
+        "images",
+        "reward",
+        "terminated",
+        "truncated",
+        "info"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scene_factory.session_observation.v1"
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "scene_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "step_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sim_time": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "coordinates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "frame",
+            "up_axis",
+            "length",
+            "time",
+            "angle",
+            "legacy_yaw_deg",
+            "quaternion_order"
+          ],
+          "properties": {
+            "frame": {
+              "const": "world"
+            },
+            "up_axis": {
+              "const": "Z"
+            },
+            "length": {
+              "const": "m"
+            },
+            "time": {
+              "const": "s"
+            },
+            "angle": {
+              "const": "rad"
+            },
+            "legacy_yaw_deg": {
+              "const": "deg"
+            },
+            "quaternion_order": {
+              "const": "wxyz"
+            }
+          }
+        },
+        "backend": {
+          "enum": [
+            "dry_run",
+            "mujoco",
+            "isaac"
+          ]
+        },
+        "fidelity": {
+          "enum": [
+            "dry_run",
+            "collision_proxy",
+            "franka_mug_scripted"
+          ]
+        },
+        "observation": {
+          "type": "object"
+        },
+        "unavailable_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "\\S"
+          },
+          "uniqueItems": true
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/image"
+          }
+        },
+        "reward": {
+          "type": "number"
+        },
+        "terminated": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "info": {
+          "type": "object"
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modality",
+        "camera",
+        "path",
+        "url",
+        "sha256",
+        "size_bytes",
+        "format",
+        "dtype",
+        "shape",
+        "units",
+        "nonfinite_depth_means",
+        "episode_id",
+        "state_version",
+        "step_index",
+        "sim_time",
+        "calibration"
+      ],
+      "properties": {
+        "modality": {
+          "enum": [
+            "rgb",
+            "depth"
+          ]
+        },
+        "camera": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "url": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "format": {
+          "const": "npy"
+        },
+        "dtype": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "shape": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "minItems": 2,
+          "maxItems": 3
+        },
+        "units": {
+          "enum": [
+            "m",
+            "uint8_srgb"
+          ]
+        },
+        "nonfinite_depth_means": {
+          "enum": [
+            null,
+            "no_return"
+          ]
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "\\S"
+        },
+        "state_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "step_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sim_time": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "calibration": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "level",
+        "backend",
+        "scene_sha256",
+        "source_scene_sha256",
+        "sha256",
+        "seed",
+        "options",
+        "step_index",
+        "terminated",
+        "truncated",
+        "runtime_state",
+        "scope"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "scene_factory.session_snapshot.v1"
+        },
+        "level": {
+          "enum": [
+            "rebuild",
+            "runtime_state"
+          ]
+        },
+        "backend": {
+          "enum": [
+            "dry_run",
+            "mujoco",
+            "isaac"
+          ]
+        },
+        "scene_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_scene_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "seed": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "options": {
+          "type": "object"
+        },
+        "step_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "terminated": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "runtime_state": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "scope": {
+          "enum": [
+            "same_backend_compatible_model",
+            "episode_initial_conditions"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "level": {
+                "const": "rebuild"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "step_index": {
+                "const": 0
+              },
+              "terminated": {
+                "const": false
+              },
+              "truncated": {
+                "const": false
+              },
+              "runtime_state": {
+                "type": "null"
+              },
+              "scope": {
+                "const": "episode_initial_conditions"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "runtime_state": {
+                "type": "object"
+              },
+              "scope": {
+                "const": "same_backend_compatible_model"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

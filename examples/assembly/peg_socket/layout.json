@@ -1,0 +1,126 @@
+{
+  "scene_id": "original_peg_socket_v1",
+  "seed": 0,
+  "recipe_name": "original_peg_socket_fixture",
+  "room_type": "kitchen",
+  "room_dimensions_m": [
+    4,
+    4,
+    3
+  ],
+  "event": "peg_socket_assembly",
+  "description": "Original rigid peg and square socket; unverified robot insertion fixture.",
+  "objects": [
+    {
+      "object_id": "robot_mount_1",
+      "asset_id": "assembly_robot_mount",
+      "category": "support",
+      "pose": {
+        "position": [
+          -0.05,
+          0,
+          0.39
+        ],
+        "yaw_deg": 0
+      },
+      "bbox_m": [
+        0.5,
+        0.6,
+        0.78
+      ],
+      "dynamic": false,
+      "support": "floor"
+    },
+    {
+      "object_id": "table_1",
+      "asset_id": "assembly_table",
+      "category": "support",
+      "pose": {
+        "position": [
+          0.7,
+          0,
+          0.46
+        ],
+        "yaw_deg": 0
+      },
+      "bbox_m": [
+        0.7,
+        0.8,
+        0.92
+      ],
+      "dynamic": false,
+      "support": "floor"
+    },
+    {
+      "object_id": "socket_1",
+      "asset_id": "assembly_square_socket",
+      "category": "socket",
+      "pose": {
+        "position": [
+          0.6,
+          0.13,
+          0.96
+        ],
+        "yaw_deg": 0
+      },
+      "bbox_m": [
+        0.07,
+        0.07,
+        0.08
+      ],
+      "dynamic": false,
+      "support": "table_1:top"
+    },
+    {
+      "object_id": "peg_1",
+      "asset_id": "assembly_cylindrical_peg",
+      "category": "peg",
+      "pose": {
+        "position": [
+          0.55,
+          -0.13,
+          0.97
+        ],
+        "yaw_deg": 0
+      },
+      "bbox_m": [
+        0.02,
+        0.02,
+        0.1
+      ],
+      "dynamic": true,
+      "support": "table_1:top"
+    }
+  ],
+  "task": {
+    "instruction": "Insert the peg into the socket using robot contacts.",
+    "target_object": "peg_1",
+    "robot": "franka",
+    "robot_base_position_m": [
+      -0.05,
+      0,
+      0.78
+    ],
+    "robot_base_orientation_wxyz": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "grasp_orientation_wxyz": [
+      0,
+      1,
+      0,
+      0
+    ],
+    "grasp_offset_m": [
+      0,
+      0,
+      0
+    ],
+    "success": {
+      "predicate": "assembly",
+      "spec": "assembly_spec.json"
+    }
+  }
+}

@@ -129,7 +129,11 @@ def build(manifest_path: Path, blend_path: Path, png_path: Path | None = None) -
         holder = bpy.data.objects.new(item["object_id"], None)
         bpy.context.collection.objects.link(holder)
         holder.location = item["pose"]["position"]
-        holder.rotation_euler.z = math.radians(float(item["pose"].get("yaw_deg", 0)))
+        if item["pose"].get("orientation_wxyz") is not None:
+            holder.rotation_mode = "QUATERNION"
+            holder.rotation_quaternion = item["pose"]["orientation_wxyz"]
+        else:
+            holder.rotation_euler.z = math.radians(float(item["pose"].get("yaw_deg", 0)))
         if item.get("visual") and _visual(bpy, item, manifest_path.parent, holder):
             continue
         dims = item["bbox_m"]

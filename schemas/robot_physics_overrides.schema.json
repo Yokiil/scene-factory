@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene_factory.robot_physics_overrides.v1",
+  "title": "Opt-in Isaac collision geometry physics estimate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "source", "robot", "contact"],
+  "properties": {
+    "schema_version": {"const": "scene_factory.robot_physics_overrides.v1"},
+    "source": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "method", "real_world_measured", "description"],
+      "properties": {
+        "kind": {"const": "geometry_estimate"},
+        "method": {"const": "PhysX_uniform_density_collision_geometry"},
+        "real_world_measured": {"const": false},
+        "description": {"type": "string", "minLength": 1}
+      }
+    },
+    "robot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["recompute_inertia", "preserve_authored_mass"],
+      "properties": {
+        "recompute_inertia": {"const": true},
+        "preserve_authored_mass": {"const": true},
+        "solver_position_iterations": {"$ref": "#/$defs/optional_position"},
+        "solver_velocity_iterations": {"$ref": "#/$defs/optional_velocity"}
+      }
+    },
+    "contact": {
+      "type": "object", "additionalProperties": false,
+      "required": ["contact_offset_m", "rest_offset_m"],
+      "properties": {
+        "contact_offset_m": {"type": "number", "exclusiveMinimum": 0},
+        "rest_offset_m": {"type": "number", "minimum": 0}
+      }
+    },
+    "task_parts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "solver_position_iterations": {"$ref": "#/$defs/optional_position"},
+          "solver_velocity_iterations": {"$ref": "#/$defs/optional_velocity"}
+        }
+      }
+    },
+    "scene_solver": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "min_position_iterations": {"type": "integer", "minimum": 1, "maximum": 255},
+        "max_position_iterations": {"type": "integer", "minimum": 1, "maximum": 255},
+        "min_velocity_iterations": {"type": "integer", "minimum": 0, "maximum": 255},
+        "max_velocity_iterations": {"type": "integer", "minimum": 0, "maximum": 255}
+      }
+    }
+  },
+  "$defs": {
+    "optional_position": {"type": ["integer", "null"], "minimum": 1, "maximum": 255},
+    "optional_velocity": {"type": ["integer", "null"], "minimum": 0, "maximum": 255}
+  }
+}

@@ -1,0 +1,196 @@
+# Public API
+
+The documented Python API is the compatibility surface for the v0.1 developer
+release. APIs may evolve before 1.0, but versioned schemas and documented
+symbols should be preferred over implementation details.
+
+## Core
+
+```python
+from scene_factory import BuildResult, SceneFactory
+
+result: BuildResult = SceneFactory().build_from_recipe(
+    "living_room_recent_snacking",
+    seed=42,
+)
+assert result.valid
+```
+
+`SceneFactory` is the main compiler. `BuildResult` contains the compiled scene,
+validation details, and optional output information.
+`result.quality` returns a `scene_factory.quality.v1` report derived from the
+recorded layout validation; physics and task layers are explicitly unverified.
+
+## Assets
+
+The registry and metadata types are:
+
+```python
+from scene_factory import (
+    ArticulationJoint,
+    AssetMetadata,
+    AssetRegistry,
+    AssetLoader,
+    InteractionRegion,
+    InteriorRegion,
+    SemanticState,
+)
+```
+
+`AssetRegistry` resolves records and metadata. `AssetLoader` resolves portable
+asset paths. `ArticulationJoint`, `InteractionRegion`, `InteriorRegion`, and
+`SemanticState` describe articulated and placement contracts.
+
+## External input
+
+```python
+from scene_factory import ExternalSceneDocument, adapt_external_scene
+
+document: ExternalSceneDocument = adapt_external_scene(
+    payload,
+    allowed_categories=categories,
+    allowed_room_types=room_types,
+    allowed_events=events,
+)
+```
+
+Use `load_external_scene` for a JSON file or stdin. `external_scene_schema`
+returns the schema for the currently registered vocabulary.
+
+## Datasets
+
+```python
+from scene_factory import inspect_dataset, reproduce_dataset, validate_dataset
+
+inspection = inspect_dataset("outputs/dataset")
+validation = validate_dataset("outputs/dataset")
+reproduction = reproduce_dataset("outputs/dataset")
+```
+
+Dataset reports are structured results with a boolean `valid` field and are
+portable across operating systems.
+
+```python
+from scene_factory import audit_dataset, assess_scene_quality
+
+quality = assess_scene_quality(result.scene.to_dict(), result.validation.to_dict())
+selection = audit_dataset("outputs/dataset", minimum_level="layout", deduplicate=True)
+selected_records = selection["selected"]
+```
+
+`audit_dataset` is read-only. Its `valid` means source integrity passed and at
+least one scene was selected; rejected source scenes remain in the audit report.
+It accepts complete datasets containing layout failures, but rejects corruption
+or incomplete generation. Selection paths remain relative to the source root.
+Requiring `physics` or `task` rejects scenes without corresponding evidence;
+this offline version only has layout evidence. See [DATA_WORKFLOW.md](../data/DATA_WORKFLOW.md).
+
+```python
+from scene_factory import (
+    build_sampling_collection, load_sampling_plan,
+    validate_sampling_collection, reproduce_sampling_collection,
+)
+
+plan = load_sampling_plan("examples/stratified_dataset/plan.json")
+collection = build_sampling_collection(plan, "outputs/stratified")
+validation = validate_sampling_collection("outputs/stratified")
+reproduction = reproduce_sampling_collection("outputs/stratified")
+```
+
+`normalize_sampling_plan` validates mapping inputs without simulator imports.
+The build generates bounded candidate pools using existing batch datasets and
+releases a selection only if every stratum meets its quality and uniqueness quota.
+Region filters operate on object centers using half-open world XY bounds.
+`resume=True` requires matching plan and source fingerprints and preserves completed
+candidates. Validation recomputes the stored selection; reproduction uses the
+existing offline candidate fingerprint checks. Physical evidence is not added.
+
+```python
+from scene_factory import (
+    configuration_fingerprint, split_sampling_collection, validate_sampling_split,
+    export_sampling_selection, validate_curated_dataset,
+)
+
+split = split_sampling_collection("outputs/stratified", seed=42)
+checked = validate_sampling_split("outputs/stratified", split.to_dict())
+export = export_sampling_selection("outputs/stratified", "outputs/curated", seed=42)
+checked_export = validate_curated_dataset("outputs/curated")
+```
+
+Configuration grouping ignores task, provenance and object labels while retaining
+registered assets, transforms, bounds, dynamic flags, interaction snapshots and
+room properties. Groups remain whole across splits; ratios apply to group counts,
+with actual scene and stratum counts reported. Nonzero requested splits require
+enough independent groups. This detects exact recorded configurations, not visual
+or spatial similarity. Splitting preserves source data and generation seeds.
+
+Export copies selected existing artifacts through a verified staging directory,
+preserves hashes and semantic fingerprints, and publishes to a new directory.
+The resulting candidate package validates without the original pool and includes
+an offline HTML preview. It does not bundle additional asset binaries, simulators
+or robot trajectories and does not imply training readiness.
+
+## Scene bundles and MuJoCo
+
+```python
+from scene_factory import MujocoBackend, MujocoMjcfExporter, SceneBundleExporter
+from scene_factory.agent import DryRunBackend, SceneFactoryEnv
+```
+
+`MujocoMjcfExporter` writes a lightweight MJCF representation with primitive
+collision geometry. `SceneBundleExporter` writes a versioned ZIP containing
+scene artifacts, local visual GLB files when present, and SHA-256 descriptors.
+For a USD scene it packages referenced layers and textures inside
+`scene/scene.usdz`; `artifacts.usd` identifies that package and `usd_dependencies`
+records each dependency's internal `path`, containing `package`, size and hash.
+Unresolved dependencies raise `SceneBundleError` without replacing an existing
+bundle. USD bundling requires the optional OpenUSD/Isaac environment; bundles
+without USD remain dependency-free.
+`MujocoBackend` is imported lazily and requires the optional `mujoco` package
+only when it is reset. `SceneFactoryEnv` uses it by default; pass
+`DryRunBackend` for a dependency-free environment contract.
+
+## Planning
+
+`InteractionAction`, `InteractionPlan`, `InteractionPlanningResult`, and
+`InteractionWorldState` are the planning data types. Use
+`plan_interaction`, `validate_interaction_plan`, and
+`replay_interaction_plan` for articulated semantic tasks. The planner does not
+claim collision-free motion or physical feasibility.
+
+## Execution
+
+```python
+from scene_factory import (
+    DryRunInteractionExecutor,
+    InteractionExecutor,
+    execute_interaction_plan,
+    validate_execution_trace,
+)
+```
+
+`InteractionExecutor` is the protocol for semantic plan execution.
+`DryRunInteractionExecutor` is the reference non-physical implementation.
+`ExecutionCommand`, `ExecutionResult`, `ExecutionStepResult`, `ExecutionTrace`,
+and `ExecutionTraceStep` carry command and trace data. Use
+`write_execution_trace_atomic` for portable output.
+
+## Executor conformance
+
+`ExecutorCapabilities`, `ConformanceCaseResult`,
+`ExecutorConformanceReport`, and `ConformanceValidationResult` are the report
+types. `run_executor_conformance` executes the core profile, while
+`validate_conformance_report` validates a saved report without re-executing the
+executor. `capability_sha256` provides a stable signature for normalized
+capabilities.
+
+The conformance suite is a semantic compatibility gate. A passing report does
+not imply physical execution.
+
+## Export policy
+
+`scene_factory.__all__` preserves the existing v0.1 import surface. Lower-level
+asset pipeline helpers, command-id helpers, symbolic effect helpers, and
+normalization functions remain import-compatible but are considered advanced
+API. Names beginning with `_` and modules not listed here are internal unless
+their own documentation says otherwise.

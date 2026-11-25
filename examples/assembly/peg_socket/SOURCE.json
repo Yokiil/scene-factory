@@ -1,0 +1,14 @@
+{
+  "source": "SceneFactory original procedural CAD geometry",
+  "license": "MIT",
+  "geometry": {
+    "peg_radius_m": 0.01,
+    "peg_length_m": 0.1,
+    "socket_half_width_m": 0.01075,
+    "clearance_m": 0.0007499999999999989,
+    "contact_offset_m": 0.0001,
+    "rest_offset_m": 0
+  },
+  "validation": "USD authoring only; no physics or insertion acceptance",
+  "usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14"
+}

@@ -5,7 +5,7 @@ import math
 from typing import Any
 
 
-_DEFAULT_SETTINGS: dict[str, float | int] = {
+_DEFAULT_SETTINGS: dict[str, float | int | None] = {
     "pre_grasp_position_tolerance_m": 0.04,
     "approach_position_tolerance_m": 0.025,
     "max_reach_steps": 180,
@@ -13,6 +13,11 @@ _DEFAULT_SETTINGS: dict[str, float | int] = {
     "arm_stiffness": 1000.0,
     "arm_damping": 200.0,
     "arm_max_force": 2000.0,
+    "finger_stiffness": 1000.0,
+    "finger_damping": 200.0,
+    "finger_max_force": 2000.0,
+    "solver_position_iterations": None,
+    "solver_velocity_iterations": None,
 }
 _REACH_KEYS = (
     "pre_grasp_position_tolerance_m",
@@ -21,12 +26,13 @@ _REACH_KEYS = (
 )
 
 
-def normalize_controller_settings(raw: Any) -> dict[str, float | int]:
+def normalize_controller_settings(raw: Any) -> dict[str, float | int | None]:
     """Return a fresh, complete configuration without changing historical defaults.
 
     Values must be finite Python numbers; booleans and numeric strings are not
     accepted. Reach steps must be an integer of at least 20. The closing margin
-    can be zero; all other numeric settings must be strictly positive.
+    can be zero; other gains must be strictly positive. Solver iteration counts
+    are optional integers in PhysX's supported range, or None to leave unchanged.
     """
     if raw is None:
         raw = {}
@@ -40,6 +46,12 @@ def normalize_controller_settings(raw: Any) -> dict[str, float | int]:
 
     result = dict(_DEFAULT_SETTINGS)
     for key, value in raw.items():
+        if key in {"solver_position_iterations", "solver_velocity_iterations"}:
+            minimum = 1 if key == "solver_position_iterations" else 0
+            if value is not None and (isinstance(value, bool) or not isinstance(value, int) or not minimum <= value <= 255):
+                raise ValueError(f"controller.{key} must be None or an integer in [{minimum}, 255]")
+            result[key] = value
+            continue
         if key == "max_reach_steps":
             if isinstance(value, bool) or not isinstance(value, int) or value < 20:
                 raise ValueError("controller.max_reach_steps must be an integer of at least 20")

@@ -1,0 +1,63 @@
+{
+  "source": "SceneFactory original procedural CAD square-peg variant",
+  "license": "MIT",
+  "fixture_id": "original_square_peg_socket_v1",
+  "base_fixture_id": "original_peg_socket_v1",
+  "generator": "tools/build_square_assembly_fixture.py",
+  "generator_sha256": "465fa4e2521b3ac2fd39f181ca3cbf0a953917031987d75229fec26ece94741f",
+  "base_generator": "tools/build_assembly_fixture.py",
+  "base_generator_sha256": "e199b9d1805ae3e612af18cb55cd174843a6a87be98aaa428695ec5d48707a88",
+  "base_usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14",
+  "base_source_manifest": {
+    "source": "SceneFactory original procedural CAD geometry",
+    "license": "MIT",
+    "geometry": {
+      "peg_radius_m": 0.01,
+      "peg_length_m": 0.1,
+      "socket_half_width_m": 0.01075,
+      "clearance_m": 0.0007499999999999989,
+      "contact_offset_m": 0.0001,
+      "rest_offset_m": 0
+    },
+    "validation": "USD authoring only; no physics or insertion acceptance",
+    "usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14"
+  },
+  "original_non_peg_prim_sha256": "b90c96d78a154e16613f48eb1dcbe44a7983efbe70ff101e0a89995b1fca5872",
+  "variant_non_peg_prim_sha256": "b90c96d78a154e16613f48eb1dcbe44a7983efbe70ff101e0a89995b1fca5872",
+  "frozen_spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+  "geometry": {
+    "peg_shape": "square_prism",
+    "peg_width_m": 0.02,
+    "peg_length_m": 0.1,
+    "socket_half_width_m": 0.01075,
+    "clearance_m": 0.0007499999999999989,
+    "contact_offset_m": 0.0001,
+    "rest_offset_m": 0.0,
+    "clearance_scope": "Nominal axis-aligned face clearance; corner/yaw contact differs from cylinder."
+  },
+  "physical_parameters": {
+    "shape": "square_prism",
+    "dimensions_m": [
+      0.02,
+      0.02,
+      0.1
+    ],
+    "mass_kg": 0.08,
+    "center_of_mass_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "inertia_kg_m2": [
+      6.933333333333334e-05,
+      6.933333333333334e-05,
+      5.3333333333333345e-06
+    ],
+    "density_kg_m3": 1999.9999999999998,
+    "nominal_face_clearance_m": 0.0007499999999999989,
+    "yaw_only_clearance_at_frozen_angular_tolerance_m": 0.0005520132664008897
+  },
+  "usd_sha256": "08491bce67db24be296378c53e58503a368e7e75d070644cf778714bcb3f172d",
+  "layout_sha256": "c0b9b7ecf1fd7024e4698064dd3195213d6ee54316484761ca5e8b8af2bd30a9",
+  "validation": "USD authoring and unchanged-input checks only; no physics or insertion acceptance"
+}

@@ -61,6 +61,11 @@ class IsaacUsdExporter:
         return output_path
 
     def _add_object(self, stage, item, asset, output_path, Gf, Usd, UsdGeom, UsdPhysics) -> None:
+        from .mujoco_mjcf import _physics_override
+
+        override = _physics_override(item, dynamic=item.dynamic, primitive=not bool(asset.source_path))
+        if asset.source_path and item.bbox_m != asset.bbox_m:
+            raise ValueError("rescaling referenced USD requires an explicit validated collision/inertia adapter")
         prim_path = f"/World/Objects/{self._safe_name(item.object_id)}"
         if asset.source_path:
             source_reference = self.registry.resolve_source_path(asset)
@@ -71,7 +76,7 @@ class IsaacUsdExporter:
                     f"USD source for asset {asset.asset_id} does not exist: {source_reference}"
                 )
             xform = UsdGeom.Xform.Define(stage, prim_path)
-            if "kitchen_dining_pack" in asset.tags:
+            if {"kitchen_dining_pack", "dessert_display_pack"} & set(asset.tags):
                 source_reference=self._localize_pack_layer(source_reference,output_path)
             xform.GetPrim().GetReferences().AddReference(
                 self._relative_reference(source_reference, output_path)
@@ -79,7 +84,7 @@ class IsaacUsdExporter:
             self._set_pose(UsdGeom.Xformable(xform), item, Gf, scale=None)
             physics_prim = xform.GetPrim()
         else:
-            geom, scale = self._define_primitive(stage, prim_path, asset, Gf, UsdGeom)
+            geom, scale = self._define_primitive(stage, prim_path, asset, Gf, UsdGeom, bbox=item.bbox_m)
             self._set_pose(UsdGeom.Xformable(geom), item, Gf, scale=scale)
             physics_prim = geom.GetPrim()
             UsdPhysics.CollisionAPI.Apply(physics_prim)
@@ -92,7 +97,7 @@ class IsaacUsdExporter:
         )
         collision_reference = self.registry.resolve_collision_path(asset)
         if collision_reference is not None:
-            if "kitchen_dining_pack" in asset.tags:
+            if {"kitchen_dining_pack", "dessert_display_pack"} & set(asset.tags):
                 collision_reference=self._localize_pack_layer(collision_reference,output_path)
             collision_xform = UsdGeom.Xform.Define(stage, f"{prim_path}/AuthoredCollision")
             collision_xform.GetPrim().GetReferences().AddReference(
@@ -116,7 +121,19 @@ class IsaacUsdExporter:
         if item.dynamic:
             UsdPhysics.RigidBodyAPI.Apply(physics_prim)
             mass_api = UsdPhysics.MassAPI.Apply(physics_prim)
-            mass_api.CreateMassAttr().Set(asset.mass_kg)
+            mass_api.CreateMassAttr().Set(override["mass_kg"] if override else asset.mass_kg)
+            if override:
+                mass_api.CreateCenterOfMassAttr().Set(Gf.Vec3f(0, 0, 0))
+                mass_api.CreateDiagonalInertiaAttr().Set(Gf.Vec3f(*override["inertia_kg_m2"]))
+                from pxr import UsdShade
+
+                material = UsdShade.Material.Define(stage, f"/World/InstanceMaterials/{self._safe_name(item.object_id)}")
+                contact = UsdPhysics.MaterialAPI.Apply(material.GetPrim())
+                contact.CreateStaticFrictionAttr().Set(override["friction"])
+                contact.CreateDynamicFrictionAttr().Set(override["friction"])
+                contact.CreateRestitutionAttr().Set(0)
+                UsdShade.MaterialBindingAPI.Apply(physics_prim).Bind(material, materialPurpose="physics")
+                physics_prim.CreateAttribute("sceneFactory:physicsSource", self._string_type()).Set(override["source"])
 
     @staticmethod
     def _localize_pack_layer(reference,output_path):
@@ -132,21 +149,22 @@ class IsaacUsdExporter:
         return target.as_posix()
 
     @staticmethod
-    def _define_primitive(stage, path, asset: AssetRecord, Gf, UsdGeom):
+    def _define_primitive(stage, path, asset: AssetRecord, Gf, UsdGeom, bbox=None):
+        bbox = bbox or asset.bbox_m
         scale = None
         if asset.primitive == "cylinder":
             geom = UsdGeom.Cylinder.Define(stage, path)
             geom.CreateAxisAttr(UsdGeom.Tokens.z)
-            geom.CreateRadiusAttr(min(asset.bbox_m[0], asset.bbox_m[1]) / 2.0)
-            geom.CreateHeightAttr(asset.bbox_m[2])
+            geom.CreateRadiusAttr(min(bbox[0], bbox[1]) / 2.0)
+            geom.CreateHeightAttr(bbox[2])
         elif asset.primitive == "sphere":
             geom = UsdGeom.Sphere.Define(stage, path)
             geom.CreateRadiusAttr(0.5)
-            scale = asset.bbox_m
+            scale = bbox
         else:
             geom = UsdGeom.Cube.Define(stage, path)
             geom.CreateSizeAttr(1.0)
-            scale = asset.bbox_m
+            scale = bbox
         geom.CreateDisplayColorAttr([Gf.Vec3f(*asset.color)])
         return geom, scale
 
@@ -154,7 +172,11 @@ class IsaacUsdExporter:
     def _set_pose(xformable, item: PlacedObject, Gf, scale) -> None:
         x, y, z = item.pose.position
         xformable.AddTranslateOp().Set(Gf.Vec3d(x, y, z))
-        xformable.AddRotateZOp().Set(item.pose.yaw_deg)
+        if item.pose.orientation_wxyz is None:
+            xformable.AddRotateZOp().Set(item.pose.yaw_deg)
+        else:
+            w, x, y, z = item.pose.effective_orientation_wxyz
+            xformable.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
         if scale is not None:
             xformable.AddScaleOp().Set(Gf.Vec3f(*scale))
 

@@ -75,3 +75,15 @@ third-party geometry. Source manifests and QA reports record the exact hashes.
 | `apple_basic` | [Food Apple 01](https://polyhaven.com/a/food_apple_01) | CC0 | `745bb132292ad0a335494fe98a6e882efb7c775f7c30761e80b490fe8a82ae79` |
 | `avocado_basic` | [Food Avocado 01](https://polyhaven.com/a/food_avocado_01) | CC0 | `56eb36e2840d3309756b78d487e6a1729aba99c87cc29bb01e8bddf5115dc4bc` |
 | `wooden_spoon_basic` | [Wooden Spoon](https://polyhaven.com/a/wooden_spoon) | CC0 | `96203c13af0e2f0d587b3f467cac8dbf8cee110bf8fcc2be01acc35bee6109f6` |
+
+## Original dessert display pack
+
+`dessert_tiered_stand_01`, `dessert_strawberry_square_01`,
+`dessert_cream_cupcake_01` and `dessert_pink_mini_cake_01` are original procedural
+SceneFactory geometry under the project MIT license. They contain no imported
+third-party geometry. The source is [tools/build_dessert_display.py](tools/build_dessert_display.py),
+with geometry/export helpers in [tools/build_kitchen_dining_assets.py](tools/build_kitchen_dining_assets.py).
+Each `data/assets/source/<asset_id>/SOURCE.json` records a repository-relative
+source location, the content SHA-256 of both source files, and hashes of the
+packaged GLB, geometry description, USD and collision USD. The source revision
+is a content digest, not a claim that the script has a published upstream URL.

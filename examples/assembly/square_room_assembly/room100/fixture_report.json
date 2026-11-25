@@ -1,0 +1,27 @@
+{
+  "schema_version": "scene_factory.assembly_room_fixture.v1",
+  "output_dir": "F:\\scene_factory_runtime\\completion_20261104\\square_room100",
+  "usd": "F:\\scene_factory_runtime\\completion_20261104\\square_room100\\scene.usda",
+  "layout": "F:\\scene_factory_runtime\\completion_20261104\\square_room100\\layout.json",
+  "assembly_spec": "F:\\scene_factory_runtime\\completion_20261104\\square_room100\\assembly_spec.json",
+  "seed": 19,
+  "counts": {
+    "scene_objects": 100,
+    "dynamic_scene_objects": 33,
+    "static_scene_objects": 67,
+    "usd_rigid_bodies": 33,
+    "usd_collision_prims": 269,
+    "background_containment_colliders": 160,
+    "room_perimeter_colliders": 4,
+    "external_geometry_assets": 0
+  },
+  "workspace_unchanged": true,
+  "spec_unchanged": true,
+  "acceptance": "geometry_only_not_physics_acceptance",
+  "files_sha256": {
+    "scene.usda": "215c7fdb2dd13468fb0a9e99fcecb907b582ea7f4489df0cce687bd73fdc88b0",
+    "layout.json": "ee708263306adc8d4c2881a1a0450c0065d2b98d73006b966cc4685a0bb2d11e",
+    "assembly_spec.json": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+    "SOURCE.json": "3d46171e4eb80b0d9de23e7bd298dac5b04f1580aaba534e5529c6696bb0fa0f"
+  }
+}

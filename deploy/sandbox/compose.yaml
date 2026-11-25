@@ -1,0 +1,69 @@
+services:
+  sandbox-cpu:
+    profiles: [cpu]
+    image: scene-factory-sandbox:mujoco-local
+    build:
+      context: ../..
+      dockerfile: deploy/sandbox/Dockerfile.mujoco
+      args:
+        PYTHON_BASE_IMAGE: ${PYTHON_BASE_IMAGE:-python:3.12.7-slim-bookworm}
+    init: true
+    ports: ["127.0.0.1:${SANDBOX_CPU_PORT:-8765}:8765"]
+    environment:
+      SCENE_FACTORY_SERVICE_TOKEN: ${SCENE_FACTORY_SERVICE_TOKEN:-}
+      SCENE_FACTORY_MUJOCO_POOL: ${SCENE_FACTORY_MUJOCO_POOL:-0}
+      SCENE_FACTORY_POOL_MAX_IDLE: ${SCENE_FACTORY_POOL_MAX_IDLE:-1}
+      SCENE_FACTORY_POOL_IDLE_SECONDS: ${SCENE_FACTORY_POOL_IDLE_SECONDS:-60}
+      SCENE_FACTORY_POOL_MAX_USES: ${SCENE_FACTORY_POOL_MAX_USES:-100}
+    volumes:
+      - ${SANDBOX_SCENES:-../../outputs/sandbox_server/scenes}:/data/scenes:ro
+      - ${SANDBOX_RESULTS:-../../outputs/sandbox_server/runtime}:/data/runtime
+      - ${SANDBOX_ASSETS:-../../data/assets}:/opt/scene-factory/data/assets:ro
+    read_only: true
+    tmpfs: ["/tmp:size=1g,mode=1777"]
+    cpus: 4.0
+    mem_limit: 8g
+    shm_size: 1g
+    pids_limit: 256
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    stop_grace_period: 45s
+    restart: unless-stopped
+  sandbox-gpu:
+    profiles: [gpu]
+    image: scene-factory-sandbox:isaac-local
+    build:
+      context: ../..
+      dockerfile: deploy/sandbox/Dockerfile.isaac
+      args:
+        ISAAC_BASE_IMAGE: ${ISAAC_BASE_IMAGE:-}
+        ISAAC_PYTHON: ${ISAAC_PYTHON:-/isaac-sim/python.sh}
+        EXPECTED_ISAAC_VERSION: ${EXPECTED_ISAAC_VERSION:-6.0.1.0}
+    init: true
+    ports: ["127.0.0.1:${SANDBOX_GPU_PORT:-8766}:8765"]
+    environment:
+      SCENE_FACTORY_SERVICE_TOKEN: ${SCENE_FACTORY_SERVICE_TOKEN:-}
+      ACCEPT_EULA: ${ISAAC_ACCEPT_EULA:-}
+      PRIVACY_CONSENT: ${ISAAC_PRIVACY_CONSENT:-}
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES:-0}
+      NVIDIA_DRIVER_CAPABILITIES: graphics,compute,utility
+    volumes:
+      - ${SANDBOX_SCENES:-../../outputs/sandbox_server/scenes}:/data/scenes:ro
+      - ${SANDBOX_GPU_RESULTS:-../../outputs/sandbox_server/gpu-runtime}:/data/runtime
+      - ${SANDBOX_ASSETS:-../../data/assets}:/opt/scene-factory/data/assets:ro
+      - isaac-cache:/root/.cache
+    cpus: 8.0
+    mem_limit: 16g
+    shm_size: 2g
+    pids_limit: 512
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["${NVIDIA_VISIBLE_DEVICES:-0}"]
+              capabilities: [gpu]
+    stop_grace_period: 60s
+    restart: unless-stopped
+volumes:
+  isaac-cache:

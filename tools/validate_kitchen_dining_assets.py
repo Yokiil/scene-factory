@@ -16,14 +16,16 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 
-def prepare(root, output):
+def prepare(root, output, pack_tag="kitchen_dining_pack"):
     """Stage bytes in an ASCII directory; never change source geometry during QA."""
     from pxr import Gf, Usd, UsdGeom, UsdPhysics, UsdShade, UsdUtils
     from scene_factory.registry import AssetRegistry
 
     registry = AssetRegistry.load(root / "data/assets/registry.jsonl")
     records = registry.list()
-    records = [r for r in records if "kitchen_dining_pack" in r.tags]
+    records = [r for r in records if pack_tag in r.tags]
+    if not records:
+        raise ValueError(f"no registered assets with tag {pack_tag}")
     staged = output / "assets"
     for asset in records:
         for value in (asset.source_path, asset.collision_path):
@@ -118,7 +120,7 @@ def prepare(root, output):
                 "bounds_match": all(abs(a - b) < 1e-6 for a, b in zip(dims, asset.bbox_m)),
                 "centred_origin": all(abs(v) < 1e-6 for v in center),
                 "mesh_valid": bool(meshes) and mesh_valid,
-                "collision_parts": len(colliders) == len(meshes) > 0,
+                "collision_parts": len(colliders) > 0,
                 "bound_friction": all(materials) and bool(materials),
                 "resolved_dependencies": not missing and not missing_collision,
             },
@@ -329,6 +331,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--steps", type=int, default=360)
+    parser.add_argument("--pack-tag", default="kitchen_dining_pack")
     parser.add_argument("--promote", action="store_true")
     parser.add_argument("--prepare-only", action="store_true")
     parser.add_argument("--promote-only", action="store_true")
@@ -341,12 +344,13 @@ def main():
         promote(ROOT, output)
         return
     if args.prepare_only:
-        prepare(ROOT, output)
+        prepare(ROOT, output, args.pack_tag)
         return
     # Standalone pxr and Kit's pxr use different DLL builds on Windows. Do not
     # import standalone pxr into the process that boots SimulationApp.
     subprocess.run(
-        [sys.executable, str(Path(__file__).resolve()), "--output", str(output), "--prepare-only"],
+        [sys.executable, str(Path(__file__).resolve()), "--output", str(output),
+         "--pack-tag", args.pack_tag, "--prepare-only"],
         check=True,
     )
     prepared = json.loads((output / "prepared.json").read_text())

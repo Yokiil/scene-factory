@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import errno
+import shutil
 import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from scene_factory.trajectory import DatasetError, EpisodeRecorder, load_episode
 
@@ -43,6 +46,41 @@ class TrajectoryDatasetTests(unittest.TestCase):
                 [0.0, 0.0, 0.0, 1.0],
             ],
         }
+
+    def test_initial_metadata_failure_closes_trajectory_before_propagating(self) -> None:
+        failures = (
+            OSError(errno.ENOSPC, "injected metadata disk exhaustion"),
+            ValueError("injected metadata serialization failure"),
+            KeyboardInterrupt("injected initialization interruption"),
+        )
+        original_open = Path.open
+        for failure in failures:
+            with self.subTest(failure=type(failure).__name__), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory) / "episode"
+                opened_trajectories = []
+
+                def track_open(path, *args, **kwargs):
+                    stream = original_open(path, *args, **kwargs)
+                    if path.name == "trajectory.jsonl":
+                        opened_trajectories.append(stream)
+                    return stream
+
+                try:
+                    with (
+                        patch.object(Path, "open", track_open),
+                        patch("scene_factory.trajectory._write_json", side_effect=failure),
+                        self.assertRaises(type(failure)) as caught,
+                    ):
+                        EpisodeRecorder(root, self._metadata())
+                    self.assertIs(caught.exception, failure)
+                    self.assertEqual(len(opened_trajectories), 1)
+                    self.assertTrue(opened_trajectories[0].closed)
+                    # Windows refuses this cleanup while a trajectory handle is live.
+                    shutil.rmtree(root)
+                    self.assertFalse(root.exists())
+                finally:
+                    for stream in opened_trajectories:
+                        stream.close()
 
     def _append(
         self,

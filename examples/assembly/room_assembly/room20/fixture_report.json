@@ -1,0 +1,27 @@
+{
+  "schema_version": "scene_factory.assembly_room_fixture.v1",
+  "output_dir": ".",
+  "usd": "scene.usda",
+  "layout": "layout.json",
+  "assembly_spec": "assembly_spec.json",
+  "seed": 19,
+  "counts": {
+    "scene_objects": 20,
+    "dynamic_scene_objects": 7,
+    "static_scene_objects": 13,
+    "usd_rigid_bodies": 7,
+    "usd_collision_prims": 59,
+    "background_containment_colliders": 30,
+    "room_perimeter_colliders": 4,
+    "external_geometry_assets": 0
+  },
+  "workspace_unchanged": true,
+  "spec_unchanged": true,
+  "acceptance": "geometry_only_not_physics_acceptance",
+  "files_sha256": {
+    "scene.usda": "7502e92c217b3cfa756ce3a7f8401e4c03dc1edda6f60bb57680333bd6728f32",
+    "layout.json": "29cfb00b5d421cfc152983c0af5fec01092457e805a4f16cc6569428ef213199",
+    "assembly_spec.json": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+    "SOURCE.json": "243706a43a2d0215c7d9af33565a1ebb410a23430346897003f318fcb8321665"
+  }
+}

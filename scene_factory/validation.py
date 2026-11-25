@@ -3,7 +3,8 @@ from __future__ import annotations
 from .geometry import (
     inverse_rotate_xy,
     objects_overlap,
-    rotate_xy,
+    relative_box,
+    rotated_half_extents,
     rotated_half_extents_xy,
 )
 from .models import CompiledScene, ValidationIssue, ValidationReport
@@ -28,8 +29,7 @@ class SceneValidator:
 
         for item in scene.objects:
             x, y, z = item.pose.position
-            hx, hy = rotated_half_extents_xy(item.bbox_m, item.pose.yaw_deg)
-            hz = item.bbox_m[2] / 2.0
+            hx, hy, hz = rotated_half_extents(item.bbox_m, item.pose)
             if abs(x) + hx > room_x / 2.0 + self.tolerance_m:
                 issues.append(
                     ValidationIssue("out_of_bounds_x", "object is outside room X bounds", (item.object_id,))
@@ -62,6 +62,9 @@ class SceneValidator:
                                       "around requires a floor chair and dining table",(item.object_id,relation.target)))
                     if target is None:
                         issues.append(ValidationIssue("missing_relation_target","around target is missing",(item.object_id,)))
+                    elif not item.pose.is_upright or not target.pose.is_upright:
+                        issues.append(ValidationIssue("unsupported_tilted_around_relation",
+                                      "around layout relation requires upright objects",(item.object_id,target.object_id)))
                     else:
                         local=inverse_rotate_xy((x-target.pose.position[0],y-target.pose.position[1]),target.pose.yaw_deg)
                         ax,ay=rotated_half_extents_xy(item.bbox_m,item.pose.yaw_deg-target.pose.yaw_deg)
@@ -104,7 +107,7 @@ class SceneValidator:
     def _support_error(self, item, objects) -> ValidationIssue | None:
         if item.support is None:
             return None
-        bottom_z = item.pose.position[2] - item.bbox_m[2] / 2.0
+        bottom_z = item.pose.position[2] - rotated_half_extents(item.bbox_m, item.pose)[2]
         if item.support == "floor":
             expected_z = 0.0
         else:
@@ -123,24 +126,12 @@ class SceneValidator:
                     "missing_surface", f"support surface {item.support} is missing", (item.object_id,)
                 )
             surface = surfaces[0]
-            support_yaw = support_object.pose.yaw_deg
-            rotated_center = rotate_xy((surface.center[0], surface.center[1]), support_yaw)
-            surface_world_xy = (
-                support_object.pose.position[0] + rotated_center[0],
-                support_object.pose.position[1] + rotated_center[1],
-            )
-            subject_offset = (
-                item.pose.position[0] - surface_world_xy[0],
-                item.pose.position[1] - surface_world_xy[1],
-            )
-            subject_local = inverse_rotate_xy(subject_offset, support_yaw)
-            footprint_x, footprint_y = rotated_half_extents_xy(
-                item.bbox_m, item.pose.yaw_deg - support_yaw
-            )
-            outside_x = abs(subject_local[0]) + footprint_x > (
+            subject_local, half_extents = relative_box(item, support_object)
+            footprint_x, footprint_y, footprint_z = half_extents
+            outside_x = abs(subject_local[0]-surface.center[0]) + footprint_x > (
                 surface.size[0] / 2.0 + self.tolerance_m
             )
-            outside_y = abs(subject_local[1]) + footprint_y > (
+            outside_y = abs(subject_local[1]-surface.center[1]) + footprint_y > (
                 surface.size[1] / 2.0 + self.tolerance_m
             )
             if outside_x or outside_y:
@@ -149,7 +140,10 @@ class SceneValidator:
                     f"object footprint is outside support surface {item.support}",
                     (item.object_id, support_object.object_id),
                 )
-            expected_z = support_object.pose.position[2] + surface.center[2]
+            # Support geometry is checked in its own SE(3) frame. Dynamic
+            # stability under gravity still requires a physical settling run.
+            bottom_z = subject_local[2]-footprint_z
+            expected_z = surface.center[2]
         if abs(bottom_z - expected_z) > self.tolerance_m:
             return ValidationIssue(
                 "floating_or_sunk",

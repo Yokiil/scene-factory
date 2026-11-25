@@ -1,0 +1,80 @@
+{
+  "asset_id": "dessert_strawberry_square_01",
+  "checks": {
+    "z_up": true,
+    "metres": true,
+    "bounds_match": true,
+    "centred_origin": true,
+    "mesh_valid": true,
+    "collision_parts": true,
+    "bound_friction": true,
+    "resolved_dependencies": true
+  },
+  "bounds_m": [
+    0.0860000029206276,
+    0.0860000029206276,
+    0.09000000357627869
+  ],
+  "mesh_count": 32,
+  "collision_count": 1,
+  "usd_sha256": "2dd67646c7ef021a4208dc8321943cb0f7d5e212027f9b603e3549d058c7eb78",
+  "collision_sha256": "c3e7b2102e7950b1ad6dbf6bdd1c789b676963e129aefba0ef232bb82b44eb77",
+  "glb_sha256": "f0ed28e14042d5b06daca6c2f0db27f2eea91471187c674e1bdcbeac7bda70c1",
+  "physics_cases": [
+    {
+      "case": "floor_drop",
+      "checks": {
+        "fell": true,
+        "on_support": true,
+        "stable": true,
+        "stopped": true,
+        "finite": true
+      },
+      "initial_position_m": [
+        4.0,
+        6.0,
+        0.495
+      ],
+      "final_position_m": [
+        3.999922752380371,
+        6.000086307525635,
+        0.044999875128269196
+      ],
+      "final_speed_mps": 0.00026740827030869753,
+      "expected_center_z_m": 0.045,
+      "passed": true
+    },
+    {
+      "case": "table_contact",
+      "checks": {
+        "fell": true,
+        "on_support": true,
+        "stable": true,
+        "stopped": true,
+        "finite": true
+      },
+      "initial_position_m": [
+        4.0,
+        9.0,
+        1.2550000000000001
+      ],
+      "final_position_m": [
+        3.9999356269836426,
+        9.000070571899414,
+        0.8049998879432678
+      ],
+      "final_speed_mps": 0.0003180433478318942,
+      "expected_center_z_m": 0.805,
+      "passed": true
+    }
+  ],
+  "grasp": "not_run",
+  "validator": "OpenUSD + real Isaac Sim/PhysX",
+  "steps": 300,
+  "dt_s": 0.016666666666666666,
+  "usd_load": "passed",
+  "mesh_check": "passed",
+  "collision": "passed",
+  "physics": "passed",
+  "valid": true
+}

@@ -76,6 +76,13 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--recipes", type=Path, help="Override recipe directory")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    from .sandbox_cli import add_sandbox_arguments
+
+    add_sandbox_arguments(subparsers)
+    from .runtime_service_cli import add_service_arguments
+
+    add_service_arguments(subparsers)
+
     subparsers.add_parser("list-recipes", help="List available event recipes")
     doctor = subparsers.add_parser("doctor", help="Diagnose optional local runtimes")
     doctor.add_argument("--json", action="store_true", help="Print machine-readable JSON")
@@ -330,6 +337,14 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0 if report["core_ready"] else 1
     try:
+        if args.command == "sandbox":
+            from .sandbox_cli import run_sandbox_from_args
+
+            return run_sandbox_from_args(args)
+        if args.command == "service":
+            from .runtime_service_cli import run_service_command
+
+            return run_service_command(args)
         if args.command == "priority":
             from .priority import ask_priority, load_priority_scenario, write_priority_scenario
 

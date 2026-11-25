@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import copy
 import json
+from contextlib import suppress
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
+
+from .episode_reset import prepare_episode_reset
+from .episode_randomization import noisy_rgb, sensor_measurements
 
 
 @runtime_checkable
@@ -20,6 +25,8 @@ class SimulatorBackend(Protocol):
 
 class DryRunBackend:
     """Gym-like backend for integration tests before a robot-specific simulator is attached."""
+
+    supports_scene_reset_options = True
 
     def __init__(self, max_steps: int = 100) -> None:
         self.max_steps = max_steps
@@ -67,18 +74,62 @@ class SceneFactoryEnv:
             backend = MujocoBackend()
         self.backend = backend
         self._scene: dict[str, Any] | None = None
+        self._scene_sha256: str | None = None
+        self._reset_attempts = 0
+
+    @property
+    def reset_attempts(self) -> int:
+        """Number of backend reset calls started, including failed attempts."""
+        return self._reset_attempts
+
+    @property
+    def scene_sha256(self) -> str | None:
+        """Canonical digest of the last successfully initialized episode scene."""
+        return self._scene_sha256
 
     def reset(self, *, seed: int | None = None, options: dict[str, Any] | None = None):
-        del seed, options
         with self.scene_path.open("r", encoding="utf-8") as handle:
-            self._scene = json.load(handle)
-        return self.backend.reset(self._scene)
+            source_scene = json.load(handle)
+        scene, reset_record = prepare_episode_reset(source_scene, seed=seed, options=options)
+        if reset_record["scene_modified"] and not getattr(
+            self.backend, "supports_scene_reset_options", False,
+        ):
+            raise ValueError(
+                f"{type(self.backend).__name__} does not support reset pose changes; "
+                "pre-exported simulation assets must be rebuilt before changing initial poses"
+            )
+        # Validation failures above preserve the active episode. Once reset starts,
+        # backend failure invalidates it; never expose stale state as a fresh episode.
+        self._reset_attempts += 1
+        self._scene = None
+        self._scene_sha256 = None
+        try:
+            observation, info = self.backend.reset(copy.deepcopy(scene))
+        except Exception:
+            if getattr(self.backend, "close_on_reset_error", True):
+                with suppress(Exception):
+                    self.backend.close()
+            raise
+        self._scene = scene
+        self._scene_sha256 = reset_record["episode_scene_sha256"]
+        return self.transform_observation(observation), {**info, "episode_reset": reset_record}
 
     def step(self, action: Any):
-        return self.backend.step(action)
+        if self._scene is None:
+            raise RuntimeError("reset must succeed before step")
+        observation, reward, terminated, truncated, info = self.backend.step(action)
+        return self.transform_observation(observation), reward, terminated, truncated, info
 
     def render(self):
-        return self.backend.render()
+        if self._scene is None:
+            raise RuntimeError("reset must succeed before render")
+        return noisy_rgb(self._scene, self.backend.render(), getattr(self.backend, "steps", 0))
+
+    def transform_observation(self, observation: dict[str, Any]) -> dict[str, Any]:
+        """Attach configured sensor measurements without altering truth or rewards."""
+        return sensor_measurements(self._scene, observation, getattr(self.backend, "steps", 0))
 
     def close(self) -> None:
+        self._scene = None
+        self._scene_sha256 = None
         self.backend.close()

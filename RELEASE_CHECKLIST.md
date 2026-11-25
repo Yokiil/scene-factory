@@ -9,7 +9,7 @@ evidence for that release. Historical publication facts are recorded separately.
 Checked on 2026-10-07 against the public GitHub Release and PyPI project endpoint:
 
 - [x] tag `v0.1.0` exists at commit `7e0de6f419522f74cae4bb2314a7b3dc8a1eb906`
-- [x] [GitHub Release](https://github.com/zy8389/scene-factory/releases/tag/v0.1.0)
+- [x] [GitHub Release](https://github.com/Yokiil/scene-factory/releases/tag/v0.1.0)
   was published on 2026-08-28 and is neither a draft nor a prerelease
 - [x] release attachments include `scene_factory-0.1.0-py3-none-any.whl`,
   `scene_factory-0.1.0.tar.gz`, `RELEASE_MANIFEST.json`, and `SHA256SUMS.txt`

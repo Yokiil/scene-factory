@@ -1,0 +1,7 @@
+# Asset and fixture files are bound by SHA-256 of their exact bytes
+# (see SOURCE.json / assembly_spec.json). Never convert their line endings.
+data/assets/** -text
+examples/assembly/** -text
+*.glb binary
+*.usd -text
+*.usda -text

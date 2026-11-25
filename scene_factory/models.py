@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import copy
+import json
 import math
 from typing import Any
 
@@ -468,12 +470,64 @@ def _support_surface_items(raw: dict[str, Any]) -> list[dict[str, Any]]:
 class Pose:
     position: Vec3
     yaw_deg: float = 0.0
+    orientation_wxyz: tuple[float, float, float, float] | None = None
+
+    def __post_init__(self) -> None:
+        _contract_vec3(self.position, "pose.position")
+        _finite_float(self.yaw_deg, "pose.yaw_deg")
+        if self.orientation_wxyz is not None:
+            q = self.orientation_wxyz
+            if not isinstance(q, (tuple, list)) or len(q) != 4:
+                raise ValueError("pose.orientation_wxyz must contain four numbers")
+            q = tuple(_finite_float(v, "pose.orientation_wxyz") for v in q)
+            norm = math.sqrt(sum(v*v for v in q))
+            if abs(norm-1.) > 1e-6:
+                raise ValueError("pose.orientation_wxyz must be normalized (w,x,y,z)")
+            q = tuple(v/norm for v in q)
+            object.__setattr__(self, "orientation_wxyz", q)
+            w, x, y, z = q
+            derived_yaw = math.degrees(math.atan2(2*(w*z+x*y), 1-2*(y*y+z*z)))
+            # Direct Python construction also feeds the legacy upright paths.
+            # With an explicit quaternion, the default planar angle must follow
+            # its rotation rather than silently remaining at zero.
+            if self.yaw_deg == 0.:
+                object.__setattr__(self, "yaw_deg", derived_yaw)
+            elif abs((self.yaw_deg-derived_yaw+180)%360-180) > 1e-5:
+                raise ValueError("pose.yaw_deg conflicts with orientation_wxyz")
+
+    @property
+    def effective_orientation_wxyz(self) -> tuple[float, float, float, float]:
+        if self.orientation_wxyz is not None:
+            return self.orientation_wxyz
+        angle = math.radians(self.yaw_deg)/2
+        return (math.cos(angle), 0., 0., math.sin(angle))
+
+    @property
+    def is_upright(self) -> bool:
+        q = self.effective_orientation_wxyz
+        return abs(q[1]) < 1e-10 and abs(q[2]) < 1e-10
+
+    def to_dict(self) -> dict[str, Any]:
+        result = {"position": list(self.position), "yaw_deg": self.yaw_deg}
+        if self.orientation_wxyz is not None:
+            result["orientation_wxyz"] = list(self.orientation_wxyz)
+        return result
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "Pose":
+        orientation = raw.get("orientation_wxyz")
+        yaw = _finite_float(raw.get("yaw_deg", 0.0), "pose.yaw_deg")
+        if orientation is not None:
+            # Validate before deriving the compatibility-only planar angle.
+            candidate = cls(_contract_vec3(raw.get("position"), "pose.position"), yaw, orientation)
+            w, x, y, z = candidate.effective_orientation_wxyz
+            derived_yaw = math.degrees(math.atan2(2*(w*z+x*y), 1-2*(y*y+z*z)))
+            if "yaw_deg" in raw and abs((yaw-derived_yaw+180)%360-180) > 1e-5:
+                raise ValueError("pose.yaw_deg conflicts with orientation_wxyz")
+            return cls(candidate.position, yaw if "yaw_deg" in raw else derived_yaw, candidate.orientation_wxyz)
         return cls(
-            position=_tuple3(raw.get("position"), "pose.position"),
-            yaw_deg=float(raw.get("yaw_deg", 0.0)),
+            position=_contract_vec3(raw.get("position"), "pose.position"),
+            yaw_deg=yaw,
         )
 
 
@@ -824,6 +878,17 @@ class PlacedObject:
     relations: tuple[Relation, ...] = ()
     fallback_reason: str | None = None
     interactions: dict[str, Any] | None = None
+    physics: dict[str, Any] | None = None
+
+    def __post_init__(self) -> None:
+        if self.physics is not None:
+            if not isinstance(self.physics, dict):
+                raise ValueError("object.physics must be an object")
+            try:
+                json.dumps(self.physics, allow_nan=False)
+            except (TypeError, ValueError, OverflowError) as exc:
+                raise ValueError("object.physics must contain finite JSON") from exc
+            object.__setattr__(self, "physics", copy.deepcopy(self.physics))
 
 
 @dataclass(frozen=True)
@@ -843,6 +908,8 @@ class CompiledScene:
     def from_dict(cls, raw: dict[str, Any]) -> "CompiledScene":
         if not isinstance(raw, dict):
             raise TypeError("compiled scene must be a JSON object")
+        if raw.get("schema_version") not in {None, "scene_factory.compiled_scene.v1", "scene_factory.compiled_scene.v2"}:
+            raise ValueError("unsupported compiled scene schema_version")
         objects = tuple(
             PlacedObject(
                 object_id=str(item["object_id"]),
@@ -861,6 +928,7 @@ class CompiledScene:
                     if item.get("interactions") is not None
                     else None
                 ),
+                physics=copy.deepcopy(item.get("physics")),
             )
             for item in raw["objects"]
         )
@@ -878,7 +946,16 @@ class CompiledScene:
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        payload = asdict(self)
+        # Preserve the v1 byte representation for legacy planar scenes.
+        for item in payload["objects"]:
+            if item["pose"]["orientation_wxyz"] is None:
+                del item["pose"]["orientation_wxyz"]
+            if item["physics"] is None:
+                del item["physics"]
+        if any(item.pose.orientation_wxyz is not None or item.physics is not None for item in self.objects):
+            payload["schema_version"] = "scene_factory.compiled_scene.v2"
+        return payload
 
 
 @dataclass(frozen=True)

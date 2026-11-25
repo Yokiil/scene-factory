@@ -221,7 +221,11 @@ class EpisodeRecorder:
         self._failure_reason: str | None = None
         self._failed_frame_seen = False
         self._finalized = False
-        _write_json(self.path / "metadata.json", self.metadata)
+        try:
+            _write_json(self.path / "metadata.json", self.metadata)
+        except BaseException:
+            self._trajectory.close()
+            raise
 
     @property
     def frame_count(self) -> int:

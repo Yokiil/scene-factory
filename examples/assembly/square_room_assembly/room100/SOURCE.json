@@ -1,0 +1,5706 @@
+{
+  "source": "SceneFactory original procedural CAD square-peg variant",
+  "license": "MIT",
+  "fixture_id": "original_square_peg_socket_room100_seed19",
+  "base_fixture_id": "original_peg_socket_v1",
+  "generator": "tools/build_square_assembly_fixture.py",
+  "generator_sha256": "465fa4e2521b3ac2fd39f181ca3cbf0a953917031987d75229fec26ece94741f",
+  "base_generator": "tools/build_assembly_fixture.py",
+  "base_generator_sha256": "e199b9d1805ae3e612af18cb55cd174843a6a87be98aaa428695ec5d48707a88",
+  "base_usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14",
+  "base_source_manifest": {
+    "source": "SceneFactory original procedural CAD geometry",
+    "license": "MIT",
+    "geometry": {
+      "peg_radius_m": 0.01,
+      "peg_length_m": 0.1,
+      "socket_half_width_m": 0.01075,
+      "clearance_m": 0.0007499999999999989,
+      "contact_offset_m": 0.0001,
+      "rest_offset_m": 0
+    },
+    "validation": "USD authoring only; no physics or insertion acceptance",
+    "usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14"
+  },
+  "original_non_peg_prim_sha256": "b90c96d78a154e16613f48eb1dcbe44a7983efbe70ff101e0a89995b1fca5872",
+  "variant_non_peg_prim_sha256": "b90c96d78a154e16613f48eb1dcbe44a7983efbe70ff101e0a89995b1fca5872",
+  "frozen_spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+  "geometry": {
+    "peg_shape": "square_prism",
+    "peg_width_m": 0.02,
+    "peg_length_m": 0.1,
+    "socket_half_width_m": 0.01075,
+    "clearance_m": 0.0007499999999999989,
+    "contact_offset_m": 0.0001,
+    "rest_offset_m": 0.0,
+    "clearance_scope": "Nominal axis-aligned face clearance; corner/yaw contact differs from cylinder."
+  },
+  "physical_parameters": {
+    "shape": "square_prism",
+    "dimensions_m": [
+      0.02,
+      0.02,
+      0.1
+    ],
+    "mass_kg": 0.08,
+    "center_of_mass_m": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "inertia_kg_m2": [
+      6.933333333333334e-05,
+      6.933333333333334e-05,
+      5.3333333333333345e-06
+    ],
+    "density_kg_m3": 1999.9999999999998,
+    "nominal_face_clearance_m": 0.0007499999999999989,
+    "yaw_only_clearance_at_frozen_angular_tolerance_m": 0.0005520132664008897
+  },
+  "usd_sha256": "215c7fdb2dd13468fb0a9e99fcecb907b582ea7f4489df0cce687bd73fdc88b0",
+  "layout_sha256": "ee708263306adc8d4c2881a1a0450c0065d2b98d73006b966cc4685a0bb2d11e",
+  "validation": "Geometry authoring and workspace identity only; dynamics, background stability and assembly task not evaluated",
+  "source_name": "Original SceneFactory seeded assembly room fixture",
+  "geometry_origin": "procedural",
+  "source_url": "tools/build_assembly_room_fixture.py",
+  "source_revision": "sha256:ed78de854f179499575212c1976bc4710d62af2e059d08a1b7a547aadc93679c",
+  "license_source": "LICENSE",
+  "generator_dependencies_sha256": {
+    "tools/build_assembly_fixture.py": "e199b9d1805ae3e612af18cb55cd174843a6a87be98aaa428695ec5d48707a88",
+    "tools/build_square_assembly_fixture.py": "465fa4e2521b3ac2fd39f181ca3cbf0a953917031987d75229fec26ece94741f"
+  },
+  "assembly_spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+  "original_workspace": {
+    "base_usd_sha256": "08491bce67db24be296378c53e58503a368e7e75d070644cf778714bcb3f172d",
+    "canonical_prim_specs_sha256": "795371f18c8eddfc10d35f1fc7d8ea50574b91788d65a18f1a4a1d354d83d95e",
+    "canonical_layout_objects_sha256": "2c43e10ba2d189598aa99b7cfea3bdf19d5ac103dddb1efca8c6b5d272087042",
+    "canonical_task_sha256": "b97a4de7a8211289dad4276f2aa7287b204ffdfc526448de911e3047018bfbdb",
+    "unchanged_after_extension": true
+  },
+  "seed": 19,
+  "counts": {
+    "scene_objects": 100,
+    "dynamic_scene_objects": 33,
+    "static_scene_objects": 67,
+    "usd_rigid_bodies": 33,
+    "usd_collision_prims": 269,
+    "background_containment_colliders": 160,
+    "room_perimeter_colliders": 4,
+    "external_geometry_assets": 0
+  },
+  "protected_workspace_aabb_m": {
+    "min_m": [
+      -1.5,
+      -1.5,
+      0.0
+    ],
+    "max_m": [
+      2.0,
+      1.5,
+      2.3
+    ]
+  },
+  "backgrounds": [
+    {
+      "object_id": "room_background_000",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.2395,
+        0.2198,
+        0.24778
+      ],
+      "pose": {
+        "position": [
+          -4.77635627159089,
+          -4.016719131741711,
+          0.12589
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4572088952772998,
+        0.6369342887268931,
+        0.4937797473220519
+      ],
+      "physical_parameters": {
+        "mass_kg": 7.8261957228,
+        "inertia_kg_m2": [
+          0.07154901723778621,
+          0.07745010577120258,
+          0.0689176686680401
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -5.11635627159089,
+            -4.356719131741711,
+            -0.01
+          ],
+          "max_m": [
+            -4.43635627159089,
+            -3.676719131741711,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_001",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.23037,
+        0.16415,
+        0.25152
+      ],
+      "pose": {
+        "position": [
+          3.9773322283163197,
+          -3.9908693484440207,
+          0.12576
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6178641029941843,
+        0.33857395645669586,
+        0.2742094935841609
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            3.63733222831632,
+            -4.330869348444021,
+            -0.01
+          ],
+          "max_m": [
+            4.31733222831632,
+            -3.650869348444021,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_002",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.19994,
+        0.13299,
+        0.20094
+      ],
+      "pose": {
+        "position": [
+          -3.210543345987218,
+          5.604474394337778,
+          0.10047
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4736201264173489,
+        0.4893626325757729,
+        0.3769124073493312
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.5505433459872178,
+            5.264474394337778,
+            -0.01
+          ],
+          "max_m": [
+            -2.870543345987218,
+            5.944474394337778,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_003",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.16651,
+        0.18236,
+        0.28656
+      ],
+      "pose": {
+        "position": [
+          -3.185735917052883,
+          -2.3911584558930277,
+          0.14528
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.31052105037553884,
+        0.423730504104586,
+        0.3520171614724724
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.2207959943296,
+        "inertia_kg_m2": [
+          0.05019438733376191,
+          0.047788649107771315,
+          0.026530671147081325
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -3.525735917052883,
+            -2.7311584558930275,
+            -0.01
+          ],
+          "max_m": [
+            -2.8457359170528833,
+            -2.051158455893028,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_004",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.14223,
+        0.15426,
+        0.13148
+      ],
+      "pose": {
+        "position": [
+          2.4041628885452853,
+          4.814757458656345,
+          0.06574
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.2629726290202902,
+        0.4603470395540553,
+        0.44444246050079894
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.0641628885452854,
+            4.474757458656345,
+            -0.01
+          ],
+          "max_m": [
+            2.744162888545285,
+            5.154757458656345,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_005",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.21458,
+        0.12476,
+        0.16057
+      ],
+      "pose": {
+        "position": [
+          -1.5777249131488906,
+          -3.2023464519345404,
+          0.080285
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.354696202117067,
+        0.321870920445621,
+        0.594028314946975
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.9177249131488907,
+            -3.5423464519345402,
+            -0.01
+          ],
+          "max_m": [
+            -1.2377249131488905,
+            -2.8623464519345405,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_006",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.21615,
+        0.14811,
+        0.1535
+      ],
+      "pose": {
+        "position": [
+          -5.604150221260648,
+          -4.818184835952432,
+          0.07875
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5040265011693257,
+        0.2429955992071311,
+        0.5783273264829649
+      ],
+      "physical_parameters": {
+        "mass_kg": 2.94848723565,
+        "inertia_kg_m2": [
+          0.011179391349913343,
+          0.017269061845709463,
+          0.016869620967590437
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -5.944150221260648,
+            -5.158184835952432,
+            -0.01
+          ],
+          "max_m": [
+            -5.264150221260648,
+            -4.478184835952432,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_007",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.24133,
+        0.29306,
+        0.25293
+      ],
+      "pose": {
+        "position": [
+          -0.8030596384439544,
+          3.978218828729416,
+          0.126465
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6206955948629422,
+        0.6695959802118296,
+        0.3357350805713749
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.1430596384439544,
+            3.638218828729416,
+            -0.01
+          ],
+          "max_m": [
+            -0.4630596384439544,
+            4.318218828729416,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_008",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.19144,
+        0.29403,
+        0.19619
+      ],
+      "pose": {
+        "position": [
+          4.799314554841728,
+          3.2120615830721375,
+          0.098095
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.21087158225301622,
+        0.24754960228817235,
+        0.41351684185892956
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.459314554841728,
+            2.8720615830721377,
+            -0.01
+          ],
+          "max_m": [
+            5.139314554841728,
+            3.5520615830721374,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_009",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.29901,
+        0.28794,
+        0.29761
+      ],
+      "pose": {
+        "position": [
+          5.575945898990659,
+          2.4054931021423522,
+          0.150805
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3245127704316422,
+        0.2901477514730251,
+        0.23528798574349863
+      ],
+      "physical_parameters": {
+        "mass_kg": 15.373986080900396,
+        "inertia_kg_m2": [
+          0.21969574173904274,
+          0.22802016138163803,
+          0.2207658582895279
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            5.235945898990659,
+            2.0654931021423524,
+            -0.01
+          ],
+          "max_m": [
+            5.915945898990659,
+            2.745493102142352,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_010",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.13304,
+        0.2401,
+        0.29059
+      ],
+      "pose": {
+        "position": [
+          -4.778459507858606,
+          1.5763001289671354,
+          0.145295
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4670708017732849,
+        0.23152466553638928,
+        0.2176109339806312
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.1184595078586055,
+            1.2363001289671354,
+            -0.01
+          ],
+          "max_m": [
+            -4.438459507858606,
+            1.9163001289671355,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_011",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17587,
+        0.29714,
+        0.17062
+      ],
+      "pose": {
+        "position": [
+          5.615975820042565,
+          -3.990581206794172,
+          0.08531
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.27423375964004404,
+        0.6831328563727291,
+        0.2278305710985844
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            5.275975820042565,
+            -4.3305812067941725,
+            -0.01
+          ],
+          "max_m": [
+            5.955975820042565,
+            -3.6505812067941723,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_012",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.23516,
+        0.20798,
+        0.16537
+      ],
+      "pose": {
+        "position": [
+          -0.006858503100218218,
+          -3.216005670980998,
+          0.084685
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5138733598097673,
+        0.25343569271159283,
+        0.6916363978321168
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.852806807249599,
+        "inertia_kg_m2": [
+          0.028551859807093367,
+          0.03342268071849216,
+          0.03985606429428763
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -0.34685850310021826,
+            -3.5560056709809977,
+            -0.01
+          ],
+          "max_m": [
+            0.3331414968997818,
+            -2.876005670980998,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_013",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.22727,
+        0.16887,
+        0.22347
+      ],
+      "pose": {
+        "position": [
+          -5.585827058339284,
+          3.1854377713182296,
+          0.111735
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3576094218267377,
+        0.30510762236265804,
+        0.44536980618407496
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.925827058339284,
+            2.8454377713182297,
+            -0.01
+          ],
+          "max_m": [
+            -5.245827058339284,
+            3.5254377713182294,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_014",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.22778,
+        0.15183,
+        0.15003
+      ],
+      "pose": {
+        "position": [
+          0.8143910052200407,
+          -4.0136283492040965,
+          0.075015
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3916278718785995,
+        0.5580095154592435,
+        0.23457597564601518
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            0.4743910052200407,
+            -4.353628349204096,
+            -0.01
+          ],
+          "max_m": [
+            1.1543910052200408,
+            -3.6736283492040966,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_015",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.14956,
+        0.20777,
+        0.28292
+      ],
+      "pose": {
+        "position": [
+          -5.578184603457334,
+          2.3875638697678276,
+          0.14346
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.407811918881099,
+        0.4684165093022084,
+        0.6934461586060132
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.274887431862401,
+        "inertia_kg_m2": [
+          0.05416082950424601,
+          0.04501761247340814,
+          0.02880816757985537
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -5.918184603457334,
+            2.047563869767828,
+            -0.01
+          ],
+          "max_m": [
+            -5.238184603457334,
+            2.7275638697678275,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_016",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.15407,
+        0.21387,
+        0.2336
+      ],
+      "pose": {
+        "position": [
+          -0.7986378291855653,
+          5.592353591922357,
+          0.1168
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4960944546386747,
+        0.29679625894034023,
+        0.20617276441634108
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.1386378291855652,
+            5.252353591922357,
+            -0.01
+          ],
+          "max_m": [
+            -0.4586378291855652,
+            5.9323535919223565,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_017",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.27206,
+        0.27149,
+        0.19662
+      ],
+      "pose": {
+        "position": [
+          4.823272742719033,
+          -5.5905534508590025,
+          0.09831
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.29334590169842173,
+        0.6817666996132803,
+        0.6482340907169872
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.483272742719033,
+            -5.930553450859002,
+            -0.01
+          ],
+          "max_m": [
+            5.163272742719033,
+            -5.250553450859003,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_018",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.21007,
+        0.12437,
+        0.22238
+      ],
+      "pose": {
+        "position": [
+          -2.4217064080039656,
+          4.006493460537901,
+          0.11319
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5252262647235318,
+        0.42327773489359855,
+        0.32758325606732785
+      ],
+      "physical_parameters": {
+        "mass_kg": 3.4859940864251997,
+        "inertia_kg_m2": [
+          0.01885944916483516,
+          0.027185603114504204,
+          0.017312986803474827
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -2.7617064080039655,
+            3.666493460537901,
+            -0.01
+          ],
+          "max_m": [
+            -2.081706408003966,
+            4.346493460537901,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_019",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17015,
+        0.26006,
+        0.28371
+      ],
+      "pose": {
+        "position": [
+          -3.180681223089053,
+          -3.1914229599525603,
+          0.141855
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3940410910333716,
+        0.4867332820422893,
+        0.24705749631976343
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.5206812230890527,
+            -3.53142295995256,
+            -0.01
+          ],
+          "max_m": [
+            -2.840681223089053,
+            -2.8514229599525605,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_020",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.29187,
+        0.28766,
+        0.1468
+      ],
+      "pose": {
+        "position": [
+          -2.418376886157579,
+          4.8175134958872246,
+          0.0734
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5509423462885592,
+        0.39620257465227215,
+        0.307530252028415
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -2.758376886157579,
+            4.477513495887225,
+            -0.01
+          ],
+          "max_m": [
+            -2.0783768861575793,
+            5.157513495887224,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_021",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.13462,
+        0.1829,
+        0.1463
+      ],
+      "pose": {
+        "position": [
+          -3.9803179425068445,
+          -0.8202248175648951,
+          0.07515000000000001
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.39838072124620916,
+        0.5155735884181927,
+        0.4576995402322816
+      ],
+      "physical_parameters": {
+        "mass_kg": 2.16131898444,
+        "inertia_kg_m2": [
+          0.009880127528528257,
+          0.007119066732678782,
+          0.009289160672195608
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -4.320317942506844,
+            -1.160224817564895,
+            -0.01
+          ],
+          "max_m": [
+            -3.6403179425068446,
+            -0.48022481756489505,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_022",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.12419,
+        0.23875,
+        0.1486
+      ],
+      "pose": {
+        "position": [
+          4.782240122920661,
+          -4.797567096033347,
+          0.0743
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4436278942424441,
+        0.41912650075133373,
+        0.6649273577125485
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.442240122920661,
+            -5.137567096033347,
+            -0.01
+          ],
+          "max_m": [
+            5.122240122920661,
+            -4.4575670960333476,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_023",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17915,
+        0.21356,
+        0.18955
+      ],
+      "pose": {
+        "position": [
+          4.781382869480736,
+          -2.4108800553414995,
+          0.094775
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6907175474444815,
+        0.663160605731824,
+        0.6718847810730314
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.441382869480736,
+            -2.7508800553414994,
+            -0.01
+          ],
+          "max_m": [
+            5.121382869480736,
+            -2.0708800553414997,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_024",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.14996,
+        0.15411,
+        0.25811
+      ],
+      "pose": {
+        "position": [
+          4.802540655712657,
+          5.585097250850443,
+          0.131055
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5347102389132743,
+        0.2171412070986138,
+        0.34601599795471316
+      ],
+      "physical_parameters": {
+        "mass_kg": 3.5790052330296,
+        "inertia_kg_m2": [
+          0.0269530900070134,
+          0.02657673061509587,
+          0.013790471959713868
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            4.462540655712657,
+            5.245097250850443,
+            -0.01
+          ],
+          "max_m": [
+            5.142540655712657,
+            5.925097250850443,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_025",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.18658,
+        0.19263,
+        0.20171
+      ],
+      "pose": {
+        "position": [
+          1.5920775156250186,
+          3.199127457156521,
+          0.100855
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5933727173337486,
+        0.2343395176036922,
+        0.5789146205668937
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            1.2520775156250186,
+            2.859127457156521,
+            -0.01
+          ],
+          "max_m": [
+            1.9320775156250187,
+            3.5391274571565208,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_026",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.14811,
+        0.17188,
+        0.28331
+      ],
+      "pose": {
+        "position": [
+          4.004260109496581,
+          -0.7854173740880174,
+          0.141655
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6794168620061652,
+        0.3366045009955456,
+        0.3881263684249967
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            3.664260109496581,
+            -1.1254173740880173,
+            -0.01
+          ],
+          "max_m": [
+            4.344260109496581,
+            -0.44541737408801735,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_027",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.29065,
+        0.21031,
+        0.19657
+      ],
+      "pose": {
+        "position": [
+          1.5918401852926445,
+          -4.808597809689803,
+          0.100285
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6517601887751445,
+        0.5175215665710944,
+        0.668853543629079
+      ],
+      "physical_parameters": {
+        "mass_kg": 7.209393634113,
+        "inertia_kg_m2": [
+          0.04978690751932966,
+          0.07396668892428811,
+          0.07732538392800396
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            1.2518401852926444,
+            -5.148597809689803,
+            -0.01
+          ],
+          "max_m": [
+            1.9318401852926446,
+            -4.468597809689803,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_028",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.13416,
+        0.20943,
+        0.21389
+      ],
+      "pose": {
+        "position": [
+          4.807481015877229,
+          4.797108882641333,
+          0.106945
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5087909317787052,
+        0.6235455848750526,
+        0.38287568961589735
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.46748101587723,
+            4.457108882641333,
+            -0.01
+          ],
+          "max_m": [
+            5.147481015877229,
+            5.137108882641333,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_029",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.29094,
+        0.2683,
+        0.16743
+      ],
+      "pose": {
+        "position": [
+          4.8024788963122,
+          -3.1837831227464846,
+          0.083715
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6119799912798105,
+        0.5367520494710887,
+        0.3575812703990041
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            4.4624788963122,
+            -3.5237831227464844,
+            -0.01
+          ],
+          "max_m": [
+            5.1424788963122,
+            -2.8437831227464847,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_030",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.20792,
+        0.23944,
+        0.15088
+      ],
+      "pose": {
+        "position": [
+          -3.9846186635882916,
+          3.987202470309107,
+          0.07744
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5819000413603874,
+        0.5949266205098385,
+        0.49102452550239273
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.5068789766143995,
+        "inertia_kg_m2": [
+          0.03008202304100435,
+          0.024786144592221563,
+          0.0377684871081043
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -4.324618663588292,
+            3.6472024703091073,
+            -0.01
+          ],
+          "max_m": [
+            -3.644618663588292,
+            4.327202470309107,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_031",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17025,
+        0.2949,
+        0.23082
+      ],
+      "pose": {
+        "position": [
+          2.4227770186548954,
+          -1.609184078169586,
+          0.11541
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.20322562221820828,
+        0.41666619974633656,
+        0.3585951111035237
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.0827770186548955,
+            -1.9491840781695862,
+            -0.01
+          ],
+          "max_m": [
+            2.7627770186548952,
+            -1.269184078169586,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_032",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.1446,
+        0.24204,
+        0.27398
+      ],
+      "pose": {
+        "position": [
+          0.016384597316475416,
+          3.223637811052964,
+          0.13699
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.2574893764932524,
+        0.421049419554979,
+        0.21665339721477805
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -0.3236154026835246,
+            2.883637811052964,
+            -0.01
+          ],
+          "max_m": [
+            0.3563845973164754,
+            3.563637811052964,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_033",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.23856,
+        0.21967,
+        0.18564
+      ],
+      "pose": {
+        "position": [
+          4.010433322891866,
+          4.788710071988344,
+          0.09482
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4528704492990599,
+        0.6008455537576384,
+        0.5945537011109908
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.837020065676801,
+        "inertia_kg_m2": [
+          0.04023512337162215,
+          0.04444554334176298,
+          0.051154565222925184
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            3.670433322891866,
+            4.448710071988344,
+            -0.01
+          ],
+          "max_m": [
+            4.350433322891866,
+            5.128710071988344,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_034",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.16082,
+        0.2098,
+        0.13029
+      ],
+      "pose": {
+        "position": [
+          3.1969768413084867,
+          -2.4013520008104394,
+          0.065145
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6229620405976038,
+        0.38499581932804616,
+        0.37973673511291284
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.856976841308487,
+            -2.7413520008104393,
+            -0.01
+          ],
+          "max_m": [
+            3.5369768413084866,
+            -2.0613520008104396,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_035",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.20191,
+        0.27527,
+        0.22752
+      ],
+      "pose": {
+        "position": [
+          -1.5821801084768037,
+          2.4092901085483662,
+          0.11376
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6303491715371418,
+        0.3314677107883576,
+        0.5924780590028104
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.9221801084768038,
+            2.0692901085483664,
+            -0.01
+          ],
+          "max_m": [
+            -1.2421801084768036,
+            2.749290108548366,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_036",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.25684,
+        0.29529,
+        0.22639
+      ],
+      "pose": {
+        "position": [
+          -1.5776144949978932,
+          3.195035488040708,
+          0.115195
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5783156354462626,
+        0.2552569901215368,
+        0.25706361014582707
+      ],
+      "physical_parameters": {
+        "mass_kg": 10.301960750522401,
+        "inertia_kg_m2": [
+          0.11885768417137833,
+          0.10063231499602841,
+          0.13148990852357098
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -1.9176144949978933,
+            2.8550354880407083,
+            -0.01
+          ],
+          "max_m": [
+            -1.237614494997893,
+            3.535035488040708,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_037",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.14777,
+        0.26271,
+        0.14584
+      ],
+      "pose": {
+        "position": [
+          0.016193768882414097,
+          5.613494861322367,
+          0.07292
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6256300940648954,
+        0.6649961807495324,
+        0.4658380549177332
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -0.32380623111758594,
+            5.2734948613223676,
+            -0.01
+          ],
+          "max_m": [
+            0.3561937688824141,
+            5.953494861322367,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_038",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.20493,
+        0.23681,
+        0.25717
+      ],
+      "pose": {
+        "position": [
+          -2.3816383500851215,
+          5.582802517510594,
+          0.128585
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.20734059340015487,
+        0.601745927003465,
+        0.5122965277630329
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -2.7216383500851213,
+            5.242802517510595,
+            -0.01
+          ],
+          "max_m": [
+            -2.0416383500851216,
+            5.922802517510594,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_039",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.19448,
+        0.2326,
+        0.28158
+      ],
+      "pose": {
+        "position": [
+          1.6161523329655707,
+          3.9814522351503197,
+          0.14279
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.40691816703600936,
+        0.6698680752705737,
+        0.4651767085507135
+      ],
+      "physical_parameters": {
+        "mass_kg": 7.642539837503999,
+        "inertia_kg_m2": [
+          0.0849532349969921,
+          0.07458467151081692,
+          0.05854518628364447
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            1.2761523329655706,
+            3.64145223515032,
+            -0.01
+          ],
+          "max_m": [
+            1.9561523329655708,
+            4.3214522351503195,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_040",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.13433,
+        0.15694,
+        0.1767
+      ],
+      "pose": {
+        "position": [
+          -4.779211792688155,
+          2.4238354472487136,
+          0.08835
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.46694362360799685,
+        0.5565716779608735,
+        0.4967084378011487
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.119211792688155,
+            2.0838354472487137,
+            -0.01
+          ],
+          "max_m": [
+            -4.439211792688155,
+            2.7638354472487134,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_041",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.19802,
+        0.29853,
+        0.15485
+      ],
+      "pose": {
+        "position": [
+          3.192252947368364,
+          0.7838214467910374,
+          0.077425
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.28901923673272345,
+        0.46971319853340326,
+        0.2892967842457836
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.852252947368364,
+            0.44382144679103736,
+            -0.01
+          ],
+          "max_m": [
+            3.532252947368364,
+            1.1238214467910375,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_042",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.13389,
+        0.20507,
+        0.24604
+      ],
+      "pose": {
+        "position": [
+          1.6147529231837647,
+          5.598879113212361,
+          0.12502
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.49151481993038404,
+        0.313166875201389,
+        0.6699023270886855
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.053285935215201,
+        "inertia_kg_m2": [
+          0.03465200978356719,
+          0.026502482269671623,
+          0.020259754251914536
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            1.2747529231837647,
+            5.258879113212362,
+            -0.01
+          ],
+          "max_m": [
+            1.9547529231837648,
+            5.938879113212361,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_043",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.16388,
+        0.27895,
+        0.21464
+      ],
+      "pose": {
+        "position": [
+          3.180421011017344,
+          -4.023676056605295,
+          0.10732
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5286178033619009,
+        0.3842901310303939,
+        0.37925529556478343
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.840421011017344,
+            -4.363676056605295,
+            -0.01
+          ],
+          "max_m": [
+            3.5204210110173437,
+            -3.683676056605295,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_044",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.22699,
+        0.17628,
+        0.2911
+      ],
+      "pose": {
+        "position": [
+          5.596979057900378,
+          -1.615632318525495,
+          0.14555
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5893682945887582,
+        0.294462200664834,
+        0.6669641863538055
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            5.256979057900378,
+            -1.9556323185254951,
+            -0.01
+          ],
+          "max_m": [
+            5.936979057900378,
+            -1.275632318525495,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_045",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.20035,
+        0.2698,
+        0.21472
+      ],
+      "pose": {
+        "position": [
+          -4.01884027541324,
+          -3.178712093000623,
+          0.10936
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.41315356101925793,
+        0.3790928517033386,
+        0.4821860244134227
+      ],
+      "physical_parameters": {
+        "mass_kg": 6.963940325759999,
+        "inertia_kg_m2": [
+          0.06899913765552423,
+          0.050050303906221026,
+          0.06553773670908593
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -4.35884027541324,
+            -3.518712093000623,
+            -0.01
+          ],
+          "max_m": [
+            -3.67884027541324,
+            -2.8387120930006233,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_046",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.20631,
+        0.20666,
+        0.27117
+      ],
+      "pose": {
+        "position": [
+          -0.7984825470509739,
+          3.181105668325671,
+          0.135585
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.28297350098726815,
+        0.2966320372070006,
+        0.24273518469973293
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.1384825470509738,
+            2.841105668325671,
+            -0.01
+          ],
+          "max_m": [
+            -0.45848254705097385,
+            3.5211056683256707,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_047",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.28632,
+        0.12963,
+        0.24285
+      ],
+      "pose": {
+        "position": [
+          3.192927998372779,
+          -3.2206631650553397,
+          0.121425
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.309669445419696,
+        0.4427867945391577,
+        0.3994174024616831
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.8529279983727793,
+            -3.5606631650553395,
+            -0.01
+          ],
+          "max_m": [
+            3.532927998372779,
+            -2.88066316505534,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_048",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.15899,
+        0.13666,
+        0.24668
+      ],
+      "pose": {
+        "position": [
+          2.4002753953804383,
+          -2.4198722130443304,
+          0.12534
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.211726311977121,
+        0.5363393338146197,
+        0.33547093559895647
+      ],
+      "physical_parameters": {
+        "mass_kg": 3.2158546837871995,
+        "inertia_kg_m2": [
+          0.02131226705739513,
+          0.023081486796899583,
+          0.011779079621248084
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            2.0602753953804385,
+            -2.7598722130443303,
+            -0.01
+          ],
+          "max_m": [
+            2.740275395380438,
+            -2.0798722130443306,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_049",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.25426,
+        0.1453,
+        0.1657
+      ],
+      "pose": {
+        "position": [
+          -2.419639726689026,
+          2.41677425478296,
+          0.08285
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5743753254297281,
+        0.35432852871408405,
+        0.5723319475060031
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -2.759639726689026,
+            2.07677425478296,
+            -0.01
+          ],
+          "max_m": [
+            -2.079639726689026,
+            2.7567742547829597,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_050",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17281,
+        0.21531,
+        0.27771
+      ],
+      "pose": {
+        "position": [
+          -4.796897112907924,
+          -2.397441039048704,
+          0.138855
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.24469692539126503,
+        0.4418183162955778,
+        0.4448181436232066
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.136897112907924,
+            -2.737441039048704,
+            -0.01
+          ],
+          "max_m": [
+            -4.4568971129079245,
+            -2.057441039048704,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_051",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.15601,
+        0.2407,
+        0.24276
+      ],
+      "pose": {
+        "position": [
+          -0.8242886872585573,
+          2.3891208969468978,
+          0.12338
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.515395956128089,
+        0.4056446260638352,
+        0.5999268177444489
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.469616869192,
+        "inertia_kg_m2": [
+          0.05326901237441677,
+          0.037955283943956475,
+          0.037501338743835315
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -1.1642886872585574,
+            2.049120896946898,
+            -0.01
+          ],
+          "max_m": [
+            -0.4842886872585573,
+            2.7291208969468976,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_052",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.12961,
+        0.15414,
+        0.26844
+      ],
+      "pose": {
+        "position": [
+          -5.583756000367911,
+          4.809841191059615,
+          0.13422
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.30281131991074717,
+        0.4998380666342133,
+        0.6599457039923455
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.923756000367911,
+            4.469841191059615,
+            -0.01
+          ],
+          "max_m": [
+            -5.243756000367911,
+            5.149841191059615,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_053",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.18703,
+        0.21895,
+        0.18348
+      ],
+      "pose": {
+        "position": [
+          -1.6095743208067104,
+          -4.802752037364474,
+          0.09174
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3044850420196746,
+        0.6757953884631664,
+        0.38931387537599504
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.9495743208067104,
+            -5.142752037364474,
+            -0.01
+          ],
+          "max_m": [
+            -1.2695743208067103,
+            -4.462752037364474,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_054",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.14548,
+        0.15775,
+        0.19433
+      ],
+      "pose": {
+        "position": [
+          -3.9778471172492957,
+          -4.803506221356218,
+          0.099165
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6936911769006129,
+        0.4190610858434497,
+        0.256793531828904
+      ],
+      "physical_parameters": {
+        "mass_kg": 2.67586230306,
+        "inertia_kg_m2": [
+          0.013970055258474735,
+          0.013140396993479323,
+          0.010268508510511594
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -4.317847117249296,
+            -5.143506221356218,
+            -0.01
+          ],
+          "max_m": [
+            -3.637847117249296,
+            -4.463506221356218,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_055",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17422,
+        0.14118,
+        0.17896
+      ],
+      "pose": {
+        "position": [
+          -5.5960009285334005,
+          3.9821641398940666,
+          0.08948
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.45028152869517385,
+        0.5961038233909036,
+        0.2651019057686734
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.9360009285334,
+            3.6421641398940667,
+            -0.01
+          ],
+          "max_m": [
+            -5.256000928533401,
+            4.322164139894067,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_056",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.28337,
+        0.1759,
+        0.18634
+      ],
+      "pose": {
+        "position": [
+          -3.1756388484189775,
+          -0.8013560951405344,
+          0.09317
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3170157032899617,
+        0.45690194108070326,
+        0.3109211293253372
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.5156388484189773,
+            -1.1413560951405344,
+            -0.01
+          ],
+          "max_m": [
+            -2.8356388484189776,
+            -0.4613560951405344,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_057",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.24695,
+        0.23624,
+        0.18005
+      ],
+      "pose": {
+        "position": [
+          5.617575681072202,
+          3.21404580376947,
+          0.092025
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.361790467180928,
+        0.5210109374391678,
+        0.38442247581038946
+      ],
+      "physical_parameters": {
+        "mass_kg": 6.30241272804,
+        "inertia_kg_m2": [
+          0.04633709260061283,
+          0.04905498965502284,
+          0.06134014366003026
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            5.277575681072202,
+            2.8740458037694703,
+            -0.01
+          ],
+          "max_m": [
+            5.957575681072202,
+            3.55404580376947,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_058",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.22568,
+        0.27403,
+        0.23639
+      ],
+      "pose": {
+        "position": [
+          2.4042919331815926,
+          3.9846036914229246,
+          0.118195
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3484316592443719,
+        0.34857986485542336,
+        0.35990729221108664
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.0642919331815928,
+            3.6446036914229247,
+            -0.01
+          ],
+          "max_m": [
+            2.7442919331815925,
+            4.324603691422925,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_059",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.13699,
+        0.22891,
+        0.15784
+      ],
+      "pose": {
+        "position": [
+          -3.208183100756373,
+          -5.583993859130266,
+          0.07892
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4693578766090432,
+        0.557995017211306,
+        0.4168032697836128
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.548183100756373,
+            -5.923993859130266,
+            -0.01
+          ],
+          "max_m": [
+            -2.868183100756373,
+            -5.243993859130266,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_060",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.17821,
+        0.22127,
+        0.25185
+      ],
+      "pose": {
+        "position": [
+          -0.01467001632814154,
+          -5.595335807756771,
+          0.127925
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.36205766747474977,
+        0.4690044265421094,
+        0.4881899133971803
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.958649109637,
+        "inertia_kg_m2": [
+          0.05580713616577912,
+          0.04726560691907545,
+          0.04008145754230382
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -0.35467001632814155,
+            -5.935335807756771,
+            -0.01
+          ],
+          "max_m": [
+            0.3253299836718585,
+            -5.255335807756771,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_061",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.15916,
+        0.27345,
+        0.15015
+      ],
+      "pose": {
+        "position": [
+          3.2004983463786947,
+          3.189866788046289,
+          0.075075
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.2665947994271933,
+        0.2000652249716932,
+        0.6657345878161678
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.860498346378695,
+            2.849866788046289,
+            -0.01
+          ],
+          "max_m": [
+            3.5404983463786945,
+            3.529866788046289,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_062",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17935,
+        0.23411,
+        0.22461
+      ],
+      "pose": {
+        "position": [
+          -1.612870625473587,
+          -2.389942777237603,
+          0.112305
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.34485999842576276,
+        0.3911286589954257,
+        0.6510150452960893
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.952870625473587,
+            -2.729942777237603,
+            -0.01
+          ],
+          "max_m": [
+            -1.2728706254735869,
+            -2.0499427772376033,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_063",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.27114,
+        0.19502,
+        0.1206
+      ],
+      "pose": {
+        "position": [
+          -3.1910636936879295,
+          -4.018283936052663,
+          0.0623
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.46954774132101357,
+        0.618894785648948,
+        0.4994644147312878
+      ],
+      "physical_parameters": {
+        "mass_kg": 3.826232021808,
+        "inertia_kg_m2": [
+          0.01676436789485129,
+          0.02807856761352226,
+          0.03556791951358965
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -3.5310636936879294,
+            -4.358283936052663,
+            -0.01
+          ],
+          "max_m": [
+            -2.8510636936879297,
+            -3.6782839360526633,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_064",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.13512,
+        0.1353,
+        0.13086
+      ],
+      "pose": {
+        "position": [
+          -3.21137530150631,
+          2.4031898960898883,
+          0.06543
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.47041431685907986,
+        0.46937497533575706,
+        0.4023802609507374
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.55137530150631,
+            2.0631898960898885,
+            -0.01
+          ],
+          "max_m": [
+            -2.87137530150631,
+            2.743189896089888,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_065",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.29918,
+        0.15157,
+        0.19411
+      ],
+      "pose": {
+        "position": [
+          -3.9937290742303575,
+          1.5856918392141708,
+          0.097055
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5130830886585311,
+        0.25316649131799296,
+        0.6942961093496856
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -4.333729074230358,
+            1.2456918392141707,
+            -0.01
+          ],
+          "max_m": [
+            -3.6537290742303576,
+            1.9256918392141709,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_066",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.1319,
+        0.20703,
+        0.28159
+      ],
+      "pose": {
+        "position": [
+          -5.621401993092632,
+          -3.1886059247110277,
+          0.142795
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5109015027904369,
+        0.30919932085632956,
+        0.662950635312819
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.613670299178,
+        "inertia_kg_m2": [
+          0.046964990991393646,
+          0.037174855320292396,
+          0.023167941760048275
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -5.961401993092632,
+            -3.5286059247110275,
+            -0.01
+          ],
+          "max_m": [
+            -5.281401993092632,
+            -2.848605924711028,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_067",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.21208,
+        0.23597,
+        0.18819
+      ],
+      "pose": {
+        "position": [
+          3.9838414685606196,
+          0.7839397446975196,
+          0.094095
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.46835214478811815,
+        0.4685878351172907,
+        0.3046653233567063
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            3.6438414685606197,
+            0.44393974469751957,
+            -0.01
+          ],
+          "max_m": [
+            4.3238414685606195,
+            1.1239397446975197,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_068",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.28296,
+        0.23694,
+        0.14426
+      ],
+      "pose": {
+        "position": [
+          1.5968411223769707,
+          -2.414033872192538,
+          0.07213
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.42368303317229916,
+        0.33518277376709926,
+        0.5467871104785678
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            1.2568411223769707,
+            -2.754033872192538,
+            -0.01
+          ],
+          "max_m": [
+            1.9368411223769708,
+            -2.074033872192538,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_069",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.23997,
+        0.1726,
+        0.19792
+      ],
+      "pose": {
+        "position": [
+          -1.575113019916117,
+          5.589007842200308,
+          0.10096000000000001
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4567382244326954,
+        0.4455080591081019,
+        0.4608550609277188
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.918567950144,
+        "inertia_kg_m2": [
+          0.028266635542504304,
+          0.03965920334501193,
+          0.03581388069357961
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -1.915113019916117,
+            5.249007842200308,
+            -0.01
+          ],
+          "max_m": [
+            -1.2351130199161169,
+            5.929007842200308,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_070",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.26996,
+        0.28104,
+        0.15992
+      ],
+      "pose": {
+        "position": [
+          -2.3976669045569867,
+          0.8025647679690721,
+          0.07996
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.46471680284925676,
+        0.6050421622527852,
+        0.668100197224246
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -2.7376669045569866,
+            0.46256476796907203,
+            -0.01
+          ],
+          "max_m": [
+            -2.057666904556987,
+            1.142564767969072,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_071",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.24646,
+        0.28688,
+        0.15203
+      ],
+      "pose": {
+        "position": [
+          -5.605168735540828,
+          -0.812537953277668,
+          0.076015
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3469392581307813,
+        0.541147995649496,
+        0.264185626692845
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.945168735540828,
+            -1.152537953277668,
+            -0.01
+          ],
+          "max_m": [
+            -5.265168735540828,
+            -0.47253795327766795,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_072",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.17445,
+        0.21519,
+        0.20185
+      ],
+      "pose": {
+        "position": [
+          -4.011379076485904,
+          5.592900644869501,
+          0.102925
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.2883484078846278,
+        0.5616918316073258,
+        0.45550768993056046
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.546456744005,
+        "inertia_kg_m2": [
+          0.032980815052806235,
+          0.026966635680338937,
+          0.029074416066650163
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -4.3513790764859035,
+            5.252900644869501,
+            -0.01
+          ],
+          "max_m": [
+            -3.671379076485904,
+            5.932900644869501,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_073",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.28558,
+        0.1982,
+        0.24519
+      ],
+      "pose": {
+        "position": [
+          -4.786633324544475,
+          -0.8208196115311036,
+          0.122595
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4703529828961893,
+        0.681246559625817,
+        0.682792682087145
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.126633324544475,
+            -1.1608196115311036,
+            -0.01
+          ],
+          "max_m": [
+            -4.446633324544475,
+            -0.4808196115311036,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_074",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.15191,
+        0.26095,
+        0.17403
+      ],
+      "pose": {
+        "position": [
+          -4.024726307387573,
+          3.1793140487694402,
+          0.087015
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.26624798945241973,
+        0.5387077168716392,
+        0.254489701509025
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -4.364726307387573,
+            2.8393140487694404,
+            -0.01
+          ],
+          "max_m": [
+            -3.6847263073875736,
+            3.51931404876944,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_075",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.29092,
+        0.17918,
+        0.21499
+      ],
+      "pose": {
+        "position": [
+          1.582396634947487,
+          2.395694560540574,
+          0.109495
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4698854473164928,
+        0.20733773961121693,
+        0.3424925466251738
+      ],
+      "physical_parameters": {
+        "mass_kg": 6.7240761201264005,
+        "inertia_kg_m2": [
+          0.04388926217401259,
+          0.07332333048135764,
+          0.06541400835571459
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            1.2423966349474869,
+            2.0556945605405743,
+            -0.01
+          ],
+          "max_m": [
+            1.922396634947487,
+            2.735694560540574,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_076",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17417,
+        0.19379,
+        0.20073
+      ],
+      "pose": {
+        "position": [
+          -2.4172930176259513,
+          -4.812757768722905,
+          0.100365
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.42907272327696366,
+        0.2852779918360391,
+        0.28048676945015927
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -2.757293017625951,
+            -5.152757768722905,
+            -0.01
+          ],
+          "max_m": [
+            -2.0772930176259514,
+            -4.472757768722905,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_077",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.19521,
+        0.12247,
+        0.27567
+      ],
+      "pose": {
+        "position": [
+          -3.9985922380339716,
+          -0.014263562113844774,
+          0.137835
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6267361858753513,
+        0.4285846451008908,
+        0.3890000181920873
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -4.338592238033971,
+            -0.3542635621138448,
+            -0.01
+          ],
+          "max_m": [
+            -3.6585922380339717,
+            0.32573643788615525,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_078",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.14857,
+        0.202,
+        0.28169
+      ],
+      "pose": {
+        "position": [
+          1.5785078057150626,
+          -3.1833258850199657,
+          0.142845
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.651248395640627,
+        0.2354863231565994,
+        0.35088490189818955
+      ],
+      "physical_parameters": {
+        "mass_kg": 5.07230281596,
+        "inertia_kg_m2": [
+          0.050787808271899416,
+          0.04287038524695356,
+          0.026577617658792782
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            1.2385078057150625,
+            -3.5233258850199656,
+            -0.01
+          ],
+          "max_m": [
+            1.9185078057150626,
+            -2.843325885019966,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_079",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.18037,
+        0.22434,
+        0.20179
+      ],
+      "pose": {
+        "position": [
+          5.611376068659918,
+          0.8121750426452263,
+          0.100895
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6428416460336942,
+        0.6473721162283705,
+        0.6615562828272485
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            5.271376068659918,
+            0.4721750426452263,
+            -0.01
+          ],
+          "max_m": [
+            5.9513760686599175,
+            1.1521750426452264,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_080",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.2478,
+        0.14765,
+        0.23493
+      ],
+      "pose": {
+        "position": [
+          -5.589225751581464,
+          0.8076838657771911,
+          0.117465
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.44498995689428467,
+        0.42440817118918284,
+        0.34545395438016246
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.9292257515814635,
+            0.46768386577719107,
+            -0.01
+          ],
+          "max_m": [
+            -5.249225751581464,
+            1.147683865777191,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_081",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.27887,
+        0.29955,
+        0.201
+      ],
+      "pose": {
+        "position": [
+          -5.6097749792402585,
+          -2.4034502418455586,
+          0.10250000000000001
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4715893774335821,
+        0.6061506485627216,
+        0.35961937872479555
+      ],
+      "physical_parameters": {
+        "mass_kg": 10.0743823251,
+        "inertia_kg_m2": [
+          0.10924929053416739,
+          0.09920704078730608,
+          0.14062047793541263
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -5.949774979240258,
+            -2.7434502418455584,
+            -0.01
+          ],
+          "max_m": [
+            -5.269774979240259,
+            -2.0634502418455587,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_082",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.14129,
+        0.18145,
+        0.2321
+      ],
+      "pose": {
+        "position": [
+          -0.7750994131085974,
+          4.801410318321959,
+          0.11605
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.679420120227744,
+        0.36950018868493717,
+        0.3980168553799516
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.1150994131085974,
+            4.461410318321959,
+            -0.01
+          ],
+          "max_m": [
+            -0.4350994131085974,
+            5.141410318321959,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_083",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.12107,
+        0.26565,
+        0.13465
+      ],
+      "pose": {
+        "position": [
+          -1.6021158836265594,
+          3.981486630994221,
+          0.067325
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.5695797958677549,
+        0.6170117322879103,
+        0.6279816384313788
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.9421158836265595,
+            3.6414866309942213,
+            -0.01
+          ],
+          "max_m": [
+            -1.2621158836265594,
+            4.3214866309942215,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_084",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.1229,
+        0.14065,
+        0.16919
+      ],
+      "pose": {
+        "position": [
+          5.575522887845499,
+          -5.599585545604305,
+          0.086595
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4314587774489326,
+        0.38474437237688996,
+        0.2690060529804489
+      ],
+      "physical_parameters": {
+        "mass_kg": 1.75475932989,
+        "inertia_kg_m2": [
+          0.007078652138472208,
+          0.006394586631829121,
+          0.005101499568307056
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            5.235522887845499,
+            -5.939585545604305,
+            -0.01
+          ],
+          "max_m": [
+            5.915522887845499,
+            -5.259585545604305,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_085",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.17635,
+        0.26205,
+        0.24526
+      ],
+      "pose": {
+        "position": [
+          -0.8084245798487554,
+          -3.990400475918262,
+          0.12263
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.437142973097977,
+        0.36862449610156967,
+        0.34797151721409203
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -1.1484245798487553,
+            -4.330400475918262,
+            -0.01
+          ],
+          "max_m": [
+            -0.46842457984875535,
+            -3.650400475918262,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_086",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.21216,
+        0.25131,
+        0.19626
+      ],
+      "pose": {
+        "position": [
+          -3.2138829954170927,
+          3.9758162861189374,
+          0.09813
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4444219851977306,
+        0.6698316192100369,
+        0.34266815409686047
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -3.5538829954170925,
+            3.6358162861189376,
+            -0.01
+          ],
+          "max_m": [
+            -2.873882995417093,
+            4.315816286118937,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_087",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.25738,
+        0.14914,
+        0.19293
+      ],
+      "pose": {
+        "position": [
+          -0.8040092768284274,
+          -4.78104104572553,
+          0.098465
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.4806704388558672,
+        0.3326657843408559,
+        0.5907154485878191
+      ],
+      "physical_parameters": {
+        "mass_kg": 4.4434464431256,
+        "inertia_kg_m2": [
+          0.022019026547580724,
+          0.03831230217707668,
+          0.03276567932299411
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -1.1440092768284273,
+            -5.12104104572553,
+            -0.01
+          ],
+          "max_m": [
+            -0.46400927682842735,
+            -4.44104104572553,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_088",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.22636,
+        0.12037,
+        0.20958
+      ],
+      "pose": {
+        "position": [
+          -4.784464321983648,
+          -4.82306006939844,
+          0.10479
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.20376272002221696,
+        0.5155598178407278,
+        0.24599649366887916
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.124464321983647,
+            -5.16306006939844,
+            -0.01
+          ],
+          "max_m": [
+            -4.444464321983648,
+            -4.48306006939844,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_089",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.1303,
+        0.18368,
+        0.12719
+      ],
+      "pose": {
+        "position": [
+          2.3775677045199144,
+          -5.589694473643602,
+          0.063595
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.48879657261568155,
+        0.3162058734144202,
+        0.40761673197274084
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            2.0375677045199145,
+            -5.929694473643602,
+            -0.01
+          ],
+          "max_m": [
+            2.7175677045199143,
+            -5.249694473643602,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_090",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.24946,
+        0.26756,
+        0.15356
+      ],
+      "pose": {
+        "position": [
+          -3.189505806118484,
+          0.8024850636179346,
+          0.07878
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3397659581354523,
+        0.29196355835904036,
+        0.6000566821456104
+      ],
+      "physical_parameters": {
+        "mass_kg": 6.149665009593599,
+        "inertia_kg_m2": [
+          0.04877146971407514,
+          0.04397572417749116,
+          0.06857832000147171
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            -3.529505806118484,
+            0.46248506361793457,
+            -0.01
+          ],
+          "max_m": [
+            -2.849505806118484,
+            1.1424850636179347,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_091",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.16177,
+        0.13906,
+        0.20323
+      ],
+      "pose": {
+        "position": [
+          -4.794859352404088,
+          3.185649258317597,
+          0.101615
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.3230175426735946,
+        0.4036155560295469,
+        0.4655872301605904
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -5.134859352404088,
+            2.845649258317597,
+            -0.01
+          ],
+          "max_m": [
+            -4.454859352404088,
+            3.5256492583175967,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_092",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.20468,
+        0.16946,
+        0.24782
+      ],
+      "pose": {
+        "position": [
+          0.00995789796430395,
+          4.801464153058062,
+          0.12391
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.28433875391106894,
+        0.31093136019334733,
+        0.3551943590443637
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -0.33004210203569606,
+            4.4614641530580625,
+            -0.01
+          ],
+          "max_m": [
+            0.349957897964304,
+            5.141464153058062,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_093",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": true,
+      "support": "floor",
+      "bbox_m": [
+        0.2683,
+        0.2786,
+        0.28675
+      ],
+      "pose": {
+        "position": [
+          2.424867988812644,
+          -3.2166781709924854,
+          0.145375
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6717155632316374,
+        0.5536318433513725,
+        0.271263777145476
+      ],
+      "physical_parameters": {
+        "mass_kg": 12.860458779000002,
+        "inertia_kg_m2": [
+          0.1713050860167841,
+          0.16526809730559897,
+          0.16033010713716003
+        ],
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": true,
+        "bounds_m": {
+          "min_m": [
+            2.0848679888126442,
+            -3.5566781709924853,
+            -0.01
+          ],
+          "max_m": [
+            2.764867988812644,
+            -2.8766781709924856,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_094",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.2492,
+        0.2147,
+        0.17214
+      ],
+      "pose": {
+        "position": [
+          -0.01505378246852111,
+          -4.786573280090408,
+          0.08607
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6347714996625925,
+        0.3709051193998386,
+        0.477712214662881
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -0.35505378246852115,
+            -5.126573280090408,
+            -0.01
+          ],
+          "max_m": [
+            0.3249462175314789,
+            -4.4465732800904085,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    },
+    {
+      "object_id": "room_background_095",
+      "asset_id": "original_room_background_box",
+      "category": "background",
+      "dynamic": false,
+      "support": "floor",
+      "bbox_m": [
+        0.23997,
+        0.18694,
+        0.25719
+      ],
+      "pose": {
+        "position": [
+          -3.979236435808245,
+          -5.6030027646799,
+          0.128595
+        ],
+        "yaw_deg": 0
+      },
+      "color": [
+        0.6344834253993455,
+        0.21314258822640741,
+        0.4151922550737327
+      ],
+      "physical_parameters": {
+        "mass_kg": null,
+        "inertia_kg_m2": null,
+        "static_friction": 1.0,
+        "dynamic_friction": 0.8,
+        "restitution": 0.0,
+        "initial_velocity_mps": [
+          0,
+          0,
+          0
+        ]
+      },
+      "containment_cell": {
+        "authored": false,
+        "bounds_m": {
+          "min_m": [
+            -4.319236435808245,
+            -5.9430027646799,
+            -0.01
+          ],
+          "max_m": [
+            -3.639236435808245,
+            -5.2630027646799,
+            0.7
+          ]
+        },
+        "inner_half_width_m": 0.3,
+        "wall_thickness_m": 0.025,
+        "wall_height_m": 0.65,
+        "lid": true
+      },
+      "workspace_intersection": false
+    }
+  ],
+  "background_plan_sha256": "5b26627df11e7f265cc062d4f4636a798b9c0f0c6958c56774da950db9e4c8f1"
+}

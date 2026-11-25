@@ -85,7 +85,7 @@ export class SceneViewer {
         const visual = this.fitVisual(
           source.clone(true),
           item.bbox_m,
-          asset.color,
+          asset.preserve_visual_materials ? null : asset.color,
           asset.visual_transform,
         );
         holder.remove(proxy);
@@ -175,7 +175,8 @@ export class SceneViewer {
       this.room.add(backsplash);
     }
 
-    const ceilingLight = new THREE.PointLight(0xfff1d5, 42, Math.max(width, depth) * 2.2, 2);
+    const compactRoomScale = Math.min(1, (height / 4) ** 2);
+    const ceilingLight = new THREE.PointLight(0xfff1d5, 42 * compactRoomScale, Math.max(width, depth) * 2.2, 2);
     ceilingLight.position.set(0, 0.3, height - 0.2);
     this.room.add(ceilingLight);
 
@@ -219,8 +220,11 @@ export class SceneViewer {
   frameRoom(dimensions) {
     const span = Math.max(Number(dimensions[0]), Number(dimensions[1]), 1);
     const targetHeight = Math.min(0.85, Number(dimensions[2]) * 0.28);
+    const distanceScale = span < 2 ? 0.78 : 1;
     this.controls.target.set(0, 0, targetHeight);
-    this.camera.position.set(span * 0.95, -span * 1.15, span * 0.9);
+    this.camera.position.set(span * 0.95 * distanceScale,
+                             -span * 1.15 * distanceScale,
+                             targetHeight + (span * 0.9 - targetHeight) * distanceScale);
     this.camera.near = Math.max(0.01, span / 1000);
     this.camera.far = Math.max(50, span * 12);
     this.camera.updateProjectionMatrix();

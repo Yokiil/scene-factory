@@ -3,6 +3,8 @@ from __future__ import annotations
 import io
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -320,10 +322,19 @@ class ExternalSceneTests(unittest.TestCase):
                     )
 
     def test_no_isaac_or_numpy_import_is_needed(self) -> None:
-        import sys
-
-        self.assertNotIn("isaacsim", sys.modules)
-        self.assertNotIn("numpy", sys.modules)
+        # Optional backend integration tests can already have imported NumPy in
+        # this pytest process. Check the SDK's own import behavior in isolation.
+        probe = subprocess.run(
+            [sys.executable, "-c", (
+                "import sys; import scene_factory.external; import scene_factory.cli; "
+                "from scene_factory.factory import SceneFactory; "
+                "SceneFactory().build_from_recipe('living_room_returned_home', 19); "
+                "assert 'isaacsim' not in sys.modules; assert 'numpy' not in sys.modules"
+            )],
+            cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True,
+            timeout=30, check=False,
+        )
+        self.assertEqual(probe.returncode, 0, probe.stdout + probe.stderr)
 
     def test_external_schema_wraps_canonical_scene_intent_schema(self) -> None:
         schema = external_scene_schema(

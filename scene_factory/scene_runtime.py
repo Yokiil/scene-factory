@@ -44,6 +44,14 @@ def _hash(payload: Any) -> str:
     return hashlib.sha256(canonical_json(payload)).hexdigest()
 
 
+def _placed_payload(item: PlacedObject) -> dict[str, Any]:
+    payload = asdict(item)
+    payload["pose"] = item.pose.to_dict()
+    if payload["physics"] is None:
+        del payload["physics"]
+    return payload
+
+
 def _source(source: Any) -> tuple[dict[str, Any], str, str | None]:
     if isinstance(source, CompiledScene):
         raw = json.loads(canonical_json(source.to_dict()))
@@ -109,6 +117,8 @@ def inspect_scene_runtime(factory: Any, source: Any) -> dict[str, Any]:
         scene = CompiledScene.from_dict(raw)
         response.update(source_scene_id=scene.scene_id, source_layout_sha256=layout_hash,
                         source_intent_sha256=intent_hash)
+        if any(not item.pose.is_upright for item in scene.objects):
+            return reject("unsupported_tilted_layout", "旧抓杯转换路径仅支持直立物体；完整姿态请使用沙盒会话接口。")
         if raw.get("objects") != json.loads(canonical_json(scene.to_dict()))["objects"]:
             return reject("noncanonical_layout", "场景布局格式不完整，请使用网页重新生成场景后运行。")
         if (len({item.object_id for item in scene.objects}) != len(scene.objects)
@@ -228,7 +238,7 @@ def inspect_scene_runtime(factory: Any, source: Any) -> dict[str, Any]:
             "support_object": support.object_id, "support_surface": "top",
             "support_top_z_m": top_z, "robot": "franka",
             "robot_base_position_m": list(base), "robot_base_orientation_wxyz": [1.0, 0.0, 0.0, 0.0],
-            "mount_object": mount.object_id, "added_objects": [asdict(item) for item in added],
+            "mount_object": mount.object_id, "added_objects": [_placed_payload(item) for item in added],
             "target_position_m": list(target),
             "target_region_xy": [target[0] - 0.08, target[0] + 0.08, target[1] - 0.09, target[1] + 0.09],
             "source_objects_sha256": _hash(raw["objects"]),

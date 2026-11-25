@@ -19,6 +19,11 @@ class ControllerSettingsTests(unittest.TestCase):
             "arm_stiffness": 1000.0,
             "arm_damping": 200.0,
             "arm_max_force": 2000.0,
+            "finger_stiffness": 1000.0,
+            "finger_damping": 200.0,
+            "finger_max_force": 2000.0,
+            "solver_position_iterations": None,
+            "solver_velocity_iterations": None,
         }
         for raw in (None, {}):
             with self.subTest(raw=raw):
@@ -45,6 +50,11 @@ class ControllerSettingsTests(unittest.TestCase):
             "arm_stiffness": 2000,
             "arm_damping": 300,
             "arm_max_force": 1000,
+            "finger_stiffness": 1000,
+            "finger_damping": 20,
+            "finger_max_force": 20,
+            "solver_position_iterations": 64,
+            "solver_velocity_iterations": 16,
         }
         settings = normalize_controller_settings(raw)
         self.assertEqual(settings, raw)
@@ -57,7 +67,8 @@ class ControllerSettingsTests(unittest.TestCase):
                 normalize_controller_settings(raw)
 
     def test_rejects_non_numbers_and_nonfinite_values(self) -> None:
-        numeric_keys = set(normalize_controller_settings(None)) - {"max_reach_steps"}
+        numeric_keys = set(normalize_controller_settings(None)) - {
+            "max_reach_steps", "solver_position_iterations", "solver_velocity_iterations"}
         invalid = (
             None,
             "0.04",
@@ -83,6 +94,9 @@ class ControllerSettingsTests(unittest.TestCase):
             "arm_stiffness",
             "arm_damping",
             "arm_max_force",
+            "finger_stiffness",
+            "finger_damping",
+            "finger_max_force",
         )
         for key in positive_keys:
             for value in (0, 0.0, -0.0, -1, -0.001):
@@ -127,6 +141,17 @@ class ControllerSettingsTests(unittest.TestCase):
         # Constructing the pure state machine also guards against accidentally
         # passing backend-only gripper or drive options into its constructor.
         MugLiftController((0.5, 0.0, 0.9), **kwargs)
+
+    def test_solver_iterations_require_bounded_integers_or_none(self) -> None:
+        for key, minimum in (("solver_position_iterations", 1), ("solver_velocity_iterations", 0)):
+            for value in (None, minimum, 16, 64, 255):
+                with self.subTest(key=key, value=value):
+                    self.assertEqual(normalize_controller_settings({key: value})[key], value)
+            for value in (True, False, "16", 16.0, -1, 256, float("nan"), float("inf"), [], {}):
+                with self.subTest(key=key, value=value), self.assertRaisesRegex(ValueError, key):
+                    normalize_controller_settings({key: value})
+        with self.assertRaises(ValueError):
+            normalize_controller_settings({"solver_position_iterations": 0})
 
     def test_reach_kwargs_validate_filtered_out_settings(self) -> None:
         invalid = (

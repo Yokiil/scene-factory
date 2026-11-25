@@ -1,0 +1,64 @@
+{
+  "files": [
+    {
+      "public_directory": "examples/assembly/peg_socket",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/sandbox_assembly_20261028",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "cc65ac997e8c6dc5bb1cbb28148847a76986c40fb7f1d6ae3703d15482f9be14"
+    },
+    {
+      "public_directory": "examples/assembly/room_assembly/room20",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/room20",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "7502e92c217b3cfa756ce3a7f8401e4c03dc1edda6f60bb57680333bd6728f32"
+    },
+    {
+      "public_directory": "examples/assembly/room_assembly/room50",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/room50",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "6bc0a08aa06ae468b562c43df82af38dd49e2d2573daf404af0d69c67f73751e"
+    },
+    {
+      "public_directory": "examples/assembly/room_assembly/room100",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/room100",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "8cd0d9f50d1433eeb5a809bb51b62d722d889096d1731fdd0915725baaddf176"
+    },
+    {
+      "public_directory": "examples/assembly/square_peg_socket",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/square_peg_socket",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "08491bce67db24be296378c53e58503a368e7e75d070644cf778714bcb3f172d"
+    },
+    {
+      "public_directory": "examples/assembly/square_room_assembly/room20",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/square_room20",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "e3ff6e04cda17318be13c11ec49e1b3dd9031b5b2b6ab13118c660c8cd2518e5"
+    },
+    {
+      "public_directory": "examples/assembly/square_room_assembly/room50",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/square_room50",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "3af2d5e580f29bc182ef7de667225744f3983c2cb03770260752ba412176f4f0"
+    },
+    {
+      "public_directory": "examples/assembly/square_room_assembly/room100",
+      "recorded_fixture_directory": "F:/scene_factory_runtime/completion_20261104/square_room100",
+      "spec_sha256": "a471bccf7939e17be355a1a3a10bf9d0d40f4b02029ecc0ab29f9775f6180147",
+      "usd_sha256": "215c7fdb2dd13468fb0a9e99fcecb907b582ea7f4489df0cce687bd73fdc88b0"
+    }
+  ],
+  "mappings": {
+    "F:/scene_factory_runtime/completion_20261104/room100": "examples/assembly/room_assembly/room100",
+    "F:/scene_factory_runtime/completion_20261104/room20": "examples/assembly/room_assembly/room20",
+    "F:/scene_factory_runtime/completion_20261104/room50": "examples/assembly/room_assembly/room50",
+    "F:/scene_factory_runtime/completion_20261104/square_peg_socket": "examples/assembly/square_peg_socket",
+    "F:/scene_factory_runtime/completion_20261104/square_room100": "examples/assembly/square_room_assembly/room100",
+    "F:/scene_factory_runtime/completion_20261104/square_room20": "examples/assembly/square_room_assembly/room20",
+    "F:/scene_factory_runtime/completion_20261104/square_room50": "examples/assembly/square_room_assembly/room50",
+    "F:/scene_factory_runtime/sandbox_assembly_20261028": "examples/assembly/peg_socket"
+  },
+  "schema_version": "scene_factory.assembly_fixture_paths.v1",
+  "scope": "Exact original procedural fixture bytes for saved-evidence audit; no official robot assets or physical rerun."
+}

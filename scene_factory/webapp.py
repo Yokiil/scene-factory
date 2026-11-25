@@ -144,6 +144,11 @@ class SceneWebApplication:
 
     def generate(self, payload: dict[str, Any]) -> dict[str, Any]:
         prompt = str(payload.get("prompt", "")).strip()
+        recipe_name = payload.get("recipe")
+        if recipe_name is not None and (
+            not isinstance(recipe_name, str) or recipe_name not in self.factory.recipes.names()
+        ):
+            raise ValueError("unknown recipe")
         if len(prompt) < 2:
             raise ValueError("请至少输入 2 个字的场景需求")
         if len(prompt) > 1000:
@@ -163,7 +168,8 @@ class SceneWebApplication:
 
         items = []
         for offset in range(count):
-            result = self.factory.build_from_prompt(prompt, seed + offset)
+            result = (self.factory.build_from_recipe(recipe_name, seed + offset)
+                      if recipe_name else self.factory.build_from_prompt(prompt, seed + offset))
             scene_dir = self.output_root / result.scene.scene_id
             files = self.factory.write_result(
                 result,
@@ -357,6 +363,7 @@ class SceneWebApplication:
             "source_type": record.source_type,
             "visual_url": visual["url"] if visual else None,
             "visual_transform": _visual_transform_for_asset(visual["transform"], record) if visual else None,
+            "preserve_visual_materials": "dessert_display_pack" in record.tags,
             "license": record.license,
             "support_surfaces": [asdict(surface) for surface in record.support_surfaces],
             "interior_regions": [asdict(region) for region in record.interior_regions],

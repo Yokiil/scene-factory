@@ -1,0 +1,2317 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Scope "Objects"
+    {
+        def Cube "robot_mount_1" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/MetalContact>
+            custom float physxCollision:contactOffset = 0.0001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+            custom string sceneFactory:category = "support"
+            custom string sceneFactory:objectId = "robot_mount_1"
+            double size = 1
+            float3 xformOp:scale = (0.5, 0.6, 0.78)
+            double3 xformOp:translate = (-0.05, 0, 0.39)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "table_1" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/MetalContact>
+            custom float physxCollision:contactOffset = 0.0001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.48, 0.35, 0.23)]
+            custom string sceneFactory:category = "support"
+            custom string sceneFactory:objectId = "table_1"
+            double size = 1
+            float3 xformOp:scale = (0.7, 0.8, 0.92)
+            double3 xformOp:translate = (0.7, 0, 0.46)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Xform "socket_1"
+        {
+            custom string sceneFactory:category = "socket"
+            custom string sceneFactory:objectId = "socket_1"
+            double3 xformOp:translate = (0.6, 0.13, 0.96)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+
+            def Cube "Base" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/MetalContact>
+                custom float physxCollision:contactOffset = 0.0001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+                double size = 1
+                float3 xformOp:scale = (0.07, 0.07, 0.02)
+                double3 xformOp:translate = (0, 0, -0.03)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "Xminus1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/MetalContact>
+                custom float physxCollision:contactOffset = 0.0001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+                double size = 1
+                float3 xformOp:scale = (0.02425, 0.07, 0.06)
+                double3 xformOp:translate = (-0.022875, 0, 0.01)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "Yminus1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/MetalContact>
+                custom float physxCollision:contactOffset = 0.0001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+                double size = 1
+                float3 xformOp:scale = (0.0215, 0.02425, 0.06)
+                double3 xformOp:translate = (0, -0.022875, 0.01)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "X1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/MetalContact>
+                custom float physxCollision:contactOffset = 0.0001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+                double size = 1
+                float3 xformOp:scale = (0.02425, 0.07, 0.06)
+                double3 xformOp:translate = (0.022875, 0, 0.01)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "Y1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/MetalContact>
+                custom float physxCollision:contactOffset = 0.0001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+                double size = 1
+                float3 xformOp:scale = (0.0215, 0.02425, 0.06)
+                double3 xformOp:translate = (0, 0.022875, 0.01)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Cube "peg_1" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "PhysicsRigidBodyAPI", "MaterialBindingAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/MetalContact>
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.000069333335, 0.000069333335, 0.0000053333333)
+            float physics:mass = 0.08
+            custom float physxCollision:contactOffset = 0.0001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.2, 0.55, 0.82)]
+            custom string sceneFactory:category = "peg"
+            custom string sceneFactory:objectId = "peg_1"
+            double size = 1
+            float3 xformOp:scale = (0.02, 0.02, 0.1)
+            double3 xformOp:translate = (0.55, -0.13, 0.97)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_000" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.07154902, 0.077450104, 0.06891767)
+            float physics:mass = 7.8261957
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.4572089, 0.6369343, 0.49377975)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_000"
+            double size = 1
+            float3 xformOp:scale = (0.2395, 0.2198, 0.24778)
+            double3 xformOp:translate = (-4.77635627159089, -4.016719131741711, 0.12589)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_001" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.61786413, 0.33857396, 0.2742095)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_001"
+            double size = 1
+            float3 xformOp:scale = (0.23037, 0.16415, 0.25152)
+            double3 xformOp:translate = (3.9773322283163197, -3.9908693484440207, 0.12576)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_002" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.47362012, 0.48936263, 0.37691242)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_002"
+            double size = 1
+            float3 xformOp:scale = (0.19994, 0.13299, 0.20094)
+            double3 xformOp:translate = (-3.210543345987218, 5.604474394337778, 0.10047)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_003" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.050194386, 0.04778865, 0.026530672)
+            float physics:mass = 5.220796
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.31052104, 0.4237305, 0.35201716)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_003"
+            double size = 1
+            float3 xformOp:scale = (0.16651, 0.18236, 0.28656)
+            double3 xformOp:translate = (-3.185735917052883, -2.3911584558930277, 0.14528)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_004" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.26297262, 0.46034703, 0.44444245)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_004"
+            double size = 1
+            float3 xformOp:scale = (0.14223, 0.15426, 0.13148)
+            double3 xformOp:translate = (2.4041628885452853, 4.814757458656345, 0.06574)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_005" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.3546962, 0.32187092, 0.5940283)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_005"
+            double size = 1
+            float3 xformOp:scale = (0.21458, 0.12476, 0.16057)
+            double3 xformOp:translate = (-1.5777249131488906, -3.2023464519345404, 0.080285)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_006" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.011179391, 0.017269062, 0.016869621)
+            float physics:mass = 2.9484873
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5040265, 0.2429956, 0.5783273)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_006"
+            double size = 1
+            float3 xformOp:scale = (0.21615, 0.14811, 0.1535)
+            double3 xformOp:translate = (-5.604150221260648, -4.818184835952432, 0.07875)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_007" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.6206956, 0.66959596, 0.33573508)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_007"
+            double size = 1
+            float3 xformOp:scale = (0.24133, 0.29306, 0.25293)
+            double3 xformOp:translate = (-0.8030596384439544, 3.978218828729416, 0.126465)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_008" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.21087158, 0.24754961, 0.41351685)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_008"
+            double size = 1
+            float3 xformOp:scale = (0.19144, 0.29403, 0.19619)
+            double3 xformOp:translate = (4.799314554841728, 3.2120615830721375, 0.098095)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_009" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.21969575, 0.22802016, 0.22076586)
+            float physics:mass = 15.373986
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.32451278, 0.29014775, 0.23528798)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_009"
+            double size = 1
+            float3 xformOp:scale = (0.29901, 0.28794, 0.29761)
+            double3 xformOp:translate = (5.575945898990659, 2.4054931021423522, 0.150805)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_010" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.4670708, 0.23152466, 0.21761094)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_010"
+            double size = 1
+            float3 xformOp:scale = (0.13304, 0.2401, 0.29059)
+            double3 xformOp:translate = (-4.778459507858606, 1.5763001289671354, 0.145295)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_011" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.27423376, 0.6831328, 0.22783057)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_011"
+            double size = 1
+            float3 xformOp:scale = (0.17587, 0.29714, 0.17062)
+            double3 xformOp:translate = (5.615975820042565, -3.990581206794172, 0.08531)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_012" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.02855186, 0.033422682, 0.039856065)
+            float physics:mass = 4.852807
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.51387334, 0.2534357, 0.6916364)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_012"
+            double size = 1
+            float3 xformOp:scale = (0.23516, 0.20798, 0.16537)
+            double3 xformOp:translate = (-0.006858503100218218, -3.216005670980998, 0.084685)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_013" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.35760942, 0.30510762, 0.4453698)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_013"
+            double size = 1
+            float3 xformOp:scale = (0.22727, 0.16887, 0.22347)
+            double3 xformOp:translate = (-5.585827058339284, 3.1854377713182296, 0.111735)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_014" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.39162788, 0.5580095, 0.23457597)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_014"
+            double size = 1
+            float3 xformOp:scale = (0.22778, 0.15183, 0.15003)
+            double3 xformOp:translate = (0.8143910052200407, -4.0136283492040965, 0.075015)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_015" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.05416083, 0.04501761, 0.028808167)
+            float physics:mass = 5.2748876
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.4078119, 0.4684165, 0.69344616)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_015"
+            double size = 1
+            float3 xformOp:scale = (0.14956, 0.20777, 0.28292)
+            double3 xformOp:translate = (-5.578184603457334, 2.3875638697678276, 0.14346)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_016" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.49609447, 0.29679626, 0.20617276)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_016"
+            double size = 1
+            float3 xformOp:scale = (0.15407, 0.21387, 0.2336)
+            double3 xformOp:translate = (-0.7986378291855653, 5.592353591922357, 0.1168)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_017" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.2933459, 0.6817667, 0.64823407)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_017"
+            double size = 1
+            float3 xformOp:scale = (0.27206, 0.27149, 0.19662)
+            double3 xformOp:translate = (4.823272742719033, -5.5905534508590025, 0.09831)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_018" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.01885945, 0.027185604, 0.017312987)
+            float physics:mass = 3.485994
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.52522624, 0.42327774, 0.32758325)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_018"
+            double size = 1
+            float3 xformOp:scale = (0.21007, 0.12437, 0.22238)
+            double3 xformOp:translate = (-2.4217064080039656, 4.006493460537901, 0.11319)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_019" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.3940411, 0.4867333, 0.2470575)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_019"
+            double size = 1
+            float3 xformOp:scale = (0.17015, 0.26006, 0.28371)
+            double3 xformOp:translate = (-3.180681223089053, -3.1914229599525603, 0.141855)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_020" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.55094236, 0.39620256, 0.30753025)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_020"
+            double size = 1
+            float3 xformOp:scale = (0.29187, 0.28766, 0.1468)
+            double3 xformOp:translate = (-2.418376886157579, 4.8175134958872246, 0.0734)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_021" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.009880127, 0.0071190665, 0.00928916)
+            float physics:mass = 2.161319
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.39838073, 0.51557356, 0.45769954)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_021"
+            double size = 1
+            float3 xformOp:scale = (0.13462, 0.1829, 0.1463)
+            double3 xformOp:translate = (-3.9803179425068445, -0.8202248175648951, 0.07515000000000001)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_022" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.4436279, 0.4191265, 0.66492736)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_022"
+            double size = 1
+            float3 xformOp:scale = (0.12419, 0.23875, 0.1486)
+            double3 xformOp:translate = (4.782240122920661, -4.797567096033347, 0.0743)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_023" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.6907175, 0.6631606, 0.6718848)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_023"
+            double size = 1
+            float3 xformOp:scale = (0.17915, 0.21356, 0.18955)
+            double3 xformOp:translate = (4.781382869480736, -2.4108800553414995, 0.094775)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_024" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.02695309, 0.026576731, 0.013790472)
+            float physics:mass = 3.5790052
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5347102, 0.21714121, 0.346016)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_024"
+            double size = 1
+            float3 xformOp:scale = (0.14996, 0.15411, 0.25811)
+            double3 xformOp:translate = (4.802540655712657, 5.585097250850443, 0.131055)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_025" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5933727, 0.23433952, 0.57891464)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_025"
+            double size = 1
+            float3 xformOp:scale = (0.18658, 0.19263, 0.20171)
+            double3 xformOp:translate = (1.5920775156250186, 3.199127457156521, 0.100855)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_026" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.67941684, 0.3366045, 0.38812637)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_026"
+            double size = 1
+            float3 xformOp:scale = (0.14811, 0.17188, 0.28331)
+            double3 xformOp:translate = (4.004260109496581, -0.7854173740880174, 0.141655)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_027" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.049786907, 0.07396669, 0.07732538)
+            float physics:mass = 7.2093935
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.65176016, 0.51752156, 0.6688535)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_027"
+            double size = 1
+            float3 xformOp:scale = (0.29065, 0.21031, 0.19657)
+            double3 xformOp:translate = (1.5918401852926445, -4.808597809689803, 0.100285)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_028" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5087909, 0.6235456, 0.38287568)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_028"
+            double size = 1
+            float3 xformOp:scale = (0.13416, 0.20943, 0.21389)
+            double3 xformOp:translate = (4.807481015877229, 4.797108882641333, 0.106945)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_029" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.61198, 0.53675205, 0.35758126)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_029"
+            double size = 1
+            float3 xformOp:scale = (0.29094, 0.2683, 0.16743)
+            double3 xformOp:translate = (4.8024788963122, -3.1837831227464846, 0.083715)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_030" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.030082023, 0.024786144, 0.037768487)
+            float physics:mass = 4.506879
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.58190006, 0.5949266, 0.49102452)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_030"
+            double size = 1
+            float3 xformOp:scale = (0.20792, 0.23944, 0.15088)
+            double3 xformOp:translate = (-3.9846186635882916, 3.987202470309107, 0.07744)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_031" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.20322563, 0.4166662, 0.3585951)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_031"
+            double size = 1
+            float3 xformOp:scale = (0.17025, 0.2949, 0.23082)
+            double3 xformOp:translate = (2.4227770186548954, -1.609184078169586, 0.11541)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_032" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.25748938, 0.42104942, 0.21665339)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_032"
+            double size = 1
+            float3 xformOp:scale = (0.1446, 0.24204, 0.27398)
+            double3 xformOp:translate = (0.016384597316475416, 3.223637811052964, 0.13699)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_033" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.040235125, 0.044445544, 0.051154565)
+            float physics:mass = 5.83702
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.45287046, 0.6008456, 0.5945537)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_033"
+            double size = 1
+            float3 xformOp:scale = (0.23856, 0.21967, 0.18564)
+            double3 xformOp:translate = (4.010433322891866, 4.788710071988344, 0.09482)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_034" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.62296206, 0.38499582, 0.37973672)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_034"
+            double size = 1
+            float3 xformOp:scale = (0.16082, 0.2098, 0.13029)
+            double3 xformOp:translate = (3.1969768413084867, -2.4013520008104394, 0.065145)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_035" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.63034916, 0.33146772, 0.59247804)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_035"
+            double size = 1
+            float3 xformOp:scale = (0.20191, 0.27527, 0.22752)
+            double3 xformOp:translate = (-1.5821801084768037, 2.4092901085483662, 0.11376)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_036" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.11885768, 0.10063232, 0.1314899)
+            float physics:mass = 10.301961
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5783156, 0.25525698, 0.2570636)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_036"
+            double size = 1
+            float3 xformOp:scale = (0.25684, 0.29529, 0.22639)
+            double3 xformOp:translate = (-1.5776144949978932, 3.195035488040708, 0.115195)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_037" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.6256301, 0.6649962, 0.46583804)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_037"
+            double size = 1
+            float3 xformOp:scale = (0.14777, 0.26271, 0.14584)
+            double3 xformOp:translate = (0.016193768882414097, 5.613494861322367, 0.07292)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_038" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.2073406, 0.6017459, 0.51229656)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_038"
+            double size = 1
+            float3 xformOp:scale = (0.20493, 0.23681, 0.25717)
+            double3 xformOp:translate = (-2.3816383500851215, 5.582802517510594, 0.128585)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_039" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.08495323, 0.07458467, 0.058545187)
+            float physics:mass = 7.64254
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.40691817, 0.66986805, 0.4651767)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_039"
+            double size = 1
+            float3 xformOp:scale = (0.19448, 0.2326, 0.28158)
+            double3 xformOp:translate = (1.6161523329655707, 3.9814522351503197, 0.14279)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_040" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.46694362, 0.55657166, 0.49670845)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_040"
+            double size = 1
+            float3 xformOp:scale = (0.13433, 0.15694, 0.1767)
+            double3 xformOp:translate = (-4.779211792688155, 2.4238354472487136, 0.08835)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_041" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.28901923, 0.4697132, 0.28929678)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_041"
+            double size = 1
+            float3 xformOp:scale = (0.19802, 0.29853, 0.15485)
+            double3 xformOp:translate = (3.192252947368364, 0.7838214467910374, 0.077425)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_042" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.03465201, 0.026502483, 0.020259755)
+            float physics:mass = 4.053286
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.49151483, 0.3131669, 0.6699023)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_042"
+            double size = 1
+            float3 xformOp:scale = (0.13389, 0.20507, 0.24604)
+            double3 xformOp:translate = (1.6147529231837647, 5.598879113212361, 0.12502)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_043" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5286178, 0.38429013, 0.3792553)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_043"
+            double size = 1
+            float3 xformOp:scale = (0.16388, 0.27895, 0.21464)
+            double3 xformOp:translate = (3.180421011017344, -4.023676056605295, 0.10732)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_044" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.5893683, 0.2944622, 0.6669642)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_044"
+            double size = 1
+            float3 xformOp:scale = (0.22699, 0.17628, 0.2911)
+            double3 xformOp:translate = (5.596979057900378, -1.615632318525495, 0.14555)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def Cube "room_background_045" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI", "PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/RoomBackground>
+            vector3f physics:angularVelocity = (0, 0, 0)
+            point3f physics:centerOfMass = (0, 0, 0)
+            float3 physics:diagonalInertia = (0.068999134, 0.050050303, 0.065537736)
+            float physics:mass = 6.96394
+            vector3f physics:velocity = (0, 0, 0)
+            custom float physxCollision:contactOffset = 0.001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.41315356, 0.37909284, 0.48218602)]
+            custom string sceneFactory:category = "background"
+            custom string sceneFactory:objectId = "room_background_045"
+            double size = 1
+            float3 xformOp:scale = (0.20035, 0.2698, 0.21472)
+            double3 xformOp:translate = (-4.01884027541324, -3.178712093000623, 0.10936)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+    }
+
+    def PhysicsScene "PhysicsScene"
+    {
+        vector3f physics:gravityDirection = (0, 0, -1)
+        float physics:gravityMagnitude = 9.81
+    }
+
+    def DomeLight "Light"
+    {
+        float inputs:intensity = 800
+    }
+
+    def "Materials"
+    {
+        def Material "MetalContact" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.25
+            float physics:restitution = 0
+            float physics:staticFriction = 0.35
+        }
+
+        def Material "RoomBackground" (
+            prepend apiSchemas = ["PhysicsMaterialAPI"]
+        )
+        {
+            float physics:dynamicFriction = 0.8
+            float physics:restitution = 0
+            float physics:staticFriction = 1
+        }
+    }
+
+    def "Room"
+    {
+        def Cube "Floor" (
+            prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+        )
+        {
+            rel material:binding:physics = </World/Materials/MetalContact>
+            custom float physxCollision:contactOffset = 0.0001
+            custom float physxCollision:restOffset = 0
+            color3f[] primvars:displayColor = [(0.45, 0.48, 0.52)]
+            double size = 1
+            float3 xformOp:scale = (14, 14, 0.05)
+            double3 xformOp:translate = (0, 0, -0.025)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+        }
+
+        def "Walls"
+        {
+            def Cube "wall_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/RoomBackground>
+                custom float physxCollision:contactOffset = 0.001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.65, 0.66, 0.68)]
+                double size = 1
+                float3 xformOp:scale = (0.1, 14, 3)
+                double3 xformOp:translate = (-7, 0, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "wall_1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/RoomBackground>
+                custom float physxCollision:contactOffset = 0.001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.65, 0.66, 0.68)]
+                double size = 1
+                float3 xformOp:scale = (0.1, 14, 3)
+                double3 xformOp:translate = (7, 0, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "wall_2" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/RoomBackground>
+                custom float physxCollision:contactOffset = 0.001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.65, 0.66, 0.68)]
+                double size = 1
+                float3 xformOp:scale = (14, 0.1, 3)
+                double3 xformOp:translate = (0, -7, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+
+            def Cube "wall_3" (
+                prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+            )
+            {
+                rel material:binding:physics = </World/Materials/RoomBackground>
+                custom float physxCollision:contactOffset = 0.001
+                custom float physxCollision:restOffset = 0
+                color3f[] primvars:displayColor = [(0.65, 0.66, 0.68)]
+                double size = 1
+                float3 xformOp:scale = (14, 0.1, 3)
+                double3 xformOp:translate = (0, 7, 1.5)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def "BackgroundCells"
+        {
+            def "room_background_000"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-5.08885627159089, -4.016719131741711, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-4.46385627159089, -4.016719131741711, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-4.77635627159089, -4.329219131741711, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-4.77635627159089, -3.704219131741711, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-4.77635627159089, -4.016719131741711, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_003"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-3.498235917052883, -2.3911584558930277, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-2.873235917052883, -2.3911584558930277, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.185735917052883, -2.7036584558930277, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.185735917052883, -2.0786584558930277, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-3.185735917052883, -2.3911584558930277, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_006"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-5.916650221260648, -4.818184835952432, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-5.291650221260648, -4.818184835952432, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-5.604150221260648, -5.130684835952432, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-5.604150221260648, -4.505684835952432, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-5.604150221260648, -4.818184835952432, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_009"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (5.263445898990659, 2.4054931021423522, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (5.888445898990659, 2.4054931021423522, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (5.575945898990659, 2.0929931021423522, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (5.575945898990659, 2.7179931021423522, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (5.575945898990659, 2.4054931021423522, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_012"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-0.31935850310021824, -3.216005670980998, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (0.30564149689978176, -3.216005670980998, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-0.006858503100218218, -3.528505670980998, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-0.006858503100218218, -2.903505670980998, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-0.006858503100218218, -3.216005670980998, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_015"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-5.890684603457334, 2.3875638697678276, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-5.265684603457334, 2.3875638697678276, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-5.578184603457334, 2.0750638697678276, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-5.578184603457334, 2.7000638697678276, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-5.578184603457334, 2.3875638697678276, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_018"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-2.7342064080039656, 4.006493460537901, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-2.1092064080039656, 4.006493460537901, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-2.4217064080039656, 3.693993460537901, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-2.4217064080039656, 4.318993460537901, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-2.4217064080039656, 4.006493460537901, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_021"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-4.2928179425068445, -0.8202248175648951, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-3.6678179425068445, -0.8202248175648951, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.9803179425068445, -1.132724817564895, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.9803179425068445, -0.5077248175648952, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-3.9803179425068445, -0.8202248175648951, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_024"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (4.490040655712657, 5.585097250850443, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (5.115040655712657, 5.585097250850443, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (4.802540655712657, 5.272597250850443, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (4.802540655712657, 5.897597250850443, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (4.802540655712657, 5.585097250850443, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_027"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.2793401852926445, -4.808597809689803, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.9043401852926445, -4.808597809689803, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.5918401852926445, -5.121097809689803, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.5918401852926445, -4.496097809689803, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (1.5918401852926445, -4.808597809689803, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_030"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-4.297118663588292, 3.987202470309107, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-3.6721186635882916, 3.987202470309107, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.9846186635882916, 3.674702470309107, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-3.9846186635882916, 4.299702470309107, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-3.9846186635882916, 3.987202470309107, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_033"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (3.697933322891866, 4.788710071988344, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (4.322933322891866, 4.788710071988344, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (4.010433322891866, 4.476210071988344, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (4.010433322891866, 5.101210071988344, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (4.010433322891866, 4.788710071988344, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_036"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-1.8901144949978932, 3.195035488040708, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-1.2651144949978932, 3.195035488040708, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-1.5776144949978932, 2.882535488040708, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-1.5776144949978932, 3.507535488040708, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-1.5776144949978932, 3.195035488040708, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_039"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.3036523329655707, 3.9814522351503197, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.9286523329655707, 3.9814522351503197, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.6161523329655707, 3.6689522351503197, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.6161523329655707, 4.29395223515032, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (1.6161523329655707, 3.9814522351503197, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_042"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.3022529231837647, 5.598879113212361, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (1.9272529231837647, 5.598879113212361, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.6147529231837647, 5.286379113212361, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (1.6147529231837647, 5.911379113212361, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (1.6147529231837647, 5.598879113212361, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+
+            def "room_background_045"
+            {
+                def Cube "wall_0" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-4.33134027541324, -3.178712093000623, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_1" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.025, 0.65, 0.65)
+                    double3 xformOp:translate = (-3.7063402754132397, -3.178712093000623, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_2" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-4.01884027541324, -3.491212093000623, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_3" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.6, 0.025, 0.65)
+                    double3 xformOp:translate = (-4.01884027541324, -2.866212093000623, 0.325)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+
+                def Cube "wall_4" (
+                    prepend apiSchemas = ["PhysicsCollisionAPI", "MaterialBindingAPI"]
+                )
+                {
+                    rel material:binding:physics = </World/Materials/RoomBackground>
+                    custom float physxCollision:contactOffset = 0.001
+                    custom float physxCollision:restOffset = 0
+                    color3f[] primvars:displayColor = [(0.5, 0.52, 0.55)]
+                    double size = 1
+                    token visibility = "invisible"
+                    float3 xformOp:scale = (0.65, 0.65, 0.025)
+                    double3 xformOp:translate = (-4.01884027541324, -3.178712093000623, 0.6625)
+                    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                }
+            }
+        }
+    }
+}
+

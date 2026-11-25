@@ -1,0 +1,25 @@
+ARG PYTHON_BASE_IMAGE=python:3.12.7-slim-bookworm
+FROM ${PYTHON_BASE_IMAGE}
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    SCENE_FACTORY_HOME=/opt/scene-factory SCENE_FACTORY_LLM_MODE=off \
+    MUJOCO_GL=osmesa OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2
+RUN apt-get update && apt-get install -y --no-install-recommends libosmesa6 libgl1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 10001 sandbox && useradd --uid 10001 --gid 10001 --create-home sandbox
+WORKDIR /opt/scene-factory
+COPY LICENSE THIRD_PARTY_NOTICES.md ./
+COPY deploy/sandbox/requirements-mujoco.txt /tmp/requirements-mujoco.txt
+RUN python -m pip install --no-cache-dir --only-binary=:all: -r /tmp/requirements-mujoco.txt
+COPY scene_factory ./scene_factory
+COPY recipes ./recipes
+COPY schemas ./schemas
+COPY web ./web
+COPY data/assets ./data/assets
+COPY deploy/sandbox ./deploy/sandbox
+RUN mkdir -p /data/runtime /data/scenes && chown -R 10001:10001 /data
+USER 10001:10001
+EXPOSE 8765
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD ["python", "deploy/sandbox/healthcheck.py"]
+ENTRYPOINT ["python", "deploy/sandbox/launch.py"]
+CMD ["service", "serve", "--host", "0.0.0.0", "--root", "/data/runtime", "--scene-root", "/data", "--max-sessions", "2", "--memory-budget-mb", "6144", "--cpu-budget", "4"]

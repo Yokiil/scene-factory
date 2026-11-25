@@ -1,0 +1,27 @@
+# Supply an actually available, licensed Linux image by immutable digest.
+# No image tag/digest is invented or silently pulled as an equivalent release.
+ARG ISAAC_BASE_IMAGE
+FROM ${ISAAC_BASE_IMAGE}
+ARG ISAAC_BASE_IMAGE
+ARG ISAAC_PYTHON=/isaac-sim/python.sh
+ARG EXPECTED_ISAAC_VERSION=6.0.1.0
+ENV ISAAC_PYTHON=${ISAAC_PYTHON} EXPECTED_ISAAC_VERSION=${EXPECTED_ISAAC_VERSION} \
+    PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    SCENE_FACTORY_HOME=/opt/scene-factory SCENE_FACTORY_LLM_MODE=off
+RUN test -x "${ISAAC_PYTHON}" && "${ISAAC_PYTHON}" -c \
+    "import os,re,sys,importlib.metadata as m; assert re.search(r'@sha256:[0-9a-f]{64}$', os.environ['ISAAC_BASE_IMAGE']), 'ISAAC_BASE_IMAGE must be digest-pinned'; assert sys.version_info >= (3,12), 'SceneFactory requires Python >=3.12'; assert m.version('isaacsim') == os.environ['EXPECTED_ISAAC_VERSION'], 'Isaac version mismatch'"
+WORKDIR /opt/scene-factory
+COPY LICENSE THIRD_PARTY_NOTICES.md ./
+COPY scene_factory ./scene_factory
+COPY recipes ./recipes
+COPY schemas ./schemas
+COPY web ./web
+COPY data/assets ./data/assets
+COPY deploy/sandbox ./deploy/sandbox
+RUN printf '#!/bin/sh\nexec "$ISAAC_PYTHON" "$@"\n' > /usr/local/bin/scenefactory-python \
+    && chmod 755 /usr/local/bin/scenefactory-python && mkdir -p /data/runtime /data/scenes
+EXPOSE 8765
+HEALTHCHECK --interval=30s --timeout=15s --start-period=180s --retries=3 \
+    CMD ["/usr/local/bin/scenefactory-python", "deploy/sandbox/healthcheck.py"]
+ENTRYPOINT ["/usr/local/bin/scenefactory-python", "deploy/sandbox/launch.py"]
+CMD ["service", "serve", "--host", "0.0.0.0", "--root", "/data/runtime", "--scene-root", "/data", "--max-sessions", "1", "--startup-timeout", "180", "--request-timeout", "120", "--memory-budget-mb", "12288", "--cpu-budget", "8"]

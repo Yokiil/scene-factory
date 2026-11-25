@@ -35,4 +35,4 @@ for the counts, scene previews and artifact links. The package validates after
 copying elsewhere without the source pool; it does not include additional mesh
 binaries, simulators or robot trajectories.
 
-See [the data workflow](../../docs/DATA_WORKFLOW.md) for field and validation semantics.
+See [the data workflow](../../docs/data/DATA_WORKFLOW.md) for field and validation semantics.

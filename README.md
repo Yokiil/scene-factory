@@ -2,10 +2,10 @@
 
 SceneFactory 是面向具身智能仿真工作流的确定性场景、任务、交互规划和执行器契约工具包。
 
-v0.1.0 已于 2026-08-28 在 [GitHub Release](https://github.com/zy8389/scene-factory/releases/tag/v0.1.0)
+v0.1.0 已于 2026-08-28 在 [GitHub Release](https://github.com/Yokiil/scene-factory/releases/tag/v0.1.0)
 发布 wheel、sdist、产物清单与校验文件。本 README 描述当前开发分支；发布后的新增功能
 见 [CHANGELOG 的 Unreleased 部分](CHANGELOG.md)，已发布版本的范围见
-[v0.1.0 发布说明](docs/RELEASE_NOTES_v0.1.0.md)。
+[v0.1.0 发布说明](docs/reference/RELEASE_NOTES_v0.1.0.md)。
 
 离线 Python SDK 可在无需 Isaac Sim、GPU、NumPy、LLM API 或网络连接的情况下
 完成场景编译、数据集验证、规划与干运行。首次克隆或下载发布产物需要网络；
@@ -36,8 +36,12 @@ v0.1.0 已于 2026-08-28 在 [GitHub Release](https://github.com/zy8389/scene-fa
 - 符号化可动部件规划与离线干运行执行；
 - 执行轨迹验证及核心执行器一致性套件；
 - 可选的 Isaac Sim USD 导出和依赖环境的机器人集成。
+- 物理沙盒首阶段：有效的 episode reset、版本化会话契约、Python 会话与 CLI 基准；
+  现已补充 HTTP 常驻会话、环境包、实例随机化、MuJoCo 快速重置与恢复、Isaac 外部关节动作和按需 RGB-D。
+  2026-11-04 继续补充 SE(3)、四层 episode 随机化、MuJoCo 跨会话池、实测增量编译、Isaac 运行包与全物体/接触观测、在线装配判据和 JEV 决策适配。
+  [当前交付清单、实测结果与验收边界](docs/sandbox/SANDBOX_COMPLETION_20261104.md)；Linux GPU 与真实 JEV 推理/训练状态单独标明。
 - 厨房与餐厅的 11 类原创 USD / GLB 资产、柜架分层放物、椅子围桌和预留通道；
-  详见[资产包与验证说明](docs/KITCHEN_DINING_ASSETS.md)。
+  详见[资产包与验证说明](docs/assets/KITCHEN_DINING_ASSETS.md)。
 
 ## 当前集成边界与 Blender case
 
@@ -87,7 +91,7 @@ Web UI、SVG/Three.js 预览、MJCF 导出和场景包导出本身不需要安�
 python -m pip install ".[dev]"
 ```
 
-核心测试与可复现的 Chromium 浏览器验收入口见[测试说明](docs/TESTING.md)。
+核心测试与可复现的 Chromium 浏览器验收入口见[测试说明](docs/reference/TESTING.md)。
 
 wheel 包含配方、模式、Web 文件、资产注册表，以及离线工作流所需的已提交资产
 元数据；不包含 Isaac Sim、个人运行目录或 NVIDIA Local Assets。USD 导出和编辑器启动
@@ -180,7 +184,7 @@ scene-factory dataset audit outputs/dataset --minimum-level layout --deduplicate
 每个新场景输出 `quality.json`，明确区分布局通过、物理未验证和任务未验证。
 审计先检查源文件完整性，再输出合格场景索引、失败原因及筛选前后的多样性统计，
 不删除源数据。`--minimum-level physics` 或 `task` 不会把缺失证据当作通过。
-报告写在源数据集目录以外；旧 v1 数据仍可读取。详见[数据路线工作流](docs/DATA_WORKFLOW.md)。
+报告写在源数据集目录以外；旧 v1 数据仍可读取。详见[数据路线工作流](docs/data/DATA_WORKFLOW.md)。
 
 抓杯与抓取放置数据可使用独立的 `kitchen_franka_mug_lift_data`、
 `kitchen_franka_mug_pick_place_data` 配方，按种子随机化杯子起点。原固定验收配方保留。
@@ -221,7 +225,8 @@ scene-factory dataset runtime-validate <ASCII_RUNTIME_DIR>/mug-pilot
 
 运行输出使用 ASCII 路径，官方资产入口指定自己的 Local Assets 根目录。
 `runtime-validate` 完全离线；证据校验通过不代表所有任务成功。
-完整流程及门槛见[真实运行工作流](docs/RUNTIME_DATA_WORKFLOW.md)。
+完整流程及门槛见[真实运行工作流](docs/data/RUNTIME_DATA_WORKFLOW.md)，
+网页中的验收与回放见[网页运行工作流](docs/sandbox/WEB_RUNTIME_WORKFLOW.md)。
 
 另有独立的[Franka 跟踪与夹持保持示例](examples/franka_tracking/README.md)，通过
 `_tracking_data` 配方指定控制参数。参考机器上，同一组20个初始布局的40个抓杯/
@@ -229,7 +234,7 @@ scene-factory dataset runtime-validate <ASCII_RUNTIME_DIR>/mug-pilot
 原配方继续保留旧控制参数。该结果适用于当前 Franka/YCB 杯子仿真切片。
 
 网页新增 Franka 配对验收入口，支持顺序排队、运行进度、逐项成败、只读历史
-和可暂停拖动的状态轨迹回放。启动配置与操作见[网页仿真工作流](docs/WEB_RUNTIME_WORKFLOW.md)。
+和可暂停拖动的状态轨迹回放。启动配置与操作见[网页仿真工作流](docs/sandbox/WEB_RUNTIME_WORKFLOW.md)。
 
 生成结果还提供“运行当前场景”：先检查厨房单杯布局，显示机器人安装与放置
 计划，再冻结实际场景进入同一队列。原物体保持原位，结果绑定来源编号与哈希；
@@ -285,19 +290,19 @@ scene-factory executor validate-report executor-conformance.json
 
 ## 架构与 API
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) 说明编译流程和模拟器边界。
-- [`docs/PUBLIC_API.md`](docs/PUBLIC_API.md) 记录受支持的 Python API。
-- [`docs/CLI.md`](docs/CLI.md) 列出 CLI 命令和退出码行为。
-- [`docs/COMPATIBILITY.md`](docs/COMPATIBILITY.md) 记录环境支持范围。
-- [`docs/SCHEMA_POLICY.md`](docs/SCHEMA_POLICY.md) 定义模式兼容性策略。
-- 更深入的资料仍可参阅[资产流水线](docs/ASSET_PIPELINE.md)、
-  [LLM 集成](docs/LLM_INTEGRATION.md)和 [Web UI](docs/WEB_UI.md)。
+- [`docs/reference/ARCHITECTURE.md`](docs/reference/ARCHITECTURE.md) 说明编译流程和模拟器边界。
+- [`docs/reference/PUBLIC_API.md`](docs/reference/PUBLIC_API.md) 记录受支持的 Python API。
+- [`docs/reference/CLI.md`](docs/reference/CLI.md) 列出 CLI 命令和退出码行为。
+- [`docs/reference/COMPATIBILITY.md`](docs/reference/COMPATIBILITY.md) 记录环境支持范围。
+- [`docs/reference/SCHEMA_POLICY.md`](docs/reference/SCHEMA_POLICY.md) 定义模式兼容性策略。
+- 更深入的资料仍可参阅[资产流水线](docs/assets/ASSET_PIPELINE.md)、
+  [LLM 集成](docs/sandbox/LLM_INTEGRATION.md)和 [Web UI](docs/sandbox/WEB_UI.md)。
 
 ## Isaac Sim 状态
 
 Isaac 专用模块采用延迟导入，因此 `import scene_factory` 始终是纯 Python 操作。
 Isaac Sim 6.0.1 可用于 USD 导出，以及
-[`docs/ISAAC_VALIDATION.md`](docs/ISAAC_VALIDATION.md) 中描述的依赖环境的
+[`docs/isaac/ISAAC_VALIDATION.md`](docs/isaac/ISAAC_VALIDATION.md) 中描述的依赖环境的
 Franka/RGB-D 工作流。
 
 当前公开状态有意保持谨慎：
@@ -320,7 +325,11 @@ URDF 或离线结果作为该验收的替代证明。
 公开命令组如下：
 
 ```text
+sandbox
+service
 list-recipes
+doctor
+blender
 build
 batch
 intent
@@ -330,9 +339,14 @@ executor
 asset
 llm-status
 llm-test
+priority
+episode
 ```
 
-运行 `scene-factory --help` 或查看 [`docs/CLI.md`](docs/CLI.md) 了解完整语法。
+运行 `scene-factory --help` 或查看 [`docs/reference/CLI.md`](docs/reference/CLI.md) 了解完整语法。
+物理沙盒的构建、会话 API 和服务器入口见[服务说明](docs/sandbox/SANDBOX_SERVICE.md)与
+[部署说明](docs/sandbox/SANDBOX_DEPLOYMENT.md)；JEV 案例、接口和未执行的训练范围见
+[JEV 对齐说明](docs/assembly/JEV_ALIGNMENT_20261104.md)。
 CLI 成功时使用退出码 `0`；命令、配置或运行时输入错误使用 `1`；
 验证或验收失败使用 `2`。
 

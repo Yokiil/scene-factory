@@ -1,0 +1,11 @@
+# Exact versions installed in the validated Windows development environment.
+# Linux wheels and container execution still require target-host verification.
+mujoco==3.3.7
+numpy==2.5.3
+absl-py==2.5.0
+glfw==2.10.2
+PyOpenGL==3.1.10
+etils[epath]==1.14.0
+fsspec==2026.9.0
+typing_extensions==4.16.0
+zipp==4.1.0

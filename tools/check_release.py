@@ -16,13 +16,13 @@ REQUIRED_FILES = (
     "CHANGELOG.md",
     "RELEASE_CHECKLIST.md",
     "THIRD_PARTY_NOTICES.md",
-    "docs/ARCHITECTURE.md",
-    "docs/COMPATIBILITY.md",
-    "docs/API_SURFACE_v0.1.md",
-    "docs/CLI_REFERENCE.md",
-    "docs/PUBLIC_API.md",
-    "docs/RELEASE_NOTES_v0.1.0.md",
-    "docs/SCHEMA_POLICY.md",
+    "docs/reference/ARCHITECTURE.md",
+    "docs/reference/COMPATIBILITY.md",
+    "docs/reference/API_SURFACE_v0.1.md",
+    "docs/reference/CLI_REFERENCE.md",
+    "docs/reference/PUBLIC_API.md",
+    "docs/reference/RELEASE_NOTES_v0.1.0.md",
+    "docs/reference/SCHEMA_POLICY.md",
     "examples/basic_scene/README.md",
     "examples/external_intent/README.md",
     "examples/external_intent/scene.json",
@@ -139,7 +139,7 @@ def _check_attribution(failures: list[str]) -> None:
 
 
 def _check_release_documents(failures: list[str]) -> None:
-    notes_path = ROOT / "docs" / "RELEASE_NOTES_v0.1.0.md"
+    notes_path = ROOT / "docs" / "reference" / "RELEASE_NOTES_v0.1.0.md"
     changelog_path = ROOT / "CHANGELOG.md"
     try:
         notes = _read_text(notes_path)
@@ -193,6 +193,10 @@ def _check_hygiene(failures: list[str], tracked: list[Path]) -> None:
         if path.resolve() == Path(__file__).resolve():
             continue
         relative = path.relative_to(ROOT).as_posix()
+        # examples/assembly 下的夹具报告与路径映射是历史实验记录，保存的是
+        # 当时运行机器的绝对路径，审计工具按原样读回，不能改写。
+        if relative.startswith("examples/assembly/"):
+            continue
         if relative.startswith(forbidden_prefixes) or relative.endswith((".log", ".tmp", ".part", ".whl")):
             failures.append(f"generated artifact is tracked: {relative}")
         if path.suffix.lower() not in {".md", ".json", ".toml", ".py", ".ps1", ".cmd", ".yml", ".yaml", ".css", ".js"}:
@@ -220,7 +224,7 @@ def run() -> dict[str, object]:
     _check_resources(failures)
     _check_attribution(failures)
     _check_release_documents(failures)
-    _check_links(failures, [ROOT / "README.md", *(ROOT / "docs").glob("*.md"), *(ROOT / "examples").glob("**/*.md")])
+    _check_links(failures, [ROOT / "README.md", *(ROOT / "docs").glob("**/*.md"), *(ROOT / "examples").glob("**/*.md")])
     _check_hygiene(failures, tracked)
     checks = {
         "required_files": "passed",

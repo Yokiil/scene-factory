@@ -1,0 +1,51 @@
+{
+  "schema_version": "scene_factory.assembly_spec.v1",
+  "spec_id": "original_peg_socket_v1",
+  "peg_id": "peg_1",
+  "socket_id": "socket_1",
+  "peg_interface_position_m": [
+    0,
+    0,
+    -0.05
+  ],
+  "socket_interface_position_m": [
+    0,
+    0,
+    0.04
+  ],
+  "insertion_axis_socket": [
+    0,
+    0,
+    -1
+  ],
+  "target_depth_m": 0.06,
+  "clearance_m": [
+    0.0006,
+    0.0009
+  ],
+  "position_tolerance_m": 0.0005,
+  "angular_tolerance_rad": 0.02,
+  "max_force_N": 30,
+  "min_hold_s": 0.5,
+  "release_stable_s": 0.5,
+  "timeout_s": 60,
+  "jam_window_s": 2,
+  "min_progress_m": 0.0005,
+  "max_linear_speed_mps": 0.3,
+  "max_angular_speed_rps": 2,
+  "drop_below_z_m": 0.89,
+  "allowed_contact_pairs": [
+    [
+      "peg_1",
+      "socket_1"
+    ],
+    [
+      "peg_1",
+      "robot"
+    ],
+    [
+      "peg_1",
+      "table_1"
+    ]
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "asset_id": "dessert_pink_mini_cake_01",
+  "source": "SceneFactory original dessert display geometry",
+  "license": "MIT",
+  "source_geometry": "visual.glb",
+  "sha256": "be46fba3445bb5838ae802b999774b92f9de5d4c3c042a244b0a03054e897579",
+  "geometry_sha256": "7ee94feb242126af479c3d064a1534772d10ed1bd4dc775b18bfa68f930da95a",
+  "usd_sha256": "77c38236ef9a4d154cf63f8367a61217e4e90d8d3a1b33bcef507eb00f602a41",
+  "collision_sha256": "8de08f9f9318c9b6f3f774b2494d45e986efc85a782f3d46bbc1df8346f22e67",
+  "visual_transform": {
+    "up_axis": "Y",
+    "rotation_euler_deg": [
+      90,
+      0,
+      0
+    ],
+    "anchor": "bottom_center"
+  },
+  "bbox_m": [
+    0.08,
+    0.08,
+    0.09
+  ],
+  "units": "m",
+  "origin": "bbox_center",
+  "generator": "tools/build_dessert_display.py",
+  "collision_strategy": "separate_simple_parts",
+  "source_url": "../../../../tools/build_dessert_display.py",
+  "source_revision": "sha256:3c6683bd1d7eeb2496f688869cfcfbaa4a2ddae7d9a25b1534fcdc25e5f04c9f",
+  "source_revision_kind": "generator_content_sha256",
+  "generator_sources_sha256": {
+    "tools/build_dessert_display.py": "3c6683bd1d7eeb2496f688869cfcfbaa4a2ddae7d9a25b1534fcdc25e5f04c9f",
+    "tools/build_kitchen_dining_assets.py": "718886de2944899e35403fbe0366acfb0a2ea3c2469a071eaff9b9e7bd7dc7e0"
+  }
+}

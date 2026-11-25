@@ -56,6 +56,12 @@ def configuration_fingerprint(layout: Mapping[str, Any]) -> str:
         "yaw_deg": item.pose.yaw_deg % 360.0,
         "dynamic": item.dynamic, "interactions": item.interactions,
     } for item in scene.objects]
+    for row, item in zip(objects, scene.objects, strict=True):
+        if not item.pose.is_upright:
+            q = item.pose.effective_orientation_wxyz
+            # q and -q denote the same rotation and must group together.
+            sign = next((1 if v > 0 else -1 for v in q if abs(v) > 1e-12), 1)
+            row["orientation_wxyz"] = [0. if abs(v) < 1e-12 else sign*v for v in q]
     return _hash({"version": CONFIGURATION_GROUP_VERSION, "room_type": scene.room_type,
                   "room_dimensions_m": scene.room_dimensions_m,
                   "objects": sorted(objects, key=canonical_json)})

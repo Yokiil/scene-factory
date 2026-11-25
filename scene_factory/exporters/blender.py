@@ -44,7 +44,7 @@ class BlenderExporter:
             objects.append({
                 "object_id": item.object_id,
                 "asset_id": item.asset_id,
-                "pose": {"position": list(item.pose.position), "yaw_deg": item.pose.yaw_deg},
+                "pose": item.pose.to_dict(),
                 "bbox_m": list(item.bbox_m),
                 "color": list(record.color),
                 "primitive": record.primitive,

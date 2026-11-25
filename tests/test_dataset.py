@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from dataclasses import replace
@@ -247,8 +249,19 @@ class DatasetContractTests(unittest.TestCase):
             self.assertFalse(validate_dataset(directory)["valid"])
 
     def test_no_isaac_import_is_needed_for_dataset_api(self) -> None:
-        self.assertNotIn("isaacsim", __import__("sys").modules)
-        self.assertNotIn("numpy", __import__("sys").modules)
+        # Backend integration tests may import NumPy during pytest collection.
+        # Inspect the dataset API's own dependencies in a fresh process.
+        probe = subprocess.run(
+            [sys.executable, "-c", (
+                "import sys; import scene_factory.dataset; "
+                "from scene_factory.factory import SceneFactory; "
+                "SceneFactory().build_from_recipe('living_room_returned_home', 19); "
+                "assert 'isaacsim' not in sys.modules; assert 'numpy' not in sys.modules"
+            )],
+            cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True,
+            timeout=30, check=False,
+        )
+        self.assertEqual(probe.returncode, 0, probe.stdout + probe.stderr)
 
     def test_inspect_supports_legacy_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

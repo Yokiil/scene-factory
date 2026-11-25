@@ -17,9 +17,14 @@ dist/
 build/
 outputs/
 local_resources/
+deliveries/
+ucode.elf
 *.usd
 *.usda
 *.usdc
 *.usdz
 !data/assets/usd/kd_*.usd
 !data/assets/collision/kd_*.usd
+!data/assets/usd/dessert_*.usd
+!data/assets/collision/dessert_*.usd
+!examples/assembly/**/scene.usda

@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene_factory.decision_training_sample.v1",
+  "title": "Measured behavior decision training sample",
+  "description": "Additional semantic checks (registered action equality, time/episode continuity, checksums, leakage and behavior-only labels) are enforced by scene_factory.decision_dataset.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "sample_id",
+    "state",
+    "rubric",
+    "label",
+    "observed_action",
+    "outcome",
+    "source",
+    "split"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "scene_factory.decision_training_sample.v1"
+    },
+    "sample_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation",
+        "task",
+        "step_index",
+        "sim_time_s",
+        "sensor_truth_policy"
+      ],
+      "properties": {
+        "observation": {
+          "type": "object"
+        },
+        "task": {
+          "type": "object"
+        },
+        "step_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sim_time_s": {
+          "type": "number",
+          "minimum": 0
+        },
+        "sensor_truth_policy": {
+          "const": "ground_truth_and_noisy_measurements_are_separate"
+        }
+      }
+    },
+    "rubric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "question_id",
+        "instructions",
+        "criteria"
+      ],
+      "properties": {
+        "type": {
+          "const": "choice"
+        },
+        "question_id": {
+          "const": "next_skill"
+        },
+        "instructions": {
+          "type": "string",
+          "minLength": 1
+        },
+        "criteria": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 255,
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "label": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "choice",
+        "optimality"
+      ],
+      "properties": {
+        "kind": {
+          "const": "observed_behavior"
+        },
+        "choice": {
+          "type": "string",
+          "minLength": 1
+        },
+        "optimality": {
+          "const": "not_established"
+        }
+      }
+    },
+    "observed_action": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "episode_outcome",
+        "task_success",
+        "terminated",
+        "truncated",
+        "failure_flags",
+        "authority"
+      ],
+      "properties": {
+        "episode_outcome": {
+          "enum": [
+            "task_success",
+            "task_not_evaluated",
+            "engine_time_limit",
+            "policy_budget_exhausted",
+            "runtime_or_policy_failure"
+          ]
+        },
+        "task_success": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "terminated": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "failure_flags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "authority": {
+          "const": "recorded_physics_task_evaluator"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rollout_file",
+        "rollout_sha256",
+        "episode_id",
+        "session_id",
+        "scene_sha256",
+        "backend",
+        "fidelity",
+        "seed",
+        "transition_index",
+        "policy_source",
+        "model_resolved",
+        "model_inference_evidence",
+        "selector_state_sha256",
+        "action_sha256"
+      ],
+      "properties": {
+        "rollout_file": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rollout_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "episode_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "session_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scene_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "backend": {
+          "enum": [
+            "mujoco",
+            "isaac"
+          ]
+        },
+        "fidelity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "transition_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "policy_source": {
+          "enum": [
+            "contract_test_double",
+            "typesafe_endpoint",
+            "self_hosted_jev",
+            "other_external_policy"
+          ]
+        },
+        "model_resolved": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_inference_evidence": {
+          "enum": [
+            "test_double_no_live_inference",
+            "reported_in_rollout_not_independently_verified"
+          ]
+        },
+        "selector_state_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "action_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "split": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "asset_families",
+        "task_structure",
+        "policy"
+      ],
+      "properties": {
+        "name": {
+          "enum": [
+            "train",
+            "validation",
+            "test"
+          ]
+        },
+        "asset_families": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "task_structure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "policy": {
+          "const": "connected_components_shared_asset_family_or_task_structure"
+        }
+      }
+    }
+  }
+}

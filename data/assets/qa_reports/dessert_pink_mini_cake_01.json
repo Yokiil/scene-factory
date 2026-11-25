@@ -1,0 +1,80 @@
+{
+  "asset_id": "dessert_pink_mini_cake_01",
+  "checks": {
+    "z_up": true,
+    "metres": true,
+    "bounds_match": true,
+    "centred_origin": true,
+    "mesh_valid": true,
+    "collision_parts": true,
+    "bound_friction": true,
+    "resolved_dependencies": true
+  },
+  "bounds_m": [
+    0.07999999821186066,
+    0.07999999821186066,
+    0.09000000357627869
+  ],
+  "mesh_count": 19,
+  "collision_count": 1,
+  "usd_sha256": "77c38236ef9a4d154cf63f8367a61217e4e90d8d3a1b33bcef507eb00f602a41",
+  "collision_sha256": "8de08f9f9318c9b6f3f774b2494d45e986efc85a782f3d46bbc1df8346f22e67",
+  "glb_sha256": "be46fba3445bb5838ae802b999774b92f9de5d4c3c042a244b0a03054e897579",
+  "physics_cases": [
+    {
+      "case": "floor_drop",
+      "checks": {
+        "fell": true,
+        "on_support": true,
+        "stable": true,
+        "stopped": true,
+        "finite": true
+      },
+      "initial_position_m": [
+        12.0,
+        6.0,
+        0.495
+      ],
+      "final_position_m": [
+        11.999987602233887,
+        6.000011444091797,
+        0.04499993100762367
+      ],
+      "final_speed_mps": 0.000315206354946855,
+      "expected_center_z_m": 0.045,
+      "passed": true
+    },
+    {
+      "case": "table_contact",
+      "checks": {
+        "fell": true,
+        "on_support": true,
+        "stable": true,
+        "stopped": true,
+        "finite": true
+      },
+      "initial_position_m": [
+        12.0,
+        9.0,
+        1.2550000000000001
+      ],
+      "final_position_m": [
+        11.999987602233887,
+        9.00001335144043,
+        0.804999828338623
+      ],
+      "final_speed_mps": 0.0003040127939143802,
+      "expected_center_z_m": 0.805,
+      "passed": true
+    }
+  ],
+  "grasp": "not_run",
+  "validator": "OpenUSD + real Isaac Sim/PhysX",
+  "steps": 300,
+  "dt_s": 0.016666666666666666,
+  "usd_load": "passed",
+  "mesh_check": "passed",
+  "collision": "passed",
+  "physics": "passed",
+  "valid": true
+}

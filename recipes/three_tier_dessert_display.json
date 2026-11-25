@@ -1,0 +1,666 @@
+{
+  "name": "three_tier_dessert_display",
+  "room_type": "dining_room",
+  "event": "dessert_display",
+  "room_dimensions_m": [
+    1.4,
+    1.4,
+    1.2
+  ],
+  "description": "三层木质蛋糕展示架上整齐陈列粉色小蛋糕、奶油杯糕和草莓方糕。",
+  "keywords": [
+    "三层蛋糕架",
+    "三层木质蛋糕展示架",
+    "甜点展示",
+    "蛋糕陈列",
+    "three tier dessert display"
+  ],
+  "objects": [
+    {
+      "object_id": "stand_1",
+      "category": "dessert_stand",
+      "asset_id": "dessert_tiered_stand_01",
+      "dynamic": false,
+      "support": "floor",
+      "fixed_pose": {
+        "position": [
+          0,
+          0,
+          0.38
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_1_1",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.224,
+          -0.25,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_1_2",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.112,
+          -0.25,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_1_3",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          -0.25,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_1_4",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.112,
+          -0.25,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_1_5",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.224,
+          -0.25,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_2_1",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.224,
+          -0.155,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_2_2",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.112,
+          -0.155,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_2_3",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          -0.155,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_2_4",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.112,
+          -0.155,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_2_5",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.224,
+          -0.155,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_3_1",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.224,
+          -0.06,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_3_2",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.112,
+          -0.06,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_3_4",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.112,
+          -0.06,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_3_5",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.224,
+          -0.06,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_4_1",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.224,
+          0.08,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_4_2",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.112,
+          0.08,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_4_3",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          0.08,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_4_4",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.112,
+          0.08,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_4_5",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.224,
+          0.08,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_5_1",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.224,
+          0.19,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_5_2",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          -0.112,
+          0.19,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_5_3",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          0.19,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_5_4",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.112,
+          0.19,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "lower_cake_5_5",
+      "category": "petit_four",
+      "asset_id": "dessert_strawberry_square_01",
+      "dynamic": true,
+      "support": "stand_1:lower",
+      "fixed_pose": {
+        "position": [
+          0.224,
+          0.19,
+          0.125
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_1_1",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          -0.16,
+          -0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_1_2",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0,
+          -0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_1_3",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0.16,
+          -0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_2_1",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          -0.16,
+          -0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_2_2",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0,
+          -0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_2_3",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0.16,
+          -0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_3_1",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          -0.16,
+          0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_3_2",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0,
+          0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_3_3",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0.16,
+          0.06,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_4_1",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          -0.16,
+          0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_4_2",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0,
+          0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "middle_cake_4_3",
+      "category": "cupcake",
+      "asset_id": "dessert_cream_cupcake_01",
+      "dynamic": true,
+      "support": "stand_1:middle",
+      "fixed_pose": {
+        "position": [
+          0.16,
+          0.18,
+          0.365
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_1_1",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          -0.11,
+          -0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_1_2",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          -0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_1_3",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          0.11,
+          -0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_2_1",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          -0.11,
+          0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_2_2",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          0.0,
+          0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    },
+    {
+      "object_id": "upper_cake_2_3",
+      "category": "mini_cake",
+      "asset_id": "dessert_pink_mini_cake_01",
+      "dynamic": true,
+      "support": "stand_1:upper",
+      "fixed_pose": {
+        "position": [
+          0.11,
+          0.056,
+          0.585
+        ],
+        "yaw_deg": 0
+      }
+    }
+  ],
+  "task": {}
+}

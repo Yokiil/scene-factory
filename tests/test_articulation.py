@@ -3,6 +3,7 @@ from __future__ import annotations
 import copy
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -403,8 +404,19 @@ class ArticulationSceneAndTaskTests(ArticulationFixture, unittest.TestCase):
             self.assertFalse(validate_dataset(directory).valid)
 
     def test_no_isaac_or_numpy_import_is_needed(self) -> None:
-        self.assertNotIn("isaacsim", sys.modules)
-        self.assertNotIn("numpy", sys.modules)
+        # Backend integration tests may import NumPy during pytest collection.
+        # Inspect the articulation API's own dependencies in a fresh process.
+        probe = subprocess.run(
+            [sys.executable, "-c", (
+                "import sys; import scene_factory.asset_validator; "
+                "import scene_factory.models; import scene_factory.layout; "
+                "import scene_factory.intent_compiler; import scene_factory.tasks; "
+                "assert 'isaacsim' not in sys.modules; assert 'numpy' not in sys.modules"
+            )],
+            cwd=Path(__file__).resolve().parents[1], capture_output=True, text=True,
+            timeout=30, check=False,
+        )
+        self.assertEqual(probe.returncode, 0, probe.stdout + probe.stderr)
 
 
 class _FactoryForTest:

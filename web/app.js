@@ -37,6 +37,7 @@ const revisionButton = document.querySelector("#revise");
 const revisionMessage = document.querySelector("#revision-message");
 const revisionSource = document.querySelector("#revision-source");
 let currentItem = null;
+let selectedRecipe = null;
 const priorityGenerate = document.querySelector("#priority-generate");
 const priorityPanel = document.querySelector("#priority-panel");
 const priorityAsk = document.querySelector("#priority-ask");
@@ -53,9 +54,11 @@ const escapeHtml = (value) => String(value ?? "")
 document.querySelectorAll("[data-prompt]").forEach((button) => {
   button.addEventListener("click", () => {
     promptInput.value = button.dataset.prompt;
+    selectedRecipe = button.dataset.recipe || null;
     promptInput.focus();
   });
 });
+promptInput.addEventListener("input", () => { selectedRecipe = null; });
 
 document.querySelectorAll("[data-revision]").forEach((button) => {
   button.addEventListener("click", () => {
@@ -353,6 +356,7 @@ form.addEventListener("submit", async (event) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         prompt: promptInput.value,
+        recipe: selectedRecipe,
         seed: Number(seedInput.value),
         count: Number(countInput.value),
         export_mjcf: mjcfInput.checked,

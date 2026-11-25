@@ -181,7 +181,7 @@ class RobotRuntimeTests(unittest.TestCase):
             usd_path = Path(directory) / "scene.usd"
             usd_path.write_text("#usda 1.0\n", encoding="utf-8")
             app = FakeApp()
-            backend = IsaacSimBackend(usd_path)
+            backend = IsaacSimBackend(usd_path, close_on_reset_error=True)
             with patch(
                 "scene_factory.backends.isaac._load_simulation_app",
                 return_value=lambda settings: app,
@@ -201,6 +201,32 @@ class RobotRuntimeTests(unittest.TestCase):
             self.assertEqual(backend.steps, 0)
             self.assertIsNone(backend._last_observation)
             self.assertEqual(backend._initial_positions, {})
+
+    def test_default_reset_failure_preserves_exception_before_explicit_close(self) -> None:
+        class FakeApp:
+            closed = False
+
+            def close(self):
+                self.closed = True
+
+        with tempfile.TemporaryDirectory() as directory:
+            usd_path = Path(directory) / "scene.usd"
+            usd_path.write_text("#usda 1.0\n", encoding="utf-8")
+            app = FakeApp()
+            backend = IsaacSimBackend(usd_path)
+            error = RuntimeError("initialization evidence must reach caller")
+            with patch("scene_factory.backends.isaac._load_simulation_app", return_value=lambda settings: app), patch.object(
+                backend, "_initialize_runtime", side_effect=error,
+            ):
+                with self.assertRaises(RuntimeError) as raised:
+                    backend.reset({"scene_id": "scene", "objects": [], "task": {"target_object": "mug_1"}})
+            self.assertIs(raised.exception, error)
+            self.assertFalse(backend.close_on_reset_error)
+            self.assertFalse(app.closed)
+            self.assertIs(backend._app, app)
+            backend.close()
+            self.assertTrue(app.closed)
+            self.assertIsNone(backend.scene)
 
     def test_close_clears_episode_state(self) -> None:
         backend = IsaacSimBackend("scene.usd")

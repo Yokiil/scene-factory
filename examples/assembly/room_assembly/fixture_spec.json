@@ -1,0 +1,21 @@
+{
+  "schema_version": "scene_factory.assembly_room_recipe.v1",
+  "source": "Original SceneFactory procedural geometry",
+  "license": "MIT",
+  "generator": "tools/build_assembly_room_fixture.py",
+  "base_generator": "tools/build_assembly_fixture.py",
+  "object_count_choices": [20, 50, 100],
+  "seed": 19,
+  "room_dimensions_m": [14, 14, 3],
+  "original_workspace_object_ids": ["robot_mount_1", "table_1", "socket_1", "peg_1"],
+  "preserve_original_assembly_spec": true,
+  "protected_robot_and_task_aabb_m": {
+    "min_m": [-1.5, -1.5, 0.0],
+    "max_m": [2.0, 1.5, 2.3]
+  },
+  "background_kind": "seeded_original_boxes",
+  "dynamic_background_selection": "index modulo 3 equals 0",
+  "dynamic_initial_velocity_mps": [0, 0, 0],
+  "containment": "five fixed invisible colliders per dynamic background; collision remains enabled",
+  "acceptance": "geometry_build_only; measured background stability and robot assembly must be recorded separately"
+}

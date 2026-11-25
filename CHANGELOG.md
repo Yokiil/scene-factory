@@ -4,6 +4,18 @@
 
 ### Added
 
+- a three-tier dessert display recipe with four authored dessert assets, a
+  build tool, scene validation and a web preview entry.
+
+- recorded assembly fixtures and trial audits for peg-in-socket and 20/50/100
+  object room assemblies, with fixture path mappings so old absolute paths
+  resolve on another machine.
+
+- a MuJoCo worker pool, measured incremental compilation with a four-way
+  comparison, Isaac runtime packages with full-object and contact observations,
+  online assembly criteria and a JEV decision adapter. Linux GPU runs and real
+  JEV training stay marked as not executed.
+
 - eleven original kitchen/dining USD and GLB assets with shared mesh geometry,
   authored convex collision parts, real contact/drop QA and portable MuJoCo
   meshes; three recipes add shelf containment, chairs around tables and explicit
@@ -91,7 +103,7 @@
 ## 0.1.0 - 2026-08-28
 
 Published as an early developer release on
-[GitHub](https://github.com/zy8389/scene-factory/releases/tag/v0.1.0).
+[GitHub](https://github.com/Yokiil/scene-factory/releases/tag/v0.1.0).
 Features listed under `Unreleased` belong to the current development branch and
 are not included in the published v0.1.0 artifacts.
 

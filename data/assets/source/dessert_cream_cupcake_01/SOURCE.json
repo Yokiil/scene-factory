@@ -1,0 +1,35 @@
+{
+  "asset_id": "dessert_cream_cupcake_01",
+  "source": "SceneFactory original dessert display geometry",
+  "license": "MIT",
+  "source_geometry": "visual.glb",
+  "sha256": "b030cc1dbcf811176f73e5038728670120ec49d020b39a429aef2a97405cc109",
+  "geometry_sha256": "eb21687ff1524602667f5ad8f35aa869c9b4d570df07e3d59cfcc27873712d15",
+  "usd_sha256": "bf6fe5961d38acf7bf2cd727f1ce46324a039123ee37caf70680fda5903eb817",
+  "collision_sha256": "775761631e939698831d10190e4726729b889c42964a193e8ce103bf0b684d26",
+  "visual_transform": {
+    "up_axis": "Y",
+    "rotation_euler_deg": [
+      90,
+      0,
+      0
+    ],
+    "anchor": "bottom_center"
+  },
+  "bbox_m": [
+    0.092,
+    0.092,
+    0.11
+  ],
+  "units": "m",
+  "origin": "bbox_center",
+  "generator": "tools/build_dessert_display.py",
+  "collision_strategy": "separate_simple_parts",
+  "source_url": "../../../../tools/build_dessert_display.py",
+  "source_revision": "sha256:3c6683bd1d7eeb2496f688869cfcfbaa4a2ddae7d9a25b1534fcdc25e5f04c9f",
+  "source_revision_kind": "generator_content_sha256",
+  "generator_sources_sha256": {
+    "tools/build_dessert_display.py": "3c6683bd1d7eeb2496f688869cfcfbaa4a2ddae7d9a25b1534fcdc25e5f04c9f",
+    "tools/build_kitchen_dining_assets.py": "718886de2944899e35403fbe0366acfb0a2ea3c2469a071eaff9b9e7bd7dc7e0"
+  }
+}

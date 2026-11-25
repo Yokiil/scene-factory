@@ -32,6 +32,22 @@ class TaskEvaluator:
     ) -> dict[str, Any]:
         success = self.task.get("success", {})
         predicate = success.get("predicate")
+        if predicate is None:
+            return {
+                "task_success": False,
+                "evaluation_status": "not_evaluated",
+                "failure_reason": "success_predicate_missing",
+            }
+        if predicate not in {"pick_and_place", "articulation_state", "lifted", "near", "on", "inside"}:
+            return {
+                "task_success": False,
+                "evaluation_status": "unsupported",
+                "predicate": predicate,
+                "failure_reason": (
+                    "assembly_requires_trajectory_contact_and_release_evidence"
+                    if predicate == "assembly" else "unsupported_success_predicate"
+                ),
+            }
         if predicate == "pick_and_place":
             return self._pick_and_place_status(state, evidence or {})
         if predicate == "articulation_state":

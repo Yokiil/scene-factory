@@ -26,9 +26,6 @@ from ..controller_settings import controller_reach_kwargs, normalize_controller_
 _BUNDLED_FRANKA_ARM_STIFFNESS = 1000.0
 _BUNDLED_FRANKA_ARM_DAMPING = 200.0
 _BUNDLED_FRANKA_ARM_MAX_FORCE = 2000.0
-_FRANKA_FINGER_STIFFNESS = 1000.0
-_FRANKA_FINGER_DAMPING = 200.0
-_FRANKA_FINGER_MAX_FORCE = 2000.0
 _BUNDLED_FRANKA_FINGER_ROOT_OFFSET_M = 0.0584
 _NUCLEUS_FRANKA_APPROACH_CLEARANCE_X_M = 0.06
 _NUCLEUS_FRANKA_GRASP_OFFSET_Z_M = -0.005
@@ -123,7 +120,11 @@ def build_observation(
 
 
 class IsaacSimBackend:
-    """Isaac Sim 6.0 backend for the deterministic Franka mug-lift slice."""
+    """Isaac Franka control with optional live object, contact and assembly evidence."""
+
+    # Kit fast shutdown terminates Python. A failed reset must first reach the
+    # session/HTTP caller so it can persist the exception, then explicitly close.
+    close_on_reset_error = False
 
     def __init__(
         self,
@@ -133,12 +134,22 @@ class IsaacSimBackend:
         max_steps: int = 720,
         physics_dt: float = 1.0 / 60.0,
         enable_rgbd: bool = False,
+        robot_asset_root: str | Path | None = None,
+        enable_general_observation: bool = False,
+        close_on_reset_error: bool = False,
     ) -> None:
         self.usd_path = Path(usd_path).expanduser().resolve()
         self.headless = headless
         self.max_steps = max_steps
         self.physics_dt = physics_dt
         self.enable_rgbd = enable_rgbd
+        self.robot_asset_root = str(robot_asset_root) if robot_asset_root is not None else None
+        if not isinstance(enable_general_observation, bool):
+            raise ValueError("enable_general_observation must be boolean")
+        self.enable_general_observation = enable_general_observation
+        if not isinstance(close_on_reset_error, bool):
+            raise ValueError("close_on_reset_error must be boolean")
+        self.close_on_reset_error = close_on_reset_error
         self.scene: dict[str, Any] | None = None
         self.steps = 0
         self._app = None
@@ -151,8 +162,14 @@ class IsaacSimBackend:
         self._initial_positions: dict[str, Vec3] = {}
         self._task_evaluator: TaskEvaluator | None = None
         self._task_status: dict[str, Any] = {}
+        self._assembly_runtime = None
+        self._assembly_clearance_m: float | None = None
+        self._assembly_contact_before_release = False
+        self._assembly_released = False
         self._controller: MugLiftController | None = None
         self._last_observation: dict[str, Any] | None = None
+        self._observation_adapter = None
+        self._general_observation_error = None
         self._grasp_diagnostics: dict[str, Any] = _empty_grasp_diagnostics()
         self._material_diagnostics: dict[str, Any] = {}
         self._finger_gripper_config: dict[str, Any] = {}
@@ -166,6 +183,10 @@ class IsaacSimBackend:
         self._grasp_hold_closing_margin_m = _GRASP_HOLD_CLOSING_MARGIN_M
         self._controller_settings = normalize_controller_settings(None)
         self._runtime_drive_gains: dict[str, Any] = {}
+        self._runtime_solver_settings: dict[str, Any] = {}
+        self._physics_override_config: dict[str, Any] | None = None
+        self._physics_override_report: dict[str, Any] = {}
+        self._finger_contact_sensor_settings: dict[str, Any] = {}
         self._contact_subscription = None
         self._contact_interface = None
         self._contact_events: list[dict[str, Any]] = []
@@ -184,6 +205,9 @@ class IsaacSimBackend:
         self._camera = None
         self._camera_config: dict[str, Any] = {}
         self._last_camera_frame_marker: str | None = None
+        self._last_camera_step: int | None = None
+        self._action_mode: str | None = None
+        self._external_done = False
 
     @property
     def runtime_summary(self) -> dict[str, Any]:
@@ -193,17 +217,36 @@ class IsaacSimBackend:
             "ik": controller.ik_status if controller else "not_run",
             "grasp": controller.grasp_status if controller else "not_run",
             "phase": controller.phase.value if controller else "not_started",
-            "failure_reason": controller.failure_reason if controller else None,
+            "failure_reason": self._task_status.get("failure_reason") if self._assembly_runtime is not None else (controller.failure_reason if controller else None),
             "grasp_diagnostics": self._grasp_diagnostics,
             "task_oracle": self._task_status,
             "pick_status": controller.pick_status if controller else "not_run",
             "place_status": controller.place_status if controller else "not_run",
-            "released": controller.released if controller else False,
+            "released": self._assembly_released if self._assembly_runtime is not None else (controller.released if controller else False),
             "robot_asset_source": self._robot_asset_source,
             "action": self._last_command,
             "controller_settings": dict(self._controller_settings),
             "runtime_drive_gains": self._runtime_drive_gains,
+            "runtime_solver_settings": self._runtime_solver_settings,
+            "physics_overrides": self._physics_override_report,
+            "finger_contact_sensor_settings": dict(self._finger_contact_sensor_settings),
+            "observation_capabilities": self.observation_capabilities,
             **self._asset_root_diagnostics,
+        }
+
+    @property
+    def observation_capabilities(self) -> dict[str, Any]:
+        ready = self._observation_adapter is not None
+        return {
+            "general_observation_requested": self.enable_general_observation,
+            "general_observation_status": "failed" if self._general_observation_error else ("ready" if ready else ("pending_initialization" if self.enable_general_observation else "not_requested")),
+            "general_observation_error": self._general_observation_error,
+            "full_object_motion": ready, "general_rigid_contacts": ready,
+            "contact_force_kind": "sum_of_absolute_per_contact_point_normal_forces" if ready else None,
+            "rgbd_requested": self.enable_rgbd,
+            "snapshot_levels": [], "episodes_per_process": 1,
+            "online_assembly_requested": self._assembly_runtime is not None,
+            "online_assembly_measurement_ready": ready and self._assembly_runtime is not None,
         }
 
     @property
@@ -245,8 +288,12 @@ class IsaacSimBackend:
         if sys.platform == "win32" and not _is_ascii(str(self.usd_path)):
             raise ValueError("Isaac Sim requires an ASCII-only root USD path on Windows")
         _validate_scene_payload(scene)
+        self._configure_assembly_runtime(scene)
         self.scene = scene
         self._controller_settings = normalize_controller_settings(scene["task"].get("controller"))
+        from ..robot_physics_overrides import normalize_physics_overrides
+
+        self._physics_override_config = normalize_physics_overrides(scene["task"].get("physics_overrides"))
         self.steps = 0
         os.environ.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
         try:
@@ -333,6 +380,7 @@ class IsaacSimBackend:
             self._target_root_path = str(self._object_prims[target_id].GetPath())
             self._refresh_grasp_diagnostics()
             observation = self._observation(task_success=False)
+            self._record_assembly_step(observation, action=None)
             self._last_observation = observation
             return observation, {
                 "scene_id": scene["scene_id"],
@@ -345,7 +393,8 @@ class IsaacSimBackend:
                 },
             }
         except Exception:
-            self.close()
+            if self.close_on_reset_error:
+                self.close()
             raise
 
     def step(
@@ -353,10 +402,17 @@ class IsaacSimBackend:
     ) -> tuple[dict[str, Any], float, bool, bool, dict[str, Any]]:
         if self.scene is None or self._controller is None or self._simulation is None:
             raise RuntimeError("reset must be called before step")
+        if isinstance(action, dict) and action.get("mode") == "joint_position":
+            return self._step_joint_position(action)
         if action not in (None, "scripted") and not (
             isinstance(action, dict) and action.get("mode") == "scripted"
         ):
-            raise ValueError("IsaacSimBackend currently supports only the scripted mug-lift action")
+            raise ValueError("unsupported Isaac action; use scripted or joint_position")
+        if self._assembly_runtime is not None:
+            raise ValueError("assembly tasks require external joint_position actions with measured contact evidence")
+        if self._action_mode == "joint_position":
+            raise ValueError("cannot switch action mode within an episode; reset first")
+        self._action_mode = "scripted"
         if self._controller.phase in {MugLiftPhase.DONE, MugLiftPhase.FAILED}:
             raise RuntimeError("episode has already ended; call reset before stepping again")
 
@@ -406,6 +462,159 @@ class IsaacSimBackend:
         reward = 1.0 if self._controller.phase == MugLiftPhase.DONE else 0.0
         return observation, reward, terminated, truncated, self.runtime_summary
 
+    def _step_joint_position(self, action: dict[str, Any]):
+        from ..joint_control import resolve_joint_targets
+        import numpy as np
+        from isaacsim.core.utils.types import ArticulationAction
+
+        if self._action_mode == "scripted":
+            raise ValueError("cannot switch action mode within an episode; reset first")
+        if self._external_done:
+            raise RuntimeError("episode has already ended; call reset before stepping again")
+        if set(action) != {"mode", "payload"}:
+            raise ValueError("joint_position action requires mode and payload")
+        limits = _read_runtime_dof_limits(self._robot)
+        if limits is None:
+            raise RuntimeError("runtime joint limits are unavailable")
+        limits = np.asarray(limits, dtype=float)
+        if limits.ndim == 3 and limits.shape[0] == 1:
+            limits = limits[0]
+        if limits.shape != (len(self._robot.dof_names), 2):
+            raise RuntimeError("runtime joint limits have an unsupported shape")
+        indices, positions = resolve_joint_targets(
+            action["payload"], list(self._robot.dof_names), limits, self._finger_gripper_config,
+        )
+        # These are drive targets. No live body pose or joint state is teleported.
+        self._robot.apply_action(ArticulationAction(
+            joint_positions=np.asarray(positions, dtype=float),
+            joint_indices=np.asarray(indices, dtype=int),
+        ))
+        self._action_mode = "joint_position"
+        self._last_command = {"mode": "joint_position", "payload": dict(action["payload"])}
+        self._last_applied_joint_position_targets = _read_applied_joint_position_targets(self._robot)
+        self._simulation.step(render=False, update_fabric=False)
+        self.steps += 1
+        self._refresh_grasp_diagnostics()
+        positions_by_id = self._read_object_positions()
+        if self._assembly_runtime is None:
+            self._task_status = self._task_evaluator.status(positions_by_id, self._task_evidence())
+        observation = self._observation(task_success=False, positions=positions_by_id)
+        assembly = self._record_assembly_step(observation, action=self._last_command)
+        reward, terminated, truncated = self._external_step_outcome(observation, assembly)
+        self._last_observation = observation
+        return observation, reward, terminated, truncated, {
+            **self.runtime_summary, "action_mode": "joint_position", "task": self._task_status,
+            "control_dt_s": self.physics_dt, "joint_target_units": "rad",
+            "gripper_semantics": "fraction_between_runtime_closed_and_open_limits",
+        }
+
+    def _external_step_outcome(self, observation: dict[str, Any], assembly: dict[str, Any] | None):
+        """Finalize the budget once and preserve any success/reward found there."""
+        success = bool(self._task_status.get("task_success"))
+        terminated = bool(assembly.get("terminated")) if assembly is not None else success
+        truncated = bool(assembly.get("truncated")) if assembly is not None else False
+        if self.steps >= self.max_steps and not (terminated or truncated):
+            truncated = True
+            if self._assembly_runtime is not None:
+                assembly = self._assembly_runtime.finalize()
+                if not assembly.get("task_success"):
+                    assembly.update(truncated=True, terminated=False, failure_reason="step_budget_exhausted")
+                self._task_status = assembly
+                success = bool(assembly.get("task_success"))
+                terminated = bool(assembly.get("terminated"))
+                truncated = bool(assembly.get("truncated"))
+                self._apply_assembly_status(observation)
+        self._external_done = terminated or truncated
+        observation["task_success"] = success
+        observation["robot"].update(phase="external_control", failure_reason=self._task_status.get("failure_reason") if (terminated or truncated) else None)
+        reward = float(assembly.get("reward", 0.0)) if assembly is not None else float(success)
+        return reward, terminated, truncated
+
+    def bind_episode_id(self, episode_id: str, observation: dict[str, Any]) -> dict[str, Any]:
+        """Bind initial assembly evidence to the API episode before any action."""
+        if self._assembly_runtime is None:
+            return observation
+        if not isinstance(episode_id, str) or not episode_id:
+            raise ValueError("episode_id must be a nonempty string")
+        if self.steps != 0 or self._action_mode is not None or self._last_observation is None:
+            raise RuntimeError("assembly episode identity can only be bound before its first action")
+        self._assembly_runtime.reset(episode_id)
+        self._assembly_contact_before_release = False
+        self._assembly_released = False
+        self._record_assembly_step(self._last_observation, action=None)
+        self._apply_assembly_status(observation)
+        return observation
+
+    def _configure_assembly_runtime(self, scene: dict[str, Any]) -> None:
+        """Validate the frozen task before Kit startup; never infer a pose-only pass."""
+        from ..assembly_runtime import AssemblyRuntimeEvaluator
+
+        task = scene.get("task", {})
+        raw_spec = task.get("assembly_spec")
+        if raw_spec is None:
+            return
+        if task.get("success", {}).get("predicate") != "assembly":
+            raise ValueError("task.assembly_spec requires success.predicate=assembly")
+        if not isinstance(raw_spec, dict):
+            raise ValueError("task.assembly_spec must be an inline versioned object")
+        evaluator = AssemblyRuntimeEvaluator(raw_spec, physics_dt_s=self.physics_dt)
+        ids = {item.get("object_id") for item in scene["objects"]}
+        if not {evaluator.spec.peg_id, evaluator.spec.socket_id}.issubset(ids):
+            raise ValueError("assembly task parts must exist in scene.objects")
+        if _target_object(scene) != evaluator.spec.peg_id:
+            raise ValueError("assembly target_object must identify the spec peg")
+        clearance = task.get("geometry_clearance_m")
+        if isinstance(clearance, bool) or not isinstance(clearance, (int, float)) or not math.isfinite(clearance):
+            raise ValueError("task.geometry_clearance_m must be a finite measured geometry clearance")
+        self._assembly_runtime = evaluator
+        self._assembly_clearance_m = float(clearance)
+        self._assembly_contact_before_release = False
+        self._assembly_released = False
+        evaluator.reset()
+
+    def _record_assembly_step(self, observation: dict[str, Any], *, action: dict[str, Any] | None) -> dict[str, Any] | None:
+        """Ingest one committed physics state; observation reads never add samples."""
+        evaluator = self._assembly_runtime
+        if evaluator is None:
+            return None
+        contacts = observation.get("contacts", [])
+        fraction = (action or {}).get("payload", {}).get("gripper_open_fraction")
+        if (action is not None and isinstance(fraction, (int, float)) and fraction < 0.8
+                and self._grasp_diagnostics.get("contact_force_read_valid")
+                and self._grasp_diagnostics.get("finger_target_contact")):
+            self._assembly_contact_before_release = True
+        robot_peg_contact = any(set(item.get("pair", [])) == {"robot", evaluator.spec.peg_id}
+                                and item.get("normal_force_N", 0.0) > 1e-6 for item in contacts)
+        self._assembly_released = bool(
+            self._assembly_contact_before_release and isinstance(fraction, (int, float))
+            and fraction >= 0.98 and self._grasp_diagnostics.get("gripper_open")
+            and self._grasp_diagnostics.get("contact_force_read_valid")
+            and not self._grasp_diagnostics.get("finger_target_contact") and not robot_peg_contact
+        )
+        self._task_status = evaluator.record(
+            sim_time=self.steps * self.physics_dt, objects=observation.get("objects"),
+            contacts=contacts, coverage=observation.get("contact_coverage"), action=action,
+            released=self._assembly_released, geometry_clearance_m=self._assembly_clearance_m,
+        )
+        self._task_status["release_evidence"] = {
+            "finger_contact_before_open": self._assembly_contact_before_release,
+            "actual_gripper_open": bool(self._grasp_diagnostics.get("gripper_open")),
+            "current_robot_peg_contact": robot_peg_contact,
+            "released": self._assembly_released,
+            "source": "live_finger_contact_and_DOF_positions_with_full_stage_contact_measurement",
+        }
+        self._apply_assembly_status(observation)
+        return self._task_status
+
+    def _apply_assembly_status(self, observation: dict[str, Any]) -> None:
+        observation["task_success"] = bool(self._task_status.get("task_success"))
+        observation["assembly_status"] = dict(self._task_status)
+        observation["robot"]["task_oracle"] = dict(self._task_status)
+        observation["robot"]["released"] = self._assembly_released
+
+    def assembly_trace(self) -> list[dict[str, Any]]:
+        return self._assembly_runtime.trace() if self._assembly_runtime is not None else []
+
     def _capture_grasp_hold_positions(self) -> None:
         """Hold the in-contact finger pose instead of driving through the mug."""
         try:
@@ -433,6 +642,8 @@ class IsaacSimBackend:
         return None
 
     def close(self) -> None:
+        self._action_mode = None
+        self._external_done = False
         simulation, app = self._simulation, self._app
         camera = self._camera
         self._simulation = None
@@ -473,8 +684,14 @@ class IsaacSimBackend:
         self._initial_positions = {}
         self._task_evaluator = None
         self._task_status = {}
+        self._assembly_runtime = None
+        self._assembly_clearance_m = None
+        self._assembly_contact_before_release = False
+        self._assembly_released = False
         self._controller = None
         self._last_observation = None
+        self._observation_adapter = None
+        self._general_observation_error = None
         self._grasp_diagnostics = _empty_grasp_diagnostics()
         self._material_diagnostics = {}
         self._finger_gripper_config = {}
@@ -488,6 +705,10 @@ class IsaacSimBackend:
         self._grasp_hold_closing_margin_m = _GRASP_HOLD_CLOSING_MARGIN_M
         self._controller_settings = normalize_controller_settings(None)
         self._runtime_drive_gains = {}
+        self._runtime_solver_settings = {}
+        self._physics_override_config = None
+        self._physics_override_report = {}
+        self._finger_contact_sensor_settings = {}
         self._contact_subscription = None
         self._contact_interface = None
         self._contact_events = []
@@ -545,7 +766,7 @@ class IsaacSimBackend:
         robot_prim_path = "/World/Robot"
         self._asset_root_diagnostics = _empty_asset_root_diagnostics()
         robot_usd, self._robot_asset_source = _resolve_franka_usd(
-            get_assets_root_path,
+            (lambda: self.robot_asset_root) if self.robot_asset_root else get_assets_root_path,
             self.usd_path.parent,
             self._asset_root_diagnostics,
         )
@@ -573,6 +794,12 @@ class IsaacSimBackend:
             UsdShade,
             self._finger_root_paths,
         )
+        if self._physics_override_config is not None:
+            from ..robot_physics_overrides import apply_physics_overrides
+
+            self._physics_override_report = apply_physics_overrides(
+                stage, robot_prim_path, self._object_prims, self._physics_override_config,
+            )
         base_position = self.scene.get("task", {}).get(
             "robot_base_position_m", [-0.05, 0.0, 0.78]
         )
@@ -602,6 +829,10 @@ class IsaacSimBackend:
         physics_context.set_physx_update_transformations_settings(
             update_to_usd=True, update_velocities_to_usd=True
         )
+        from ..isaac_observation import prepare_contact_reporting
+
+        if self.enable_general_observation:
+            prepare_contact_reporting(stage)
         self._simulation.initialize_physics()
         self._robot.initialize()
         self._finger_gripper_config = _resolve_finger_gripper_config(self._robot)
@@ -656,6 +887,11 @@ class IsaacSimBackend:
             self._finger_gripper_config["indices"],
             self._controller_settings,
         )
+        self._runtime_solver_settings = _configure_franka_solver_iterations(self._robot, self._controller_settings)
+        if self._physics_override_report:
+            from ..robot_physics_overrides import verify_physics_overrides
+
+            self._physics_override_report = verify_physics_overrides(self._robot, self._physics_override_report, stage=stage)
         self._robot.set_world_pose(position=base_position, orientation=base_orientation)
         self._robot.set_joint_positions(default_joints)
         self._robot.apply_action(ArticulationAction(joint_positions=default_joints))
@@ -663,6 +899,17 @@ class IsaacSimBackend:
             base_position, base_orientation
         )
         self._initialize_contact_reporting(stage)
+        from ..isaac_observation import IsaacObservationAdapter
+
+        if self.enable_general_observation:
+            try:
+                self._observation_adapter = IsaacObservationAdapter(
+                    stage, self._object_prims, self._simulation.physics_sim_view, self.physics_dt,
+                    required_dynamic_ids={item["object_id"] for item in self.scene["objects"] if item.get("dynamic")},
+                )
+            except Exception as exc:
+                self._general_observation_error = str(exc)
+                raise NotImplementedError(f"requested general observations are unavailable for this loaded stage: {exc}") from exc
         self._initialize_rgbd_camera()
         for _ in range(10):
             self._simulation.step(render=self._camera is not None)
@@ -717,7 +964,11 @@ class IsaacSimBackend:
             raise RuntimeError("RGB-D camera is not configured; reset a sensor-enabled scene first")
         import numpy as np
 
-        previous_marker = self._last_camera_frame_marker
+        # Re-observing one committed state is valid, including an HTTP retry.
+        # A changed simulation step still requires a fresh reference timestamp.
+        previous_marker = (
+            self._last_camera_frame_marker if self._last_camera_step != self.steps else None
+        )
         last_error = "camera returned no valid frame"
         for _ in range(12):
             try:
@@ -764,6 +1015,7 @@ class IsaacSimBackend:
                 last_error = "camera calibration contains non-finite values"
                 continue
             self._last_camera_frame_marker = repr(reference_time)
+            self._last_camera_step = self.steps
             return {
                 "status": "ok",
                 "simulation_step": int(self.steps),
@@ -1008,12 +1260,22 @@ class IsaacSimBackend:
 
             physics_sim_view = self._simulation.physics_sim_view
             self._contact_views = []
+            # The legacy sensor defaults alter stabilization/sleep settings.
+            # Complete-measurement trials explicitly preserve authored settings;
+            # the historical path keeps its recorded initialization behavior.
+            self._finger_contact_sensor_settings = {
+                "prepare_contact_sensors": not self.enable_general_observation,
+                "disable_stablization": not self.enable_general_observation,
+                "mode": "preserve_authored_settings" if self.enable_general_observation else "legacy_sensor_defaults",
+            }
             for index, finger_path in enumerate(self._finger_root_paths):
                 view = RigidContactView(
                     prim_paths_expr=finger_path,
                     filter_paths_expr=[self._target_root_path],
                     name=f"franka_finger_target_contact_{index}",
                     max_contact_count=32,
+                    prepare_contact_sensors=self._finger_contact_sensor_settings["prepare_contact_sensors"],
+                    disable_stablization=self._finger_contact_sensor_settings["disable_stablization"],
                 )
                 view.initialize(physics_sim_view)
                 self._contact_views.append((finger_path, view))
@@ -1165,7 +1427,7 @@ class IsaacSimBackend:
         finger_positions = self._read_prim_positions(finger_paths)
         finger_bounds = self._read_prim_bounds(finger_paths)
         controller = self._controller
-        return build_observation(
+        observation = build_observation(
             instruction=str(self.scene.get("task", {}).get("instruction", "")),
             object_positions=positions,
             joint_positions=[float(value) for value in joint_positions],
@@ -1189,6 +1451,16 @@ class IsaacSimBackend:
             action=self._last_command,
             timestamp=self.steps * self.physics_dt,
         )
+        if self._observation_adapter is not None:
+            try:
+                observation["objects"] = self._observation_adapter.object_states()
+                observation["contacts"], observation["contact_coverage"] = self._observation_adapter.contacts()
+            except Exception as exc:
+                self._general_observation_error = str(exc)
+                raise NotImplementedError(f"requested general observation measurement failed: {exc}") from exc
+            observation["available_fields"] = ["object_orientations", "object_velocities", "general_contacts"]
+        observation["robot"]["joint_names"] = list(self._robot.dof_names)
+        return observation
 
     def _task_evidence(self) -> dict[str, Any]:
         return dict(self._grasp_diagnostics)
@@ -1212,6 +1484,8 @@ class IsaacSimBackend:
         from pxr import Usd, UsdGeom
 
         result: dict[str, Vec3] = {}
+        if self._observation_adapter is not None:
+            return {key: tuple(value["position"]) for key, value in self._observation_adapter.object_states().items()}
         for object_id, prim in self._object_prims.items():
             matrix = UsdGeom.Xformable(prim).ComputeLocalToWorldTransform(Usd.TimeCode.Default())
             value = matrix.ExtractTranslation()
@@ -1470,12 +1744,12 @@ def _configure_franka_runtime_drives(
     if finger_indices.shape != (2,):
         raise RuntimeError("Franka runtime finger indices are invalid")
     set_gains(
-        kps=np.full((1, 2), _FRANKA_FINGER_STIFFNESS, dtype=float),
-        kds=np.full((1, 2), _FRANKA_FINGER_DAMPING, dtype=float),
+        kps=np.full((1, 2), settings["finger_stiffness"], dtype=float),
+        kds=np.full((1, 2), settings["finger_damping"], dtype=float),
         joint_indices=finger_indices,
     )
     set_max_efforts(
-        values=np.full((1, 2), _FRANKA_FINGER_MAX_FORCE, dtype=float),
+        values=np.full((1, 2), settings["finger_max_force"], dtype=float),
         joint_indices=finger_indices,
     )
     get_gains = getattr(view, "get_gains", None)
@@ -1485,7 +1759,7 @@ def _configure_franka_runtime_drives(
     observed = {}
     for name, indices, expected in (
         ("arm", arm_indices, (settings["arm_stiffness"], settings["arm_damping"], settings["arm_max_force"])),
-        ("fingers", finger_indices, (_FRANKA_FINGER_STIFFNESS, _FRANKA_FINGER_DAMPING, _FRANKA_FINGER_MAX_FORCE)),
+        ("fingers", finger_indices, (settings["finger_stiffness"], settings["finger_damping"], settings["finger_max_force"])),
     ):
         kps, kds = get_gains(joint_indices=indices)
         arrays = [np.asarray(kps).reshape(-1), np.asarray(kds).reshape(-1),
@@ -1499,6 +1773,48 @@ def _configure_franka_runtime_drives(
             "damping": arrays[1].tolist(), "max_force": arrays[2].tolist(),
         }
     return {"source": "Isaac articulation runtime API", "verified": True, **observed}
+
+
+def _configure_franka_solver_iterations(robot: Any, controller_settings: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Apply optional active-articulation solver counts and verify the readback.
+
+    None preserves the engine value. These are articulation settings: scene
+    iteration limits can still clamp the effective solver count.
+    """
+    import numpy as np
+
+    settings = normalize_controller_settings(controller_settings)
+    requested, observed, unavailable = {}, {}, {}
+    for kind in ("position", "velocity"):
+        key = f"solver_{kind}_iterations"
+        target = settings[key]
+        requested[kind] = target
+        setter = getattr(robot, f"set_solver_{kind}_iteration_count", None)
+        getter = getattr(robot, f"get_solver_{kind}_iteration_count", None)
+        if target is not None:
+            if not callable(setter) or not callable(getter):
+                raise RuntimeError(f"Isaac articulation cannot configure/verify {kind} solver iterations")
+            setter(target)
+        try:
+            if not callable(getter):
+                raise RuntimeError("readback API unavailable")
+            raw = np.asarray(getter())
+            value = raw.item() if raw.size == 1 else None
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not np.isfinite(value) or int(value) != value:
+                raise RuntimeError("readback is not a finite scalar integer")
+            observed[kind] = int(value)
+        except (RuntimeError, TypeError, ValueError, OverflowError) as exc:
+            if target is not None:
+                raise RuntimeError(f"cannot verify active {kind} solver iterations: {exc}") from exc
+            observed[kind], unavailable[kind] = None, str(exc)
+        if target is not None and observed[kind] != target:
+            raise RuntimeError(f"active {kind} solver iterations differ from requested settings")
+    return {
+        "source": "Isaac SingleArticulation runtime API", "scope": "articulation_iteration_counts",
+        "requested": requested, "observed": observed,
+        "verified": all(value is not None for value in observed.values()), "unavailable": unavailable,
+        "effective_scene_clamping": "scene min/max iteration settings may clamp articulation counts",
+    }
 
 
 def _action_joint_positions(action: Any) -> list[float] | None:
