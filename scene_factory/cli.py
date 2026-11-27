@@ -1,696 +1,193 @@
+"""Clean v2 CLI for Scene-to-MJCF generation, verification, randomization, traces, and MCP."""
+
 from __future__ import annotations
 
 import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Sequence
 
-from .asset_pipeline import AssetNormalizer, CollisionProcessor
-from .asset_validator import validate_asset, validate_usd
-from .conformance import (
-    EXECUTOR_NAMES,
-    capability_sha256,
-    create_executor,
-    normalize_executor_capabilities,
-    run_executor_conformance,
-    validate_conformance_report,
-    write_conformance_report_atomic,
+from .cordis import CordisContext, apply_cordis_config, load_cordis_config
+from .core import (
+    AssetCatalog,
+    LLMClient,
+    SceneAgent,
+    export_sft_jsonl,
+    load_llm_config,
+    randomize_xml,
+    verify_mujoco_xml,
 )
-from .dataset import audit_dataset, inspect_dataset, reproduce_dataset, validate_dataset, write_json_atomic
-from .external import ExternalSceneError, external_scene_schema, load_external_scene
-from .exporters.isaac_usd import IsaacBackendUnavailable
-from .factory import SceneFactory
-from .paths import default_registry_path
-from .quality import QUALITY_LEVELS
-from .curation import (
-    export_sampling_selection,
-    split_sampling_collection,
-    validate_curated_dataset,
-    validate_sampling_split,
-)
-from .sampling import (
-    build_sampling_collection,
-    load_sampling_plan,
-    reproduce_sampling_collection,
-    validate_sampling_collection,
-)
-from .planning import (
-    plan_interaction,
-    replay_interaction_plan,
-    validate_interaction_plan,
-    write_plan_atomic,
-)
-from .execution import (
-    DryRunInteractionExecutor,
-    execute_interaction_plan,
-    validate_execution_trace,
-    write_execution_trace_atomic,
-)
-from .registry import AssetRegistry
-from .trajectory import inspect_episode, replay_episode, validate_episode
+from .core.mjcf import write_xml_atomic
+from .plugin_api import run_stdio_server
 
 
-def _intent_report(document) -> dict[str, object]:
-    intent = document.intent
-    return {
-        **document.to_dict(),
-        "room_type": intent.room_type,
-        "event": intent.event,
-        "description": intent.description,
-        "object_count": len(intent.objects),
-        "relation_count": len(intent.relations),
-        "categories": sorted({item.category for item in intent.objects}),
-        "relation_predicates": sorted({item.predicate for item in intent.relations}),
-        "room_dimensions_m": intent.room_dimensions_m,
-        "clutter_level": intent.clutter_level,
-        "layout_style": intent.layout_style,
-    }
+def _default_cordis_path() -> Path | None:
+    candidate = Path("config/cordis.toml")
+    return candidate if candidate.is_file() else None
 
 
-def _parser() -> argparse.ArgumentParser:
+def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="scene-factory",
-        description="Generate reproducible household simulation scenes.",
+        description="Image + text to high-fidelity MuJoCo MJCF XML with Cordis plugin governance.",
     )
-    parser.add_argument("--registry", type=Path, help="Override asset registry JSONL")
-    parser.add_argument("--recipes", type=Path, help="Override recipe directory")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser.add_argument("--assets", type=Path, help="Override data/assets directory.")
+    sub = parser.add_subparsers(dest="command", required=True)
 
-    from .sandbox_cli import add_sandbox_arguments
+    gen = sub.add_parser("generate", help="Run the multimodal VLM/LLM agent to generate MuJoCo XML.")
+    gen.add_argument("--prompt", required=True, help="Scene description text.")
+    gen.add_argument("--image", action="append", default=[], help="Reference image path (repeatable).")
+    gen.add_argument("--output", type=Path, required=True, help="Output directory for scene.xml, renders, trace.json.")
+    gen.add_argument("--max-turns", type=int, default=12)
+    gen.add_argument("--randomize", type=int, default=0, help="Also emit N random layout variants.")
+    gen.add_argument("--seed", type=int, default=42)
+    gen.add_argument("--cordis", type=Path, help="Cordis plugin config (.toml or .json).")
+    gen.add_argument("--no-plugins", action="store_true", help="Disable all Cordis plugins (naked LLM baseline).")
+    gen.add_argument("--llm-config", type=Path, help="Optional config/llm.json override.")
 
-    add_sandbox_arguments(subparsers)
-    from .runtime_service_cli import add_service_arguments
+    ver = sub.add_parser("verify", help="Compile, settle, and render a MuJoCo XML file.")
+    ver.add_argument("xml", type=Path, help="Path to MuJoCo XML file.")
+    ver.add_argument("--settle-steps", type=int, default=150)
+    ver.add_argument("--render-dir", type=Path, help="Directory to save rendered PNG views.")
+    ver.add_argument("--no-render", action="store_true")
 
-    add_service_arguments(subparsers)
+    rnd = sub.add_parser("randomize", help="Generate deterministic random layout/physics XML variants.")
+    rnd.add_argument("xml", type=Path, help="Base MuJoCo XML file.")
+    rnd.add_argument("--output", type=Path, required=True, help="Output directory for randomized XMLs.")
+    rnd.add_argument("--count", type=int, default=5)
+    rnd.add_argument("--seed", type=int, default=42)
+    rnd.add_argument("--xy-jitter", type=float, default=0.08)
+    rnd.add_argument("--yaw-jitter", type=float, default=25.0)
+    rnd.add_argument("--mass-scale", type=float, nargs=2, default=[1.0, 1.0], metavar=("MIN", "MAX"))
+    rnd.add_argument("--friction-scale", type=float, nargs=2, default=[1.0, 1.0], metavar=("MIN", "MAX"))
 
-    subparsers.add_parser("list-recipes", help="List available event recipes")
-    doctor = subparsers.add_parser("doctor", help="Diagnose optional local runtimes")
-    doctor.add_argument("--json", action="store_true", help="Print machine-readable JSON")
-    blender = subparsers.add_parser("blender", help="Render a prepared Blender manifest")
-    blender_commands = blender.add_subparsers(dest="blender_command", required=True)
-    blender_render = blender_commands.add_parser("render", help="Create .blend and optional PNG")
-    blender_render.add_argument("manifest", type=Path)
-    blender_render.add_argument("--blender-exe", type=Path)
-    blender_render.add_argument("--no-png", action="store_true")
-    subparsers.add_parser("llm-status", help="Show natural-language parser configuration")
-    subparsers.add_parser("llm-test", help="Test the configured LLM with one structured request")
+    assets = sub.add_parser("assets", help="Search or list local high-fidelity assets.")
+    assets.add_argument("--query", default="")
+    assets.add_argument("--category")
+    assets.add_argument("--detailed-only", action="store_true")
+    assets.add_argument("--limit", type=int, default=20)
 
-    from .priority import DEFAULT_TASK, MOTION_STATES, TASK_URGENCIES
+    plugins = sub.add_parser("plugins", help="Inspect Cordis plugin admission/exit configuration.")
+    plugins.add_argument("--cordis", type=Path, help="Cordis config path (default: config/cordis.toml).")
 
-    priority = subparsers.add_parser("priority", help="Build a table-edge scenario and ask AI about task priority")
-    priority_commands = priority.add_subparsers(dest="priority_command", required=True)
-    priority_build = priority_commands.add_parser("build", help="Build a structured cup-risk scenario")
-    priority_build.add_argument("--output", type=Path, required=True)
-    priority_build.add_argument("--seed", type=int, default=42)
-    priority_build.add_argument("--clearance-m", type=float, default=0.005)
-    priority_build.add_argument("--motion-state", choices=MOTION_STATES, default="toward_edge")
-    priority_build.add_argument("--current-task", default=DEFAULT_TASK)
-    priority_build.add_argument("--urgency", choices=TASK_URGENCIES, default="routine")
-    priority_build.add_argument("--unsafe-to-pause", action="store_true")
-    priority_build.add_argument("--pause-consequence", default="")
-    priority_ask = priority_commands.add_parser("ask", help="Ask the configured LLM for an advisory decision")
-    priority_ask.add_argument("scenario", type=Path)
-    priority_ask.add_argument("--output", type=Path)
+    sft = sub.add_parser("export-sft", help="Export verified agent traces into SFT/RL JSONL.")
+    sft.add_argument("traces", nargs="+", type=Path, help="Trace JSON files or directories containing trace.json.")
+    sft.add_argument("--output", type=Path, required=True)
+    sft.add_argument("--min-score", type=float, default=0.8)
 
-    intent = subparsers.add_parser("intent", help="Validate and inspect external SceneIntent JSON")
-    intent_commands = intent.add_subparsers(dest="intent_command", required=True)
-    intent_validate = intent_commands.add_parser("validate", help="Validate an external SceneIntent")
-    intent_validate.add_argument("path", type=str)
-    intent_inspect = intent_commands.add_parser("inspect", help="Inspect a normalized SceneIntent")
-    intent_inspect.add_argument("path", type=str)
-    intent_commands.add_parser("schema", help="Print the canonical SceneIntent JSON Schema")
-
-    build = subparsers.add_parser("build", help="Build one scene")
-    source = build.add_mutually_exclusive_group(required=True)
-    source.add_argument("--recipe")
-    source.add_argument("--prompt")
-    source.add_argument("--intent", help="External SceneIntent JSON path, or - for stdin")
-    build.add_argument("--seed", type=int, default=42)
-    build.add_argument("--output", type=Path, required=True)
-    build.add_argument(
-        "--mjcf",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Export MuJoCo MJCF (enabled by default)",
-    )
-    build.add_argument("--usd", action="store_true", help="Export USD using Isaac Sim pxr")
-    build.add_argument(
-        "--blender", action="store_true",
-        help="Prepare a Blender manifest and render script (Blender not required)",
-    )
-
-    batch = subparsers.add_parser("batch", help="Build multiple deterministic scenes")
-    source = batch.add_mutually_exclusive_group(required=True)
-    source.add_argument("--recipe")
-    source.add_argument("--prompt")
-    source.add_argument("--intent", help="External SceneIntent JSON path, or - for stdin")
-    batch.add_argument("--count", type=int, required=True)
-    batch.add_argument("--seed-start", type=int, default=0)
-    batch.add_argument("--output", type=Path, required=True)
-    batch.add_argument(
-        "--mjcf",
-        action=argparse.BooleanOptionalAction,
-        default=True,
-        help="Export MuJoCo MJCF (enabled by default)",
-    )
-    batch.add_argument("--usd", action="store_true", help="Export USD using Isaac Sim pxr")
-    batch.add_argument("--resume", action="store_true", help="Resume an incomplete dataset")
-
-    dataset = subparsers.add_parser("dataset", help="Inspect and validate generated datasets")
-    dataset_commands = dataset.add_subparsers(dest="dataset_command", required=True)
-    for name, help_text in (
-        ("inspect", "Inspect dataset metadata and manifest"),
-        ("validate", "Validate dataset integrity and completeness"),
-        ("reproduce", "Rebuild recipe scenes and compare fingerprints"),
-    ):
-        command = dataset_commands.add_parser(name, help=help_text)
-        command.add_argument("path", type=Path)
-
-    audit = dataset_commands.add_parser("audit", help="Audit quality, diversity and scene selection")
-    audit.add_argument("path", type=Path)
-    audit.add_argument("--minimum-level", choices=QUALITY_LEVELS, default="layout")
-    audit.add_argument("--deduplicate", action="store_true", help="Select only the first eligible exact layout")
-    audit.add_argument("--output", type=Path, help="Write an audit JSON outside the source dataset")
-
-    sample = dataset_commands.add_parser("sample", help="Build a collection with per-stratum quality quotas")
-    sample.add_argument("path", type=Path, help="Sampling plan JSON")
-    sample.add_argument("--output", type=Path, required=True)
-    sample.add_argument("--resume", action="store_true")
-    run_isaac = dataset_commands.add_parser(
-        "run-isaac", help="Run selected lift/place candidates sequentially in real Isaac Sim"
-    )
-    run_isaac.add_argument("path", type=Path, help="Validated sampling collection")
-    run_isaac.add_argument("--output", type=Path, required=True)
-    run_isaac.add_argument("--limit-layouts", type=int, default=20)
-    run_isaac.add_argument("--isaac-python", type=Path)
-    run_isaac.add_argument("--asset-root", type=Path, help="Official local Isaac assets root")
-    run_isaac.add_argument("--stage-timeout", type=float, default=300.0)
-    run_isaac.add_argument("--resume", action="store_true")
-    runtime_validate = dataset_commands.add_parser(
-        "runtime-validate", help="Recheck runtime evidence and quality without starting Isaac"
-    )
-    runtime_validate.add_argument("path", type=Path)
-    for name, help_text in (
-        ("sampling-validate", "Validate a collection, its quotas and source selection"),
-        ("sampling-reproduce", "Reproduce the candidate datasets of a validated collection"),
-    ):
-        command = dataset_commands.add_parser(name, help=help_text)
-        command.add_argument("path", type=Path)
-
-    for name, help_text in (
-        ("sampling-split", "Group scene configurations into train, validation and test candidates"),
-        ("sampling-export", "Export selected artifacts with grouped splits and a standalone preview"),
-    ):
-        command = dataset_commands.add_parser(name, help=help_text)
-        command.add_argument("path", type=Path)
-        command.add_argument("--output", type=Path, required=True)
-        command.add_argument("--seed", type=int, default=0)
-        command.add_argument("--ratios", type=float, nargs=3, default=(0.7, 0.15, 0.15),
-                             metavar=("TRAIN", "VALIDATION", "TEST"))
-    split_validate = dataset_commands.add_parser("sampling-split-validate", help="Validate grouped split assignments")
-    split_validate.add_argument("path", type=Path)
-    split_validate.add_argument("report", type=Path)
-    curated_validate = dataset_commands.add_parser("curated-validate", help="Validate an exported candidate package")
-    curated_validate.add_argument("path", type=Path)
-
-    task = subparsers.add_parser(
-        "task", help="Plan and replay deterministic symbolic interaction tasks"
-    )
-    task_commands = task.add_subparsers(dest="task_command", required=True)
-    task_plan = task_commands.add_parser(
-        "plan", help="Generate a symbolic articulation interaction plan"
-    )
-    task_plan.add_argument("scene_pos", nargs="?", type=Path)
-    task_plan.add_argument("--scene", dest="scene", type=Path)
-    task_plan.add_argument("--object", dest="object_id")
-    task_plan.add_argument("--state")
-    task_plan.add_argument("--joint-id", dest="joint_id")
-    task_plan.add_argument("--output", type=Path)
-    for task_name, help_text in (
-        ("validate", "Validate a symbolic interaction plan"),
-        ("replay", "Replay a symbolic interaction plan offline"),
-    ):
-        command = task_commands.add_parser(task_name, help=help_text)
-        command.add_argument("scene_pos", nargs="?", type=Path)
-        command.add_argument("--scene", dest="scene", type=Path)
-        command.add_argument("plan_pos", nargs="?", type=Path)
-        command.add_argument("--plan", dest="plan", type=Path)
-    task_execute = task_commands.add_parser(
-        "execute", help="Execute a symbolic plan through an offline executor"
-    )
-    task_execute.add_argument("scene_pos", nargs="?", type=Path)
-    task_execute.add_argument("--scene", dest="scene", type=Path)
-    task_execute.add_argument("plan_pos", nargs="?", type=Path)
-    task_execute.add_argument("--plan", dest="plan", type=Path)
-    task_execute.add_argument("--executor", choices=("dry-run",), default="dry-run")
-    task_execute.add_argument("--output", type=Path)
-    trace_validate = task_commands.add_parser(
-        "execution-validate", help="Validate a serialized execution trace"
-    )
-    trace_validate.add_argument("scene_pos", nargs="?", type=Path)
-    trace_validate.add_argument("--scene", dest="scene", type=Path)
-    trace_validate.add_argument("plan_pos", nargs="?", type=Path)
-    trace_validate.add_argument("--plan", dest="plan", type=Path)
-    trace_validate.add_argument("trace_pos", nargs="?", type=Path)
-    trace_validate.add_argument("--trace", dest="trace", type=Path)
-
-    executor = subparsers.add_parser("executor", help="Inspect and validate executor compatibility")
-    executor_commands = executor.add_subparsers(dest="executor_command", required=True)
-    executor_inspect = executor_commands.add_parser("inspect", help="Inspect executor capabilities")
-    executor_inspect.add_argument("--executor", choices=EXECUTOR_NAMES, default="dry-run")
-    executor_conformance = executor_commands.add_parser(
-        "conformance", help="Run the core executor conformance suite"
-    )
-    executor_conformance.add_argument("--executor", choices=EXECUTOR_NAMES, default="dry-run")
-    executor_conformance.add_argument("--output", type=Path)
-    executor_validate = executor_commands.add_parser(
-        "validate-report", help="Validate a serialized executor conformance report"
-    )
-    executor_validate.add_argument("path", type=Path)
-
-    asset = subparsers.add_parser("asset", help="Inspect and validate registered assets")
-    asset_commands = asset.add_subparsers(dest="asset_command", required=True)
-    inspect = asset_commands.add_parser("inspect", help="Run asset metadata and USD QA")
-    inspect.add_argument(
-        "--registry",
-        dest="asset_registry",
-        type=Path,
-        help="Asset registry JSONL (defaults to the project registry)",
-    )
-    inspect_source = inspect.add_mutually_exclusive_group(required=True)
-    inspect_source.add_argument("--asset-id", help="Registry asset ID to inspect")
-    inspect_source.add_argument("--usd", type=Path, help="Inspect a standalone local USD")
-    inspect.add_argument("--report", type=Path, help="Write the JSON QA report")
-
-    normalize = asset_commands.add_parser(
-        "normalize", help="Normalize one real USD without creating collision geometry"
-    )
-    normalize.add_argument("source", type=Path)
-    normalize.add_argument("--output", type=Path, required=True)
-    normalize.add_argument("--asset-id", required=True)
-    normalize.add_argument("--category", required=True)
-    normalize.add_argument("--target-bbox", type=float, nargs=3, metavar=("X", "Y", "Z"))
-    normalize.add_argument("--scale-mode", choices=("uniform", "exact"), default="uniform")
-    normalize.add_argument("--report", type=Path)
-
-    collision = asset_commands.add_parser(
-        "collision", help="Validate an authored collision file without generating one"
-    )
-    collision.add_argument("--collision-path", type=Path)
-    collision.add_argument("--status")
-    collision.add_argument("--enabled", action="store_true")
-    collision.add_argument("--report", type=Path)
-
-    episode = subparsers.add_parser("episode", help="Inspect, validate, or replay an offline episode")
-    episode_commands = episode.add_subparsers(dest="episode_command", required=True)
-    for command, help_text in (
-        ("inspect", "Inspect episode structure and summary"),
-        ("validate", "Validate episode integrity and task result"),
-        ("replay", "Replay episode consistency checks offline"),
-    ):
-        command_parser = episode_commands.add_parser(command, help=help_text)
-        command_parser.add_argument("path", type=Path, help="Episode directory")
+    sub.add_parser("mcp", help="Run zero-dependency MCP stdio plugin server for external agents.")
     return parser
 
 
-def main(argv: list[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
-    if args.command == "blender":
-        from .exporters.blender import render_manifest
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = _build_parser()
+    args = parser.parse_args(argv)
 
-        try:
-            print(json.dumps(
-                render_manifest(args.manifest, blender_exe=args.blender_exe, png=not args.no_png),
-                ensure_ascii=False, indent=2,
-            ))
-            return 0
-        except (OSError, RuntimeError) as exc:
-            print(f"scene-factory: {exc}", file=sys.stderr)
-            return 1
-    if args.command == "doctor":
-        from .doctor import diagnose, format_report
+    if args.command == "mcp":
+        catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()
+        return run_stdio_server(catalog=catalog)
 
-        report = diagnose()
-        print(
-            json.dumps(report, ensure_ascii=False, indent=2)
-            if args.json else format_report(report)
+    if args.command == "assets":
+        catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()
+        results = catalog.search(
+            args.query,
+            category=args.category,
+            detailed_only=args.detailed_only,
+            limit=args.limit,
         )
-        return 0 if report["core_ready"] else 1
-    try:
-        if args.command == "sandbox":
-            from .sandbox_cli import run_sandbox_from_args
+        print(json.dumps({"total_catalog": len(catalog), "matches": results}, ensure_ascii=False, indent=2))
+        return 0
 
-            return run_sandbox_from_args(args)
-        if args.command == "service":
-            from .runtime_service_cli import run_service_command
-
-            return run_service_command(args)
-        if args.command == "priority":
-            from .priority import ask_priority, load_priority_scenario, write_priority_scenario
-
-            if args.priority_command == "build":
-                files = write_priority_scenario(
-                    SceneFactory(), args.output, seed=args.seed, clearance_m=args.clearance_m,
-                    motion_state=args.motion_state, current_task=args.current_task,
-                    urgency=args.urgency, safe_to_pause=not args.unsafe_to_pause,
-                    pause_consequence=args.pause_consequence,
-                )
-                print(json.dumps({"result": "passed", "files": files}, ensure_ascii=False, indent=2))
-            else:
-                decision = ask_priority(load_priority_scenario(args.scenario))
-                output = args.output or args.scenario.with_name("priority_decision.json")
-                write_json_atomic(output, decision)
-                print(json.dumps(decision, ensure_ascii=False, indent=2))
+    if args.command == "plugins":
+        path = args.cordis or _default_cordis_path()
+        if path is None:
+            print(json.dumps({"config": None, "plugins": []}, indent=2))
             return 0
-        if args.command == "asset":
-            if args.asset_command == "normalize":
-                report = AssetNormalizer().normalize(
-                    args.source,
-                    args.output,
-                    asset_id=args.asset_id,
-                    category=args.category,
-                    target_bbox_m=tuple(args.target_bbox) if args.target_bbox else None,
-                    scale_mode=args.scale_mode,
-                    report_path=args.report,
-                )
-                print(json.dumps(report, ensure_ascii=False, indent=2))
-                return 0 if report["valid"] else 2
+        declarations = load_cordis_config(path)
+        print(json.dumps({"config": str(path), "plugins": declarations}, ensure_ascii=False, indent=2))
+        return 0
 
-            if args.asset_command == "collision":
-                report = CollisionProcessor().process(
-                    args.collision_path,
-                    collision_status=args.status,
-                    collision_enabled=args.enabled,
-                    report_path=args.report,
-                )
-                print(json.dumps(report, ensure_ascii=False, indent=2))
-                return 0 if report["valid"] else 2
+    if args.command == "verify":
+        xml = args.xml.read_text(encoding="utf-8")
+        report = verify_mujoco_xml(
+            xml,
+            settle_steps=args.settle_steps,
+            render=not args.no_render,
+            render_dir=args.render_dir,
+        )
+        print(json.dumps(report.to_dict(include_base64=False), ensure_ascii=False, indent=2))
+        return 0 if report.compiled and report.settled_stable else 2
 
-            report_path = args.report
-            if args.asset_id:
-                registry_path = args.asset_registry or args.registry
-                registry = AssetRegistry.load(registry_path or default_registry_path())
-                report = validate_asset(args.asset_id, registry, report_path=report_path)
-            else:
-                report = validate_usd(args.usd, report_path=report_path)
-            print(json.dumps(report, ensure_ascii=False, indent=2))
-            return 0 if report["valid"] else 2
-
-        if args.command == "episode":
-            operation = {
-                "inspect": inspect_episode,
-                "validate": validate_episode,
-                "replay": replay_episode,
-            }[args.episode_command]
-            report = operation(args.path)
-            print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-            return 0 if report.valid else 2
-
-        if args.command == "dataset":
-            if args.dataset_command in {"run-isaac", "runtime-validate"}:
-                from .runtime_batch import run_runtime_batch, validate_runtime_batch
-
-                if args.dataset_command == "runtime-validate":
-                    report = validate_runtime_batch(args.path)
-                    print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
-                    return 0 if report.get("valid") else 2
-                settings = {}
-                if args.asset_root is not None:
-                    settings["robot_asset_root"] = str(args.asset_root.absolute())
-                report = run_runtime_batch(
-                    args.path, args.output, isaac_python=args.isaac_python,
-                    limit_layouts=args.limit_layouts, resume=args.resume,
-                    stage_timeout_s=args.stage_timeout, settings=settings,
-                )
-                print(json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.get("valid") else 2
-            if args.dataset_command in {"sampling-split", "sampling-export"}:
-                if args.dataset_command == "sampling-split":
-                    output = args.output.expanduser().resolve()
-                    if output.is_relative_to(args.path.expanduser().resolve()):
-                        raise ValueError("split output must be outside the source collection")
-                    report = split_sampling_collection(args.path, ratios=args.ratios, seed=args.seed)
-                    write_json_atomic(output, report.to_dict())
-                else:
-                    report = export_sampling_selection(args.path, args.output, ratios=args.ratios, seed=args.seed)
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            if args.dataset_command == "sampling-split-validate":
-                with args.report.expanduser().open(encoding="utf-8-sig") as handle:
-                    report = validate_sampling_split(args.path, json.load(handle))
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            if args.dataset_command == "curated-validate":
-                report = validate_curated_dataset(args.path)
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            if args.dataset_command == "sample":
-                report = build_sampling_collection(
-                    load_sampling_plan(args.path), args.output, resume=args.resume,
-                    factory=SceneFactory(args.registry, args.recipes),
-                )
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            if args.dataset_command in {"sampling-validate", "sampling-reproduce"}:
-                operation = validate_sampling_collection if args.dataset_command == "sampling-validate" else reproduce_sampling_collection
-                report = operation(args.path)
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            if args.dataset_command == "audit":
-                output = args.output.expanduser().resolve() if args.output is not None else None
-                if output is not None and output.is_relative_to(args.path.expanduser().resolve()):
-                    raise ValueError("audit output must be outside the source dataset")
-                report = audit_dataset(
-                    args.path, minimum_level=args.minimum_level, deduplicate=args.deduplicate
-                )
-                if output is not None:
-                    write_json_atomic(output, report.to_dict())
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.valid else 2
-            handler = {
-                "inspect": inspect_dataset,
-                "validate": validate_dataset,
-                "reproduce": reproduce_dataset,
-            }[args.dataset_command]
-            report = handler(args.path)
-            print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
-            if args.dataset_command == "inspect":
-                return 0
-            return 0 if report["valid"] else 2
-
-        if args.command == "task":
-            scene_path = args.scene or args.scene_pos
-            if scene_path is None:
-                raise ValueError("task command requires --scene layout.json")
-            if args.task_command == "plan":
-                result = plan_interaction(
-                    scene_path,
-                    object_id=args.object_id,
-                    state=args.state,
-                    joint_id=args.joint_id,
-                )
-                if result.valid and args.output is not None and result.plan is not None:
-                    write_plan_atomic(args.output, result.plan)
-                print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if result.valid else 2
-            if args.task_command == "execute":
-                plan_path = args.plan or args.plan_pos
-                if plan_path is None:
-                    raise ValueError("task execute command requires --plan plan.json")
-                executor = DryRunInteractionExecutor()
-                result = execute_interaction_plan(scene_path, plan_path, executor)
-                if result.trace is not None and args.output is not None:
-                    write_execution_trace_atomic(args.output, result.trace)
-                print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if result.valid else 2
-            if args.task_command == "execution-validate":
-                plan_path = args.plan or args.plan_pos
-                trace_path = args.trace or args.trace_pos
-                if plan_path is None or trace_path is None:
-                    raise ValueError(
-                        "task execution-validate requires --plan plan.json and --trace trace.json"
-                    )
-                result = validate_execution_trace(scene_path, plan_path, trace_path)
-                print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if result.valid else 2
-            plan_path = args.plan or args.plan_pos
-            if plan_path is None:
-                raise ValueError(f"task {args.task_command} command requires --plan plan.json")
-            handler = (
-                validate_interaction_plan
-                if args.task_command == "validate"
-                else replay_interaction_plan
-            )
-            result = handler(scene_path, plan_path)
-            print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-            return 0 if result.valid else 2
-
-        if args.command == "executor":
-            if args.executor_command == "inspect":
-                instance = create_executor(args.executor)
-                capabilities = normalize_executor_capabilities(instance.capabilities())
-                try:
-                    instance.close()
-                except Exception:
-                    pass
-                print(
-                    json.dumps(
-                        {
-                            "result": "passed",
-                            "valid": True,
-                            "executor": capabilities.to_dict(),
-                            "capability_sha256": capability_sha256(capabilities),
-                        },
-                        ensure_ascii=False,
-                        indent=2,
-                        sort_keys=True,
-                    )
-                )
-                return 0
-            if args.executor_command == "conformance":
-                report = run_executor_conformance(
-                    lambda: create_executor(args.executor),
-                )
-                if args.output is not None:
-                    write_conformance_report_atomic(args.output, report)
-                print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-                return 0 if report.result == "passed" else 2
-            validation = validate_conformance_report(args.path)
-            print(json.dumps(validation.to_dict(), ensure_ascii=False, indent=2, sort_keys=True))
-            return 0 if validation.valid else 2
-
-        factory = SceneFactory(args.registry, args.recipes)
-        if args.command == "intent":
-            if args.intent_command == "schema":
-                print(
-                    json.dumps(
-                        external_scene_schema(
-                            factory.registry.categories(),
-                            factory.recipes.room_types(),
-                            factory.recipes.events(),
-                        ),
-                        ensure_ascii=False,
-                        indent=2,
-                        sort_keys=True,
-                    )
-                )
-                return 0
-            try:
-                document = load_external_scene(
-                    args.path,
-                    allowed_categories=factory.registry.categories(),
-                    allowed_room_types=factory.recipes.room_types(),
-                    allowed_events=factory.recipes.events(),
-                )
-            except ExternalSceneError as exc:
-                print(f"scene-factory: {exc}", file=sys.stderr)
-                return 2
-            if args.intent_command == "validate":
-                print(
-                    json.dumps(
-                        {"result": "passed", "valid": True, **_intent_report(document)},
-                        ensure_ascii=False,
-                        indent=2,
-                        sort_keys=True,
-                    )
-                )
-                return 0
-            print(json.dumps(_intent_report(document), ensure_ascii=False, indent=2, sort_keys=True))
-            return 0
-        if args.command == "list-recipes":
-            for name in factory.recipes.names():
-                print(name)
-            return 0
-
-        if args.command == "llm-status":
-            print(json.dumps(factory.llm_status(), ensure_ascii=False, indent=2))
-            return 0
-
-        if args.command == "llm-test":
-            print(
-                json.dumps(
-                    factory.test_llm_connection(),
-                    ensure_ascii=False,
-                    indent=2,
-                )
-            )
-            return 0
-
-        if args.command == "build":
-            if args.recipe:
-                result = factory.build_from_recipe(args.recipe, args.seed)
-            elif args.prompt is not None:
-                result = factory.build_from_prompt(args.prompt, args.seed)
-            else:
-                document = load_external_scene(
-                    args.intent,
-                    allowed_categories=factory.registry.categories(),
-                    allowed_room_types=factory.recipes.room_types(),
-                    allowed_events=factory.recipes.events(),
-                )
-                result = factory.build_from_intent(
-                    document.intent,
-                    args.seed,
-                    input_source=document.input_source,
-                )
-            files = factory.write_result(
-                result,
-                args.output,
-                export_usd=args.usd,
-                export_mjcf=args.mjcf,
-                export_blender=args.blender,
-            )
-            print(
-                json.dumps(
-                    {
-                        "scene_id": result.scene.scene_id,
-                        "recipe": result.scene.recipe_name,
-                        "valid": result.valid,
-                        "quality": result.quality,
-                        "files": files,
-                    },
-                    ensure_ascii=False,
-                    indent=2,
-                )
-            )
-            return 0 if result.valid else 2
-
-        external_document = None
-        if args.intent is not None:
-            external_document = load_external_scene(
-                args.intent,
-                allowed_categories=factory.registry.categories(),
-                allowed_room_types=factory.recipes.room_types(),
-                allowed_events=factory.recipes.events(),
-            )
-        manifest = factory.build_batch(
-            output_root=args.output,
+    if args.command == "randomize":
+        xml = args.xml.read_text(encoding="utf-8")
+        variants, stats = randomize_xml(
+            xml,
             count=args.count,
-            seed_start=args.seed_start,
-            recipe_name=args.recipe,
-            prompt=args.prompt,
-            intent=external_document.intent if external_document else None,
-            input_source=external_document.input_source if external_document else None,
-            export_usd=args.usd,
-            export_mjcf=args.mjcf,
-            resume=args.resume,
+            seed=args.seed,
+            xy_jitter_m=args.xy_jitter,
+            yaw_jitter_deg=args.yaw_jitter,
+            mass_scale_range=(args.mass_scale[0], args.mass_scale[1]),
+            friction_scale_range=(args.friction_scale[0], args.friction_scale[1]),
         )
-        valid_count = sum(item["valid"] for item in manifest)
+        args.output.mkdir(parents=True, exist_ok=True)
+        written = []
+        for var in variants:
+            out_path = write_xml_atomic(args.output / f"variant_{var.index:03d}_seed{var.seed}.xml", var.xml)
+            written.append(
+                {
+                    "index": var.index,
+                    "seed": var.seed,
+                    "path": str(out_path.resolve()),
+                    "xml_sha256": var.xml_sha256,
+                    "max_penetration_m": var.max_penetration_m,
+                }
+            )
+        print(json.dumps({"stats": stats, "variants": written}, ensure_ascii=False, indent=2))
+        return 0
+
+    if args.command == "export-sft":
+        trace_files: list[Path] = []
+        for entry in args.traces:
+            if entry.is_dir():
+                trace_files.extend(sorted(entry.rglob("trace.json")))
+            elif entry.is_file():
+                trace_files.append(entry)
+        summary = export_sft_jsonl(trace_files, args.output, min_score=args.min_score)
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
+
+    if args.command == "generate":
+        catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()
+        cordis = CordisContext()
+        cordis_path = None if args.no_plugins else (args.cordis or _default_cordis_path())
+        apply_cordis_config(cordis, cordis_path, disable_all=args.no_plugins)
+        client = LLMClient(load_llm_config(args.llm_config))
+        agent = SceneAgent(client, catalog=catalog, cordis=cordis, max_turns=args.max_turns)
+        result = agent.run(
+            args.prompt,
+            images=args.image,
+            output_dir=args.output,
+            randomize_count=args.randomize,
+            seed=args.seed,
+        )
         print(
             json.dumps(
-                {"generated": len(manifest), "valid": valid_count, "output": str(args.output)},
+                {
+                    "output_dir": str(result.output_dir),
+                    "xml_sha256": result.xml_sha256,
+                    "compiled": result.verification.compiled,
+                    "settled_stable": result.verification.settled_stable,
+                    "score": result.verification.score,
+                    "turns": result.trace.turns,
+                    "variant_count": len(result.variants),
+                    "cordis_plugins": [p["name"] for p in result.trace.cordis_plugins],
+                },
                 ensure_ascii=False,
                 indent=2,
             )
         )
-        return 0 if valid_count == len(manifest) else 2
-    except ExternalSceneError as exc:
-        print(f"scene-factory: {exc}", file=sys.stderr)
-        return 2
-    except (KeyError, ValueError, OSError, RuntimeError, IsaacBackendUnavailable) as exc:
-        print(f"scene-factory: {exc}", file=sys.stderr)
-        return 1
+        return 0 if result.verification.compiled else 2
 
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+    parser.print_help(sys.stderr)
+    return 1

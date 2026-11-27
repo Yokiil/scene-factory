@@ -4,6 +4,7 @@ prune .venv
 prune node_modules
 prune venv
 prune tests
+prune extensions
 prune outputs
 prune deliveries
 prune logs

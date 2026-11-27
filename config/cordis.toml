@@ -1,0 +1,33 @@
+# Cordis plugin admission & exit governance for SceneFactory v2.
+#
+# Principles:
+# 1. Never weld bad-case interceptions into scene_factory/core/agent.py.
+# 2. Prefer `prompt_injection` plugins that guide LLM reasoning traces.
+# 3. Every plugin declares `added_for_model` and `exit_criteria` so it can be
+#    retired cleanly (`enabled = false`) as stronger base models arrive.
+
+[[plugins]]
+name = "mjcf_prompt_hints"
+entrypoint = "scene_factory.cordis.plugins.prompt_hints:plugin"
+kind = "prompt_injection"
+enabled = true
+version = "1.0"
+added_for_model = "general-vlm-2026"
+purpose = "Inject concise MuJoCo coordinate/half-extent/resting-height guidance into the prompt."
+exit_criteria = "Disable when base VLM reaches >=95% first-pass compile & settle rate with --no-plugins."
+
+[plugins.config]
+include_defaults = true
+
+[[plugins]]
+name = "xml_safety_guard"
+entrypoint = "scene_factory.cordis.plugins.xml_guard:plugin"
+kind = "tool_hook"
+enabled = true
+version = "1.0"
+added_for_model = "general-vlm-2026"
+purpose = "Advise on malformed XML / NaN tokens and block external filesystem path traversal in XML file attributes."
+exit_criteria = "Keep path-traversal guard only when running untrusted prompts; disable advisory mode once redundant."
+
+[plugins.config]
+mode = "advise"
