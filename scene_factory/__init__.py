@@ -26,6 +26,17 @@ from .core import (
     verify_mujoco_xml,
 )
 from .plugin_api import MCPServer, run_stdio_server
+from .spatial import (
+    SpatialAnalysis,
+    SpatialBoxProbe,
+    analyze_xml_spatial,
+    cross_modal_subspace_alignment,
+    evaluate_collision_methods,
+    fit_spatial_box_probe,
+    generate_xml_spatial_benchmark,
+    predict_box_collision,
+    steering_delta_for_separation,
+)
 
 __all__ = [
     "AgentResult",
@@ -44,18 +55,27 @@ __all__ = [
     "SceneAgent",
     "SceneToolbox",
     "SceneWorkspace",
+    "SpatialAnalysis",
+    "SpatialBoxProbe",
     "ToolCall",
     "VerificationReport",
+    "analyze_xml_spatial",
     "apply_cordis_config",
     "create_base_xml",
+    "cross_modal_subspace_alignment",
     "encode_png",
+    "evaluate_collision_methods",
     "export_sft_jsonl",
+    "fit_spatial_box_probe",
+    "generate_xml_spatial_benchmark",
     "inspect_xml_summary",
     "load_cordis_config",
     "load_llm_config",
     "merge_fragment",
+    "predict_box_collision",
     "randomize_xml",
     "run_stdio_server",
+    "steering_delta_for_separation",
     "verify_mujoco_xml",
 ]
 __version__ = "0.2.0"

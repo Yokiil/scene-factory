@@ -31,3 +31,17 @@ exit_criteria = "Keep path-traversal guard only when running untrusted prompts; 
 
 [plugins.config]
 mode = "advise"
+
+[[plugins]]
+name = "xml_spatial_hint"
+entrypoint = "scene_factory.cordis.plugins.spatial_check:plugin"
+kind = "tool_hook"
+enabled = false
+version = "1.0"
+added_for_model = "general-vlm-2026"
+purpose = "Run zero-render analytical SE(3)+OBB collision & floating check directly on XML and emit advisory hints."
+exit_criteria = "Retire once base LLM / S-Space inner-programming reliably avoids interpenetration on first pass."
+
+[plugins.config]
+collision_tol_m = 0.004
+floating_tol_m = 0.02

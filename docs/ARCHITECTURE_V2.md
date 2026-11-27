@@ -55,5 +55,8 @@ flowchart LR
 | `scene_factory/cordis/loader.py` | 从 `config/cordis.toml` 或 `.json` 装载/退出插件 |
 | `scene_factory/cordis/plugins/` | 可选插件示例：`prompt_hints.py`（提示引导）、`xml_guard.py`（技术安全护栏） |
 | `scene_factory/plugin_api/mcp_server.py` | 零依赖标准 MCP (JSON-RPC 2.0 stdio) 服务端，供外部 Agent 挂载 |
-| `scene_factory/cli.py` | 极简 CLI：`generate` / `verify` / `randomize` / `assets` / `plugins` / `export-sft` / `mcp` |
+| `scene_factory/spatial/geometry.py` | 免渲染/免引擎 XML SE(3) 嵌套坐标系解析、3D OBB SAT 碰撞/悬空检测与 S-Space 相机系投影 |
+| `scene_factory/spatial/benchmark.py` | 3 级难度 XML-Spatial-Collision Benchmark 生成器（平铺 / 父子嵌套 / 旋转多部件 Minimal Pairs + token span） |
+| `scene_factory/spatial/sspace_probe.py` | 对接 `mirros-lab/s-space` 的 6D 盒内编程碰撞读出、跨模态子空间对齐与右逆激活干预算法 |
+| `scene_factory/cli.py` | 极简 CLI：`generate` / `verify` / `randomize` / `spatial-check` / `benchmark-xml` / `assets` / `plugins` / `export-sft` / `mcp` |
 | `extensions/` | 隔离归档的 v1 动态控制、Isaac 后端、精细装配、Web 与历史测试 |

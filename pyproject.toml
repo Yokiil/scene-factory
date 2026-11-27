@@ -26,6 +26,7 @@ packages = [
   "scene_factory.cordis",
   "scene_factory.cordis.plugins",
   "scene_factory.plugin_api",
+  "scene_factory.spatial",
 ]
 
 [tool.setuptools.data-files]

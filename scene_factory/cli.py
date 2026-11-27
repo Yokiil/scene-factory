@@ -20,6 +20,7 @@ from .core import (
 )
 from .core.mjcf import write_xml_atomic
 from .plugin_api import run_stdio_server
+from .spatial import analyze_xml_spatial, generate_xml_spatial_benchmark
 
 
 def _default_cordis_path() -> Path | None:
@@ -75,6 +76,17 @@ def _build_parser() -> argparse.ArgumentParser:
     sft.add_argument("traces", nargs="+", type=Path, help="Trace JSON files or directories containing trace.json.")
     sft.add_argument("--output", type=Path, required=True)
     sft.add_argument("--min-score", type=float, default=0.8)
+
+    sp = sub.add_parser("spatial-check", help="Zero-render analytical 3D coordinate & OBB collision check on XML.")
+    sp.add_argument("xml", type=Path, help="Path to MuJoCo XML file.")
+    sp.add_argument("--crosscheck-mujoco", action="store_true", help="Also compare pairwise distances with MuJoCo.")
+
+    bm = sub.add_parser("benchmark-xml", help="Generate 3-level XML-Spatial-Collision benchmark for S-Space probing.")
+    bm.add_argument("--output", type=Path, required=True, help="Output directory for samples.jsonl and manifest.json.")
+    bm.add_argument("--per-level", type=int, default=30, help="Minimal-pair groups per difficulty level.")
+    bm.add_argument("--seed", type=int, default=42)
+    bm.add_argument("--render-images", action="store_true", help="Also render PNG views for cross-modal S-Space alignment.")
+    bm.add_argument("--no-mujoco-crosscheck", action="store_true")
 
     sub.add_parser("mcp", help="Run zero-dependency MCP stdio plugin server for external agents.")
     return parser
@@ -155,6 +167,25 @@ def main(argv: Sequence[str] | None = None) -> int:
                 trace_files.append(entry)
         summary = export_sft_jsonl(trace_files, args.output, min_score=args.min_score)
         print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
+
+    if args.command == "spatial-check":
+        xml = args.xml.read_text(encoding="utf-8")
+        analysis = analyze_xml_spatial(xml, crosscheck_mujoco=args.crosscheck_mujoco)
+        print(json.dumps(analysis.to_dict(), ensure_ascii=False, indent=2))
+        return 0 if analysis.assembly_valid else 2
+
+    if args.command == "benchmark-xml":
+        catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()
+        manifest = generate_xml_spatial_benchmark(
+            args.output,
+            per_level=args.per_level,
+            seed=args.seed,
+            render_images=args.render_images,
+            crosscheck_mujoco=not args.no_mujoco_crosscheck,
+            catalog=catalog,
+        )
+        print(json.dumps(manifest, ensure_ascii=False, indent=2))
         return 0
 
     if args.command == "generate":
