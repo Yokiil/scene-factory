@@ -104,8 +104,8 @@ class MujocoBackend:
         self._scene_sha256 = self._json_digest(scene)
         self.steps = 0
         self._body_ids = {
-            str(item["object_id"]): self._body_id(str(item["object_id"]))
-            for item in scene.get("objects", [])
+            object_id: self._body_id(body_name)
+            for object_id, body_name in MujocoMjcfExporter.object_body_names(scene).items()
         }
         initial_state = self._object_positions()
         self._task_evaluator = TaskEvaluator(dict(scene.get("task", {})), initial_state)
@@ -231,8 +231,7 @@ class MujocoBackend:
                 "Install the project again or run: python -m pip install mujoco"
             ) from exc
 
-    def _body_id(self, object_id: str) -> int:
-        body_name = MujocoMjcfExporter.body_name(object_id)
+    def _body_id(self, body_name: str) -> int:
         body_id = int(
             self._mujoco.mj_name2id(
                 self._model,
@@ -241,7 +240,7 @@ class MujocoBackend:
             )
         )
         if body_id < 0:
-            raise RuntimeError(f"MuJoCo body was not created for object {object_id!r}")
+            raise RuntimeError(f"MuJoCo body was not created: {body_name!r}")
         return body_id
 
     def _object_positions(self) -> dict[str, tuple[float, float, float]]:

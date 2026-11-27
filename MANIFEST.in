@@ -5,6 +5,7 @@ prune node_modules
 prune venv
 prune tests
 prune outputs
+prune deliveries
 prune logs
 prune release-dist
 prune local_assets
@@ -14,3 +15,4 @@ global-exclude *.aria2
 global-exclude *.part
 global-exclude *.tmp
 global-exclude *.log
+global-exclude *.elf

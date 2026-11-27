@@ -209,7 +209,34 @@ def _force_contact(diagnostics: dict, target: str) -> bool:
     return False
 
 
-def assess_task_trace(scene: dict, frames: list[dict], settings: dict) -> dict:
+def _measured_retry(frames: list[dict], index: int, actions: list[dict], target: str) -> bool:
+    """The single failed -> reach edge permitted in a physical recovery episode."""
+    if len(actions) != len(frames) - 1:
+        return False
+    begin = index - 1
+    while begin > 0 and frames[begin - 1]['robot']['phase'] == 'FAILED':
+        begin -= 1
+    failure, resumed = frames[begin], frames[index]
+    before, after = failure.get('mug_skill', {}), resumed.get('mug_skill', {})
+    if not (0 < begin < index and before.get('attempt') == 1 and after.get('attempt') == 2
+            and before.get('can_recover') is True and after.get('candidate') == 'nominal'
+            and failure['robot'].get('failure_reason') == 'grasp_failure'
+            and frames[begin - 1]['robot']['phase'] == 'VERIFY_GRASP'):
+        return False
+    for step in range(begin, index):
+        action = actions[step]
+        if (action.get('from_step') != step or action.get('action') != {'mode': 'mug_skill', 'skill': 'recover'}
+                or _force_contact(frames[step]['robot']['grasp_diagnostics'], target)):
+            return False
+    diagnostics = resumed['robot']['grasp_diagnostics']
+    tcp_before = failure['robot']['end_effector_pose']['position']
+    tcp_after = resumed['robot']['end_effector_pose']['position']
+    return (diagnostics.get('gripper_open') is True and diagnostics.get('contact_force_read_valid') is True
+            and not _force_contact(diagnostics, target) and tcp_after[2] - tcp_before[2] > 0.03)
+
+
+def assess_task_trace(scene: dict, frames: list[dict], settings: dict, *,
+                      recovery_actions: list[dict] | None = None) -> dict:
     """Replay each oracle from positions and force reports, including failures.
 
     settings.runtime_summary supplies actual official Franka source and final
@@ -320,7 +347,12 @@ def assess_task_trace(scene: dict, frames: list[dict], settings: dict) -> dict:
             checks["phase_transitions"] = False
         if previous_phase and phase != previous_phase and phase != "FAILED":
             allowed = MUG_LIFT_PHASE_TRANSITIONS.get(MugLiftPhase(previous_phase), ())
-            if phase_enum not in allowed or (predicate == "pick_and_place" and previous_phase == "LIFT" and phase == "DONE"):
+            retry = (recovery_actions is not None and not metrics.get('recovery_transition_step')
+                     and previous_phase == 'FAILED' and phase == 'PRE_GRASP'
+                     and _measured_retry(frames, index, recovery_actions, target))
+            if retry:
+                metrics['recovery_transition_step'] = index
+            elif phase_enum not in allowed or (predicate == "pick_and_place" and previous_phase == "LIFT" and phase == "DONE"):
                 checks["phase_transitions"] = False
         if phase_enum is not None:
             previous_phase = phase

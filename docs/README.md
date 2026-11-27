@@ -40,6 +40,7 @@
 - [ISAAC_BUILD.md](isaac/ISAAC_BUILD.md)：Isaac 环境包与 HTTP 验收
 - [ISAAC_PHYSICS_ESTIMATES.md](isaac/ISAAC_PHYSICS_ESTIMATES.md)：显式物理参数估算
 - [ISAAC_ROOM_BACKGROUND_VALIDATION.md](isaac/ISAAC_ROOM_BACKGROUND_VALIDATION.md)：房间背景静置的独立验收
+- [EMBODIED_MUG_ACCEPTANCE.md](isaac/EMBODIED_MUG_ACCEPTANCE.md)：Franka 抓杯闭环策略、接触力调节与同回合失抓恢复验收
 
 ## assembly：装配、抓持与任务契约
 

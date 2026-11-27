@@ -4,6 +4,12 @@
 
 ### Added
 
+- a read-only `scene_factory.world_state.v1` view (`build_world_state`,
+  `SceneFactoryEnv.world_state`, `RuntimeSession.world_state`, and HTTP
+  `GET /v1/sessions/{id}/world-state`) plus closed-loop Franka mug skills with
+  contact-force-regulated gripping, headless `mug_physics.kit`, and verified
+  same-episode failure recovery on the reference Isaac Sim 6.0.1.0 YCB mug slice.
+
 - a three-tier dessert display recipe with four authored dessert assets, a
   build tool, scene validation and a web preview entry.
 

@@ -161,6 +161,8 @@ def worker_main(connection: Any, config: dict[str, Any]) -> None:
                     result = session.step(request)
                 elif operation == "observation":
                     result = session.observe(request) if request else session.observe()
+                elif operation == "world_state":
+                    result = session.world_state()
                 elif operation in {"snapshot", "restore"}:
                     if operation == "restore" and backend_name == "isaac":
                         raise NotImplementedError(

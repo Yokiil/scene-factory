@@ -29,7 +29,7 @@ from .session_contracts import finite_json
 SERVICE_SCHEMA = "scene_factory.runtime_service.v1"
 DEFAULT_MAX_BODY = 4 * 1024 * 1024
 MAX_SESSION_HISTORY = 100000
-_OPERATIONS = {"describe", "reset", "step", "observation", "snapshot", "restore"}
+_OPERATIONS = {"describe", "reset", "step", "observation", "world_state", "snapshot", "restore"}
 
 
 class ServiceError(RuntimeError):
@@ -1186,6 +1186,9 @@ class RuntimeRequestHandler(http.server.BaseHTTPRequestHandler):
                 result = manager.build_status(parts[2])
             elif len(parts) == 3 and parts[:2] == ["v1", "sessions"] and method == "GET":
                 result = manager.describe(parts[2])
+            elif (len(parts) == 4 and parts[:2] == ["v1", "sessions"]
+                  and method == "GET" and parts[3] == "world-state"):
+                result = manager.call(parts[2], "world_state")
             elif len(parts) == 3 and parts[:2] == ["v1", "sessions"] and method == "DELETE":
                 result = manager.close_session(parts[2])
             elif (

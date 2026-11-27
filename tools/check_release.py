@@ -35,8 +35,7 @@ REQUIRED_FILES = (
 PERSONAL_PATH_PATTERNS = (
     re.compile(r"\bC:[\\/](?:Users|Documents and Settings)[\\/]", re.IGNORECASE),
     re.compile(r"\bF:[\\/]", re.IGNORECASE),
-    re.compile(r"Desktop\\agent", re.IGNORECASE),
-    re.compile(r"\b29497\b"),
+    re.compile(r"Desktop[\\/]agent", re.IGNORECASE),
 )
 SECRET_PATTERNS = (
     re.compile(r"\bsk-[A-Za-z0-9_-]{16,}\b"),

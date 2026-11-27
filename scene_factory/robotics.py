@@ -88,6 +88,7 @@ class MugLiftController:
         if max_steps < 1:
             raise ValueError("max_steps must be positive")
         self.initial_target_position = tuple(float(value) for value in initial_target_position)
+        self.grasp_anchor_position = self.initial_target_position
         self.grasp_offset = tuple(float(value) for value in grasp_offset)
         self.approach_clearance_x_m = float(approach_clearance_x_m)
         self.approach_clearance_y_m = float(approach_clearance_y_m)
@@ -152,7 +153,7 @@ class MugLiftController:
     def command(self, target_position: Vec3) -> MugLiftCommand:
         del target_position
         x, y, initial_z = (
-            self.initial_target_position[index] + self.grasp_offset[index]
+            self.grasp_anchor_position[index] + self.grasp_offset[index]
             for index in range(3)
         )
         approach_x = x + self.approach_clearance_x_m
@@ -199,7 +200,7 @@ class MugLiftController:
             if self.place_target_position is None:
                 raise RuntimeError("pick_place controller has no place target")
             source_x, source_y, source_z = self.transfer_start_position or tuple(
-                self.initial_target_position[index] + self.grasp_offset[index]
+                self.grasp_anchor_position[index] + self.grasp_offset[index]
                 for index in range(3)
             )
             place_x, place_y, place_z = (

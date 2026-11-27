@@ -24,6 +24,9 @@ scene-factory-web = "scene_factory.webapp:main"
 packages = ["scene_factory", "scene_factory.backends", "scene_factory.exporters"]
 license-files = ["LICENSE"]
 
+[tool.setuptools.package-data]
+"scene_factory.backends" = ["mug_physics.kit"]
+
 [tool.setuptools.data-files]
 "share/scene-factory/recipes" = ["recipes/*.json"]
 "share/scene-factory/schemas" = ["schemas/*.json"]

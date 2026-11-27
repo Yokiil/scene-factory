@@ -106,6 +106,10 @@ class RuntimeClient:
         suffix = "/observation" + ("?" + urllib.parse.urlencode(query) if query else "")
         return self.request("GET", self._path(session_id, suffix))
 
+    def world_state(self, session_id: str) -> dict[str, Any]:
+        """Read the committed world state without advancing the episode."""
+        return self.request("GET", self._path(session_id, "/world-state"))
+
     def build(self, request: dict[str, Any]) -> dict[str, Any]:
         request = dict(request)
         request.setdefault("idempotency_key", uuid.uuid4().hex)

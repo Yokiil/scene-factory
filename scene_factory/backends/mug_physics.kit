@@ -1,0 +1,28 @@
+[package]
+title = "SceneFactory headless mug physics"
+version = "1.0.0"
+description = "PhysX, articulation, gripper and Lula IK for headless Franka episodes"
+
+[dependencies]
+"isaacsim.simulation_app" = {}
+"isaacsim.core.api" = {}
+"isaacsim.robot.manipulators" = {}
+"isaacsim.robot_motion.motion_generation" = {}
+"isaacsim.storage.native" = {}
+"omni.physx.tensors" = {}
+"omni.kit.loop-isaac" = {}
+
+[settings.app]
+name = "SceneFactory-Mug-Physics"
+settings.persistent = false
+settings.fabricDefaultStageFrameHistoryCount = 3
+vulkan = true
+runLoops.main.manualModeEnabled = true
+runLoops.main.rateLimitEnabled = false
+window.enabled = false
+
+[settings]
+app.renderer.skipWhileMinimized = true
+exts."omni.kit.viewport.window".startup.disableWindowOnLoad = true
+exts."omni.kit.renderer.core".present.enabled = false
+renderer.gpuEnumeration.glInterop.enabled = false

@@ -91,6 +91,23 @@ class MujocoMjcfExporter:
         normalized = _NAME_RE.sub("_", object_id).strip("_.-") or "object"
         return f"object__{normalized}"
 
+    @classmethod
+    def object_body_names(cls, scene: CompiledScene | Mapping[str, Any]) -> dict[str, str]:
+        names: dict[str, str] = {}
+        used: set[str] = set()
+        for index, item in enumerate(_value(scene, "objects")):
+            object_id = str(_value(item, "object_id"))
+            if object_id in names:
+                raise ValueError(f"duplicate object_id: {object_id}")
+            base = name = cls.body_name(object_id)
+            suffix = index
+            while name in used:
+                name = f"{base}_{suffix}"
+                suffix += 1
+            names[object_id] = name
+            used.add(name)
+        return names
+
     def to_string(self, scene: CompiledScene | Mapping[str, Any]) -> str:
         scene_id = str(_value(scene, "scene_id"))
         room_x, room_y, room_z = _value(scene, "room_dimensions_m")
@@ -159,13 +176,10 @@ class MujocoMjcfExporter:
             },
         )
 
-        used_names: set[str] = set()
-        for index, item in enumerate(_value(scene, "objects")):
+        names = self.object_body_names(scene)
+        for item in _value(scene, "objects"):
             object_id = str(_value(item, "object_id"))
-            body_name = self.body_name(object_id)
-            if body_name in used_names:
-                body_name = f"{body_name}_{index}"
-            used_names.add(body_name)
+            body_name = names[object_id]
             asset = self.registry.get(str(_value(item, "asset_id")))
             pose = _value(item, "pose")
             position = _value(pose, "position")

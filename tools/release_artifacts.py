@@ -127,6 +127,10 @@ REQUIRED_PACKAGE_FILES = (
     "scene_factory/isaac_export.py",
     "scene_factory/isaac_preview.py",
     "scene_factory/isaac_runtime.py",
+    "scene_factory/world_state.py",
+    "scene_factory/embodied_agent.py",
+    "scene_factory/backends/isaac_mug_skills.py",
+    "scene_factory/backends/mug_physics.kit",
 )
 SDIST_REQUIRED_FILES = (
     "MANIFEST.in",
@@ -143,6 +147,7 @@ FORBIDDEN_COMMON_SEGMENTS = {
     ".venv",
     "venv",
     "outputs",
+    "deliveries",
     "release-dist",
     "logs",
     "secrets",
@@ -156,7 +161,7 @@ FORBIDDEN_COMMON_SEGMENTS = {
     "test",
 }
 FORBIDDEN_WHEEL_SEGMENTS = FORBIDDEN_COMMON_SEGMENTS | {"tests", "test"}
-FORBIDDEN_SUFFIXES = (".aria2", ".part", ".tmp", ".log")
+FORBIDDEN_SUFFIXES = (".aria2", ".part", ".tmp", ".log", ".elf")
 
 
 class ArtifactError(RuntimeError):

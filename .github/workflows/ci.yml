@@ -140,4 +140,19 @@ jobs:
       - name: Verify simulator dependencies
         run: python -c "import mujoco; import numpy"
       - name: Test MuJoCo integration
-        run: python -B -m pytest -p no:cacheprovider -q tests/test_mujoco.py
+        run: >-
+          python -B -m pytest -p no:cacheprovider -q
+          tests/test_mujoco.py
+          tests/test_mujoco_state.py
+          tests/test_constrained_randomization.py
+          tests/test_environment_package.py
+          tests/test_episode_reset.py
+          tests/test_session.py
+          tests/test_session_extensions.py
+          tests/test_incremental_compiler.py
+          tests/test_runtime_benchmark.py
+          tests/test_world_state.py
+          tests/test_worker_pool.py
+          tests/test_runtime_service.py
+          tests/test_agent_adapter.py
+          tests/test_decision_dataset.py

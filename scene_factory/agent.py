@@ -125,6 +125,14 @@ class SceneFactoryEnv:
             raise RuntimeError("reset must succeed before render")
         return noisy_rgb(self._scene, self.backend.render(), getattr(self.backend, "steps", 0))
 
+    def world_state(self, observation: dict[str, Any], **metadata: Any) -> dict[str, Any]:
+        """Project a returned observation using the effective episode layout."""
+        from .world_state import build_world_state
+
+        if self._scene is None:
+            raise RuntimeError("reset must succeed before reading world state")
+        return build_world_state(self._scene, observation, scene_sha256=self._scene_sha256, **metadata)
+
     def transform_observation(self, observation: dict[str, Any]) -> dict[str, Any]:
         """Attach configured sensor measurements without altering truth or rewards."""
         return sensor_measurements(self._scene, observation, getattr(self.backend, "steps", 0))

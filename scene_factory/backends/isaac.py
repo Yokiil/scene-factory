@@ -19,6 +19,7 @@ from ..robotics import (
     quaternion_angular_distance,
 )
 from ..tasks import TaskEvaluator
+from .isaac_mug_skills import MugSkillBridge
 from ..robot_specs import FRANKA_SPEC
 from ..controller_settings import controller_reach_kwargs, normalize_controller_settings
 
@@ -137,6 +138,8 @@ class IsaacSimBackend:
         robot_asset_root: str | Path | None = None,
         enable_general_observation: bool = False,
         close_on_reset_error: bool = False,
+        minimal_kit: bool = False,
+        mug_initial_candidate: str | None = None,
     ) -> None:
         self.usd_path = Path(usd_path).expanduser().resolve()
         self.headless = headless
@@ -150,6 +153,13 @@ class IsaacSimBackend:
         if not isinstance(close_on_reset_error, bool):
             raise ValueError("close_on_reset_error must be boolean")
         self.close_on_reset_error = close_on_reset_error
+        if type(minimal_kit) is not bool or (minimal_kit and (not headless or enable_rgbd)):
+            raise ValueError("minimal_kit requires headless physics without RGB-D")
+        self.minimal_kit = minimal_kit
+        if mug_initial_candidate not in (None, "nominal", "lateral"):
+            raise ValueError("mug_initial_candidate must be nominal or lateral")
+        self.mug_initial_candidate = mug_initial_candidate
+        self._mug_skills = None
         self.scene: dict[str, Any] | None = None
         self.steps = 0
         self._app = None
@@ -304,22 +314,39 @@ class IsaacSimBackend:
         original_argv = sys.argv
         sys.argv = [sys.argv[0]]
         try:
-            self._app = SimulationApp(
-                {
-                    "headless": self.headless,
-                    "hide_ui": self.headless,
-                    "renderer": "RayTracedLighting" if self.enable_rgbd else "Minimal",
-                    "minimal_shading_mode": 4,
-                    "anti_aliasing": 0,
-                    "multi_gpu": False,
-                    "max_gpu_count": 1,
-                    "width": 640,
-                    "height": 480,
-                    "disable_viewport_updates": self.headless and not self.enable_rgbd,
-                    "fast_shutdown": True,
-                    "open_usd": self.usd_path.as_posix(),
-                }
-            )
+            config = {
+                "headless": self.headless,
+                "hide_ui": self.headless,
+                "renderer": "RayTracedLighting" if self.enable_rgbd else "Minimal",
+                "minimal_shading_mode": 4,
+                "anti_aliasing": 0,
+                "multi_gpu": False,
+                "max_gpu_count": 1,
+                "width": 640,
+                "height": 480,
+                "disable_viewport_updates": self.headless and not self.enable_rgbd,
+                "fast_shutdown": True,
+                "open_usd": self.usd_path.as_posix(),
+            }
+            if self.minimal_kit:
+                package = Path(import_module("isaacsim").__file__).parent
+                import shutil
+                import tempfile
+
+                profile = Path(__file__).with_name("mug_physics.kit")
+                config["limit_cpu_threads"] = 4
+                config["extra_args"] = [
+                    item for folder in ("exts", "extscache", "extsDeprecated")
+                    for item in ("--ext-folder", str(package / folder))
+                ]
+                # Kit accepts only ASCII experience paths on this Windows host.
+                # The episode USD directory has already passed that requirement.
+                with tempfile.TemporaryDirectory(prefix="mug_kit_", dir=self.usd_path.parent) as temp:
+                    experience = Path(temp) / profile.name
+                    shutil.copyfile(profile, experience)
+                    self._app = SimulationApp(config, experience=str(experience))
+            else:
+                self._app = SimulationApp(config)
         except (ImportError, OSError, RuntimeError) as exc:
             raise IsaacBackendUnavailable(f"Isaac Sim failed to start: {exc}") from exc
         finally:
@@ -376,6 +403,14 @@ class IsaacSimBackend:
                 lift_height_m=_pick_place_lift_height(scene["task"]),
                 **controller_reach_kwargs(self._controller_settings),
             )
+            if self.mug_initial_candidate is not None:
+                target = next(obj for obj in scene["objects"] if obj["object_id"] == target_id)
+                if (self._robot_asset_source != "nucleus_franka_usd" or target.get("asset_id") != "mug_001"
+                    or target.get("dynamic") is not True or scene["task"].get("success", {}).get("predicate")
+                    not in {"pick_and_place", "lifted"}):
+                    raise ValueError("mug_skill requires the official Franka and a dynamic mug_001 lift or placement task")
+                source_support = scene["task"]["success"].get("source_support") or str(target.get("support", "")).split(":")[0]
+                self._mug_skills = MugSkillBridge(self._controller, self.mug_initial_candidate, source_support)
             self._grasp_hold_closing_margin_m = self._controller_settings["grasp_hold_closing_margin_m"]
             self._target_root_path = str(self._object_prims[target_id].GetPath())
             self._refresh_grasp_diagnostics()
@@ -402,9 +437,16 @@ class IsaacSimBackend:
     ) -> tuple[dict[str, Any], float, bool, bool, dict[str, Any]]:
         if self.scene is None or self._controller is None or self._simulation is None:
             raise RuntimeError("reset must be called before step")
+        skill_mode = isinstance(action, dict) and action.get("mode") == "mug_skill"
+        if self._mug_skills is not None and not skill_mode:
+            raise ValueError("this episode accepts only mug_skill actions")
+        if skill_mode:
+            if self._mug_skills is None or self._action_mode not in (None, "mug_skill"):
+                raise ValueError("mug_skill requires an episode initialized with mug_initial_candidate")
+            self._mug_skills.validate(action, self._controller, self.steps)
         if isinstance(action, dict) and action.get("mode") == "joint_position":
             return self._step_joint_position(action)
-        if action not in (None, "scripted") and not (
+        if not skill_mode and action not in (None, "scripted") and not (
             isinstance(action, dict) and action.get("mode") == "scripted"
         ):
             raise ValueError("unsupported Isaac action; use scripted or joint_position")
@@ -412,15 +454,45 @@ class IsaacSimBackend:
             raise ValueError("assembly tasks require external joint_position actions with measured contact evidence")
         if self._action_mode == "joint_position":
             raise ValueError("cannot switch action mode within an episode; reset first")
-        self._action_mode = "scripted"
-        if self._controller.phase in {MugLiftPhase.DONE, MugLiftPhase.FAILED}:
+        self._action_mode = "mug_skill" if skill_mode else "scripted"
+        recovering = skill_mode and action["skill"] == "recover"
+        if not recovering and self._controller.phase in {MugLiftPhase.DONE, MugLiftPhase.FAILED}:
             raise RuntimeError("episode has already ended; call reset before stepping again")
 
         target_id = _target_object(self.scene)
         before_positions = self._read_object_positions()
-        command = self._controller.command(before_positions[target_id])
+        if recovering:
+            self._grasp_hold_positions = None
+            ee_position, _ = self._end_effector_pose()
+            command = self._mug_skills.recovery_command(ee_position, before_positions[target_id])
+        else:
+            command = self._controller.command(before_positions[target_id])
         ik_success = self._apply_command(command)
         self._last_command = _serialize_command(command)
+        if skill_mode:
+            self._last_command.update(mode="mug_skill", skill=action["skill"],
+                                      attempt=self._mug_skills.attempt, candidate=self._mug_skills.candidate)
+            if command.gripper in {"close", "closed"}:
+                self._last_command["grasp_force_control"] = dict(self._mug_skills.grasp_feedback)
+        if (skill_mode and self._mug_skills.candidate == "lateral" and
+            (recovering or (command.phase == MugLiftPhase.VERIFY_GRASP and
+                            self._controller.phase_steps >= self._controller._VERIFY_GRASP_STEPS - 4))):
+            # Sleeping actors omit solver contact forces. Wake only the subject
+            # of the failed grasp so the next physics step measures support.
+            from omni.physx import get_physx_simulation_interface
+            from pxr import PhysicsSchemaTools, UsdUtils
+
+            interface = get_physx_simulation_interface()
+            stage_id = UsdUtils.StageCache.Get().GetId(self._stage).ToLongInt()
+            body = PhysicsSchemaTools.sdfPathToInt(self._object_prims[target_id].GetPath())
+            sleeping = bool(interface.is_sleeping(stage_id, body))
+            # Renew the wake counter before integration: an awake actor can
+            # cross the sleep threshold during this very step.
+            interface.wake_up(stage_id, body)
+            self._last_command["support_measurement"] = {
+                "target": target_id, "was_sleeping": sleeping, "wake_up_requested": True,
+                "source": "PhysX simulation interface",
+            }
         self._simulation.step(
             render=self._camera is not None or not self.headless,
             update_fabric=self._camera is not None,
@@ -437,26 +509,54 @@ class IsaacSimBackend:
         task_success = bool(self._task_status.get("task_success"))
         ee_position, ee_orientation = self._end_effector_pose()
         orientation_error = self._orientation_error(ee_orientation)
-        self._controller.advance(
-            target_position=positions[target_id],
-            end_effector_position=tuple(float(value) for value in ee_position),
-            orientation_error_rad=orientation_error,
-            ik_success=ik_success,
-            task_success=task_success,
-            grasp_diagnostics=self._grasp_diagnostics,
-            task_state=self._task_status,
-        )
+        if not recovering:
+            self._controller.advance(
+                target_position=positions[target_id],
+                end_effector_position=tuple(float(value) for value in ee_position),
+                orientation_error_rad=orientation_error,
+                ik_success=ik_success,
+                task_success=task_success,
+                grasp_diagnostics=self._grasp_diagnostics,
+                task_state=self._task_status,
+            )
         if (
             command.phase == MugLiftPhase.GRASP
             and self._controller.phase == MugLiftPhase.VERIFY_GRASP
         ):
             self._capture_grasp_hold_positions()
         observation = self._observation(task_success=task_success, positions=positions)
+        if skill_mode:
+            self._mug_skills.observe(
+                self._controller, positions[target_id], self._grasp_diagnostics, self.steps,
+                observation, target_id,
+            )
+            if recovering:
+                if self.steps >= self.max_steps:
+                    self._controller.fail("timeout")
+                elif not self._mug_skills.can_recover:
+                    self._controller.fail("recovery_evidence_lost")
+                else:
+                    self._controller = self._mug_skills.advance_recovery(
+                        self._controller, positions[target_id], ee_position, orientation_error,
+                        self._grasp_diagnostics, self.steps, ik_success,
+                        home_ready=(command.gripper == "recover_home" and
+                                    max(abs(a-b) for a, b in zip(observation['robot']['joint_positions'][:7],
+                                        FRANKA_SPEC.default_joint_positions[:7], strict=True)) < 0.04 and
+                                    max(abs(a-b) for a,b in zip(observation['robot']['joint_positions'][:7],
+                                        self._last_observation['robot']['joint_positions'][:7], strict=True)) < 0.0001),
+                    )
+                if self._controller.failure_reason != self._mug_skills.last_failure:
+                    self._mug_skills.can_recover = False
+                observation["robot"].update(phase=self._controller.phase.value,
+                                          failure_reason=self._controller.failure_reason,
+                                          pick_status=self._controller.pick_status,
+                                          place_status=self._controller.place_status)
+            observation["mug_skill"] = self._mug_skills.snapshot()
         self._last_observation = observation
         timed_out = self._controller.failure_reason == "timeout"
         terminated = (
             self._controller.phase in {MugLiftPhase.DONE, MugLiftPhase.FAILED}
-            and not timed_out
+            and not timed_out and not (skill_mode and self._mug_skills.can_recover)
         )
         truncated = timed_out
         reward = 1.0 if self._controller.phase == MugLiftPhase.DONE else 0.0
@@ -643,6 +743,7 @@ class IsaacSimBackend:
 
     def close(self) -> None:
         self._action_mode = None
+        self._mug_skills = None
         self._external_done = False
         simulation, app = self._simulation, self._app
         camera = self._camera
@@ -850,7 +951,7 @@ class IsaacSimBackend:
             self._finger_gripper_config["open_positions"],
             strict=True,
         ):
-            default_joints[index] = position
+            default_joints[index] = position - (0.00025 if self.mug_initial_candidate is not None else 0.0)
         self._robot.set_joint_positions(default_joints)
         self._robot.apply_action(ArticulationAction(joint_positions=default_joints))
 
@@ -1143,16 +1244,33 @@ class IsaacSimBackend:
     def _apply_command(self, command) -> bool | None:
         import numpy as np
 
-        if command.gripper == "open":
+        if command.gripper == "recover_home":
+            from isaacsim.core.utils.types import ArticulationAction
+
+            current = np.asarray(self._robot.get_joint_positions())[:7]
+            rest = np.asarray(FRANKA_SPEC.default_joint_positions[:7])
+            targets = current + np.clip(rest - current, -0.40, 0.40)
+            margin = 0.00025 if np.max(np.abs(rest-current)) < 0.12 else 0.0015
+            opened = np.asarray(self._finger_gripper_config['open_positions']) - margin
+            indices = [*range(7), *self._finger_gripper_config['indices']]
+            self._robot.apply_action(ArticulationAction(joint_positions=np.r_[targets, opened], joint_indices=np.asarray(indices)))
+            self._last_applied_joint_position_targets = _read_applied_joint_position_targets(self._robot)
+            return None
+        if command.gripper in {"open", "recover_open"}:
             self._gripper.open()
             from isaacsim.core.utils.types import ArticulationAction
 
+            opened = np.asarray(self._finger_gripper_config["open_positions"], dtype=float)
+            if self._action_mode == "mug_skill":
+                # The detachment maneuver has no payload. Hold just inside the
+                # physical stops so an unloaded actuator cannot push through
+                # its upper limit. Measured open/limit checks are unchanged.
+                delta = np.abs(self._finger_gripper_config["action_deltas"])
+                opened = np.maximum(self._finger_gripper_config["closed_positions"],
+                                    opened - np.minimum(0.00025, delta / 16.0))
             self._robot.apply_action(
                 ArticulationAction(
-                    joint_positions=np.asarray(
-                        self._finger_gripper_config["open_positions"],
-                        dtype=float,
-                    ),
+                    joint_positions=opened,
                     joint_velocities=(
                         np.asarray(
                             self._finger_gripper_config["action_deltas"],
@@ -1161,6 +1279,8 @@ class IsaacSimBackend:
                         / self.physics_dt
                         * 0.5
                         if command.phase in {MugLiftPhase.RELEASE, MugLiftPhase.VERIFY_PLACE}
+                        and (self._action_mode != "mug_skill" or
+                             (command.gripper == "open" and not self._grasp_diagnostics.get("gripper_open")))
                         else None
                     ),
                     joint_indices=np.asarray(
@@ -1170,7 +1290,8 @@ class IsaacSimBackend:
                 )
             )
         elif command.gripper in {"close", "closed"}:
-            self._gripper.close()
+            if self._action_mode != "mug_skill":
+                self._gripper.close()
             # Keep ParallelGripper as the command interface, then submit the
             # runtime lower limits explicitly so both Franka asset layouts close
             # instead of stopping after one incremental delta per frame.
@@ -1179,6 +1300,11 @@ class IsaacSimBackend:
             finger_positions = self._grasp_hold_positions or self._finger_gripper_config[
                 "closed_positions"
             ]
+            if self._action_mode == "mug_skill":
+                finger_positions = self._mug_skills.regulated_fingers(
+                    self._last_observation, _target_object(self.scene),
+                    self._controller_settings["finger_stiffness"], self.physics_dt,
+                )
             self._robot.apply_action(
                 ArticulationAction(
                     joint_positions=np.asarray(
@@ -1308,6 +1434,8 @@ class IsaacSimBackend:
                 if matrix.ndim != 3 or matrix.shape[0] < 1 or matrix.shape[1] < 1:
                     raise RuntimeError("invalid Franka contact force matrix")
                 force = np.asarray(matrix[0, 0], dtype=float)
+                if force.shape != (3,) or not np.isfinite(force).all():
+                    raise RuntimeError("invalid Franka contact force vector")
                 magnitude = float(np.linalg.norm(force))
                 if magnitude <= 1e-6:
                     continue
@@ -1459,6 +1587,8 @@ class IsaacSimBackend:
                 self._general_observation_error = str(exc)
                 raise NotImplementedError(f"requested general observation measurement failed: {exc}") from exc
             observation["available_fields"] = ["object_orientations", "object_velocities", "general_contacts"]
+        if self._mug_skills is not None:
+            observation["mug_skill"] = self._mug_skills.snapshot()
         observation["robot"]["joint_names"] = list(self._robot.dof_names)
         return observation
 

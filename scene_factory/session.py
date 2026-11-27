@@ -209,6 +209,17 @@ class RuntimeSession:
                 response = capture_observation_images(self, request, response)
             return response
 
+    def world_state(self) -> dict[str, Any]:
+        """Read the last committed frame, using the same episode/version as observe()."""
+        with self._lock:
+            self._check_ready()
+            frame = self._observation
+            return self.env.world_state(
+                frame["observation"], backend=self.backend, episode_id=frame["episode_id"],
+                session_id=frame["session_id"], state_version=frame["state_version"],
+                step_index=frame["step_index"], sim_time=frame["sim_time"], info=frame["info"],
+            )
+
     def snapshot(self, request: dict[str, Any]) -> dict[str, Any]:
         """Capture a rebuild recipe or backend-scoped serialized running state."""
         with self._lock:
