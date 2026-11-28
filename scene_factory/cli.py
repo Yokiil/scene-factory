@@ -21,6 +21,7 @@ from .core import (
 from .core.mjcf import write_xml_atomic
 from .plugin_api import run_stdio_server
 from .spatial import analyze_xml_spatial, generate_xml_spatial_benchmark
+from .studio import run_studio
 
 
 def _default_cordis_path() -> Path | None:
@@ -89,6 +90,10 @@ def _build_parser() -> argparse.ArgumentParser:
     bm.add_argument("--no-mujoco-crosscheck", action="store_true")
 
     sub.add_parser("mcp", help="Run zero-dependency MCP stdio plugin server for external agents.")
+
+    st = sub.add_parser("studio", help="Launch Precision 3D Studio web UI for SceneFactory v2.")
+    st.add_argument("--host", default="127.0.0.1", help="Bind host (default: 127.0.0.1).")
+    st.add_argument("--port", type=int, default=8788, help="Bind port (default: 8788).")
     return parser
 
 
@@ -99,6 +104,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "mcp":
         catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()
         return run_stdio_server(catalog=catalog)
+
+    if args.command == "studio":
+        return run_studio(host=args.host, port=args.port, assets_dir=args.assets)
 
     if args.command == "assets":
         catalog = AssetCatalog(args.assets) if args.assets else AssetCatalog()

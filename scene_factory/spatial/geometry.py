@@ -426,7 +426,7 @@ def analyze_xml_spatial(
             lrot = _element_rotation(child, angle_degrees=angle_degrees)
             wpos = _add(parent_pos, _mat_vec(parent_rot, lpos))
             wrot = _mat_mul(parent_rot, lrot)
-            dynamic = child.find("freejoint") is not None
+            dynamic = child.find("freejoint") is not None or child.find("joint") is not None
 
             geoms: list[GeomOBB] = []
             for gi, geom in enumerate(child.findall("geom")):

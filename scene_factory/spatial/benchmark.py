@@ -130,7 +130,10 @@ def _add_box_body(
         attrs["quat"] = f"{q[0]:.6f} {q[1]:.6f} {q[2]:.6f} {q[3]:.6f}"
     body = ET.SubElement(parent, "body", attrs)
     if dynamic:
-        ET.SubElement(body, "freejoint", {"name": f"joint__{name}"})
+        if parent.tag == "worldbody":
+            ET.SubElement(body, "freejoint", {"name": f"joint__{name}"})
+        else:
+            ET.SubElement(body, "joint", {"name": f"joint__{name}_z", "type": "slide", "axis": "0 0 1"})
     gattrs = {
         "name": f"geom__{name}",
         "type": "box",

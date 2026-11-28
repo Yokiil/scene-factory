@@ -66,7 +66,25 @@ scene-factory plugins
 scene-factory export-sft outputs/ --min-score 0.8 --output outputs/sft_traces.jsonl
 ```
 
-### 3. 作为标准 MCP 插件挂载给外部 Agent（如 Cordis / DeepSeek Harness / Claude / Cursor）
+### 3. 启动 Precision 3D Studio 交互式工作台（零前端构建依赖）
+
+```bash
+scene-factory studio --port 8788
+```
+
+浏览器打开 `http://127.0.0.1:8788`，提供三视图舞台（3D 视口 + MuJoCo 离屏渲染 + 实时可编辑 XML）、零渲染 SE(3)/OBB 3D 穿模诊断叠层、多轮 Agent Trace 时间线、原地 Random 变体库与 Cordis 插件热开关。
+
+### 4. 纯 XML 空间坐标与 3D OBB 碰撞检测 / S-Space 基准
+
+```bash
+# 零渲染直接解析任意 MuJoCo XML 的嵌套 SE(3) 坐标系与 3D OBB 碰撞
+scene-factory spatial-check outputs/table_mug_scene/scene.xml --crosscheck-mujoco
+
+# 生成 3 个难度的 XML-Spatial-Collision 基准集（兼容 mirros-lab/s-space）
+scene-factory benchmark-xml --output outputs/xml_spatial_bench --per-level 30
+```
+
+### 5. 作为标准 MCP 插件挂载给外部 Agent（如 Cordis / DeepSeek Harness / Claude / Cursor）
 
 ```bash
 scene-factory mcp

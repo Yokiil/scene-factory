@@ -27,7 +27,11 @@ packages = [
   "scene_factory.cordis.plugins",
   "scene_factory.plugin_api",
   "scene_factory.spatial",
+  "scene_factory.studio",
 ]
+
+[tool.setuptools.package-data]
+"scene_factory.studio" = ["static/*", "static/vendor/*"]
 
 [tool.setuptools.data-files]
 "share/scene-factory/config" = ["config/cordis.toml", "config/llm.example.json"]
